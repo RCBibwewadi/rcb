@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import React, { useRef, useState } from "react";
 // import { createClient } from "@supabase/supabase-js";
 
@@ -59,7 +60,7 @@ export default function ImageUploader({ label, imageUrl, onUpload }: ImageUpload
         onClick={() => fileRef.current?.click()}
       >
         {preview ? (
-          <img src={preview} alt="Preview" className="w-32 h-32 object-cover rounded-lg" />
+          <Image src={preview} alt="Preview" className="w-32 h-32 object-cover rounded-lg" />
         ) : (
           <span className="text-sm text-mauve-wine-light">
             {uploading ? "Uploading..." : "Click to upload"}

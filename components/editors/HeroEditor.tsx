@@ -1,5 +1,6 @@
 "use client";
 import { removeImage, setupImageUploader } from "@/lib/adminutils";
+import Image from "next/image";
 import React, { useState, useEffect } from "react";
 
 interface HeroData {
@@ -82,7 +83,7 @@ export default function HeroEditor() {
             </div>
             <div className="mt-3">
               {hero.backgroundImage && (
-                <img src={hero.backgroundImage} alt="Preview" className="h-20 w-20 object-cover rounded-lg border" />
+                <Image src={hero.backgroundImage} alt="Preview" className="h-20 w-20 object-cover rounded-lg border" />
               )}
             </div>
           </div>

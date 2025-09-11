@@ -43,7 +43,7 @@ export default function AdminPage() {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (password === process.env.NEXT_PUBLIC_ADMIN_PASSWORD) {
+    if (password === "rotaract2025admin") {
       setAuthenticated(true);
       setError("");
     } else {

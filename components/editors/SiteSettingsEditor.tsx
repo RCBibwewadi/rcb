@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import React, { useState } from "react";
 
 interface SiteConfig {
@@ -105,7 +106,7 @@ const SiteSettingsEditor: React.FC<SiteSettingsEditorProps> = ({ initialData, on
           </div>
           {config.clubLogo && (
             <div className="mt-3">
-              <img
+              <Image
                 src={config.clubLogo}
                 alt="Club Logo"
                 className="h-20 w-20 object-cover rounded-lg border"

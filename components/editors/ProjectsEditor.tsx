@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import React, { useState } from "react";
 
 interface Project {
@@ -164,7 +165,7 @@ const ProjectsEditor: React.FC<ProjectsEditorProps> = ({ initialData, onSave }) 
 
                 {project.image && (
                   <div className="mt-3">
-                    <img
+                    <Image
                       src={project.image}
                       alt="Preview"
                       className="h-20 w-20 object-cover rounded-lg border"
