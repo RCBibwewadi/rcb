@@ -1,6 +1,7 @@
 "use client";
 
 import { Mail, Phone, MapPin, Twitter, Instagram, Github, Linkedin } from "lucide-react";
+import { MdEmail } from "react-icons/md";
 
 export default function Footer() {
   return (
@@ -30,11 +31,11 @@ export default function Footer() {
             <div className="space-y-4">
               <div className="flex items-center">
                 <Mail className="w-5 h-5 text-rose-tan mr-3" />
-                <span className="text-luxury-cream">rotaractbibwewadi@example.com</span>
+                <span className="text-luxury-cream">rotaractclubofbibwewadi@gmail.com</span>
               </div>
               <div className="flex items-center">
                 <Phone className="w-5 h-5 text-rose-tan mr-3" />
-                <span className="text-luxury-cream">+91 XXXXX XXXXX</span>
+                <span className="text-luxury-cream">+91 91683 43950</span>
               </div>
               <div className="flex items-center">
                 <MapPin className="w-5 h-5 text-rose-tan mr-3" />
@@ -48,10 +49,9 @@ export default function Footer() {
             <h4 className="text-lg font-semibold mb-6">Follow Us</h4>
             <div className="flex space-x-4">
               {[
-                { icon: <Twitter className="w-5 h-5 text-white" />, colors: "from-rose-tan to-rose-tan-dark" },
-                { icon: <Instagram className="w-5 h-5 text-white" />, colors: "from-mauve-wine to-mauve-wine-dark" },
-                { icon: <Github className="w-5 h-5 text-white" />, colors: "from-luxury-gold to-rose-tan" },
-                { icon: <Linkedin className="w-5 h-5 text-white" />, colors: "from-rose-tan-light to-mauve-wine-light" },
+                { icon: <MdEmail className="w-5 h-5 text-white" />, colors: "from-rose-tan to-rose-tan-dark",href:"mailto:rotaractclubofbibwewadi@gmail.com"},
+                { icon: <Instagram className="w-5 h-5 text-white" />, colors: "from-mauve-wine to-mauve-wine-dark",href:"https://www.instagram.com/rotaractclubofbibwewadipune?igsh=Z2s0bTEwd2hoaTFj" },
+        
               ].map((social, i) => (
                 <a
                   key={i}
@@ -67,7 +67,7 @@ export default function Footer() {
 
         <div className="border-t border-mauve-wine mt-12 pt-8 text-center">
           <p className="text-[#d1c2a2]">
-            &copy; 2024 Rotaract Club of Bibwewadi Pune. All Rights Reserved.
+            &copy; 2025 Rotaract Club of Bibwewadi Pune. All Rights Reserved.
           </p>
         </div>
       </div>

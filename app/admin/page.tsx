@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useState } from "react";
@@ -14,11 +15,11 @@ import EventsEditor from "@/components/editors/EventsEditor";
 
 const initialContent: ContentData = {
   hero: {
-    backgroundImage: "",
-    title: "",
-    subtitle: "",
-    description: "",
-    ctaText: "",
+    backgroundImage: "/public/main.jpeg",
+    title: "Rotaract Club of Bibwewadi Pune",
+    subtitle: "From solos to symphony",
+    description: "Join us in creating positive change and impacting lives through service, leadership, and community engagement.",
+    ctaText: "Join Our Mission",
   },
   about: {
     title: "",
@@ -27,11 +28,147 @@ const initialContent: ContentData = {
     description2: "",
     description3: "",
   },
-  boardMembers: [],
+  boardMembers: [
+    {
+      "id": 1,
+      "name": "President",
+      "position": "President",
+      "description": "Leading with Vision",
+      "image": "./data/images/Seha.jpeg",
+      "gradient": "from-rose-tan to-rose-tan-dark",
+      "initial": "P"
+    },
+    {
+      "id": 2,
+      "name": "Secretary",
+      "position": "Secretary",
+      "description": "Organizing Success",
+      "image": "./data/images/Rishi.jpeg",
+      "gradient": "from-luxury-gold to-rose-tan",
+      "initial": "S"
+    },
+    {
+      "id": 3,
+      "name": "Joint Secretary",
+      "position": "Joint Secretary",
+      "description": "Financial Stewardship",
+      "image": "./data/images/Hitansh.png",
+      "gradient": "from-rose-tan-light to-mauve-wine-light",
+      "initial": "JS"
+    },
+    {
+      "id": 4,
+      "name": "Treasurer",
+      "position": "Treasurer",
+      "description": "Financial Stewardship",
+      "image": "./data/images/ansh.jpeg",
+      "gradient": "from-rose-tan-light to-mauve-wine-light",
+      "initial": "T"
+    },
+    {
+      "id": 5,
+      "name": "Vice President",
+      "position": "Vice President",
+      "description": "Supporting Excellence",
+      "image": "./data/images/Jayendra.jpeg",
+      "gradient": "from-mauve-wine to-mauve-wine-dark",
+      "initial": "VP"
+    },
+    {
+      "id": 6,
+      "name": "Club Mentor",
+      "position": "Club Mentor",
+      "description": "Financial Stewardship",
+      "image": "./data/images/Disha.jpeg",
+      "gradient": "from-rose-tan-light to-mauve-wine-light",
+      "initial": "CM"
+    },
+    {
+      "id": 7,
+      "name": "Immediate Past President",
+      "position": "IPP",
+      "description": "Financial Stewardship",
+      "image": "",
+      "gradient": "from-rose-tan-light to-mauve-wine-light",
+      "initial": "IP"
+    },
+    {
+      "id": 8,
+      "name": "Sergeant at Arms",
+      "position": "SAA",
+      "description": "Financial Stewardship",
+      "image": "./data/images/Vanshita.jpeg",
+      "gradient": "from-rose-tan-light to-mauve-wine-light",
+      "initial": "SA"
+    },
+    {
+      "id": 9,
+      "name": "Club Service Director",
+      "position": "CSD",
+      "description": "Financial Stewardship",
+      "image": "./data/images/Pritesh.JPG",
+      "gradient": "from-rose-tan-light to-mauve-wine-light",
+      "initial": "CSD"
+    },
+    {
+      "id": 10,
+      "name": "Professional Development Director",
+      "position": "PDD",
+      "description": "Financial Stewardship",
+      "image": "./data/images/Shrenik.jpeg",
+      "gradient": "from-rose-tan-light to-mauve-wine-light",
+      "initial": "PDD"
+    },
+    {
+      "id": 11,
+      "name": "International Service Director",
+      "position": "ISD",
+      "description": "Financial Stewardship",
+      "image": "./data/images/Pranav.jpeg",
+      "gradient": "from-rose-tan-light to-mauve-wine-light",
+      "initial": "ISD"
+    },
+    {
+      "id": 12,
+      "name": "Community Service Director",
+      "position": "CMD",
+      "description": "Financial Stewardship",
+      "image": "./data/images/Lavish.png",
+      "gradient": "from-rose-tan-light to-mauve-wine-light",
+      "initial": "CMD"
+    },
+    {
+      "id": 13,
+      "name": "Rotary Rotaract Relationship Officer",
+      "position": "RRRO",
+      "description": "Financial Stewardship",
+      "image": "",
+      "gradient": "from-rose-tan-light to-mauve-wine-light",
+      "initial": "RRRO"
+    },
+    {
+      "id": 12,
+      "name": "Diversity Equity Inclusivity",
+      "position": "DEI",
+      "description": "Financial Stewardship",
+      "image": "",
+      "gradient": "from-rose-tan-light to-mauve-wine-light",
+      "initial": "DEI"
+    },
+    {
+      "id": 13,
+      "name": "Public Relations Officer",
+      "position": "PRO",
+      "description": "Financial Stewardship",
+      "image": "./data/images/Dinal.jpeg",
+      "gradient": "from-rose-tan-light to-mauve-wine-light",
+      "initial": "PRO"
+    }
+  ],
   projects: [],
   events: [],
   contact: {},
-  siteConfig: { siteName: "", tagline: "", clubLogo: "" },
+  siteConfig: { siteName: "", tagline: "", clubLogo: "" , adminPassword: "" },
 };
 
 export default function AdminPage() {
@@ -43,7 +180,7 @@ export default function AdminPage() {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (password === "rotaract2025admin") {
+    if (password === process.env.NEXT_PUBLIC_ADMIN_PASSWORD) {
       setAuthenticated(true);
       setError("");
     } else {
@@ -213,23 +350,17 @@ export default function AdminPage() {
                 )}
 
                 {section === "hero" && (
-                  <HeroEditor
-                    initialData={contentData.hero}
-                    onSave={(d) => handleSave("hero", d)}
-                  />
+                  <HeroEditor />
                 )}
 
                 {section === "about" && (
                   <AboutEditor
                     initialData={contentData.about}
-                    onSave={(d) => handleSave("about", d)}
                   />
                 )}
                  {/* ✅ New Sections */}
     {section === "board" && (
       <BoardEditor
-        initialData={contentData.boardMembers}
-        onSave={(d) => handleSave("boardMembers", d)}
       />
     )}
 
@@ -243,7 +374,6 @@ export default function AdminPage() {
      {section === "events" && (
       <EventsEditor
         initialData={contentData.events}
-        onSave={(d) => handleSave("events", d)}
       />
     )}
 

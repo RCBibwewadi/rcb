@@ -23,7 +23,6 @@ export interface BoardMember {
   image: string;
   gradient: string;
   initial: string;
-  label: string;
 }
 
 export interface Project {
@@ -43,5 +42,6 @@ export interface ContentData {
     siteName: string;
     tagline: string;
     clubLogo: string;
+    adminPassword: string;
   };
 }

@@ -1,4 +1,5 @@
 // utils/adminUtils.ts
+import { supabaseClient } from "./supabaseClient";
 
 export function createImageUploader(inputId: string, currentValue = ''): string {
   const uploaderId = `uploader-${inputId}`;
@@ -98,3 +99,21 @@ export function removeImage(inputId: string, showNotification: (msg: string, typ
 
   showNotification('Image removed successfully!', 'success');
 }
+export async function uploadHeroImage(file: File): Promise<string> {
+  const fileName = `hero-${Date.now()}-${file.name}`;
+
+  // Upload the file
+  const { data: uploadData, error: uploadError } = await supabaseClient.storage
+    .from("hero-images")
+    .upload(fileName, file, { cacheControl: "3600", upsert: true });
+
+  if (uploadError) throw uploadError;
+
+  // Get public URL
+  const { data: urlData } = supabaseClient.storage
+    .from("hero-images")
+    .getPublicUrl(fileName);
+
+  return urlData.publicUrl;
+}
+

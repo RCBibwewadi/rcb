@@ -73,3 +73,10 @@ body {
   box-shadow: 0 20px 25px -5px rgba(107, 76, 87, 0.1),
     0 10px 10px -5px rgba(107, 76, 87, 0.04);
 }
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 0.5rem; /* adjust spacing */
+}
+

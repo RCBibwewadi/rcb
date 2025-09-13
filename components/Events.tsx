@@ -1,8 +1,20 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { IEvent } from "./editors/EventsEditor";
+import CalenderView from "./ui/CalenderView";
 
 export default function EventsSection() {
   const [view, setView] = useState<"list" | "calendar">("list");
+  const [events, setEvents] = useState<IEvent[]>([]);
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      const res = await fetch("/api/events");
+      const data = await res.json();
+      setEvents(data);
+    };
+    fetchEvents();
+  }, []);
 
   return (
     <section id="events" className="py-20 bg-white">
@@ -46,117 +58,38 @@ export default function EventsSection() {
         </div>
 
         {/* List View */}
-        {view === "list" && (
-          <div id="list-view" className="max-w-4xl mx-auto space-y-6">
-            {/* Example Event 1 */}
-            <div className="glass-effect rounded-xl p-6 lg:p-8 hover-scale luxury-shadow">
+         {view === "list" && (
+        <div className="max-w-4xl mx-auto space-y-6">
+          {events.map((event) => (
+            <div key={event.id} className="glass-effect rounded-xl p-6 lg:p-8 hover-scale luxury-shadow">
               <div className="flex flex-col md:flex-row md:items-center justify-between">
                 <div className="flex-1">
                   <div className="flex items-center mb-4">
                     <div className="bg-gradient-to-r from-rose-tan to-rose-tan-dark text-white px-4 py-2 rounded-lg font-semibold text-sm luxury-shadow">
-                      15 SEP 2024
+                      {new Date(event.date).toLocaleDateString("en-US", { day: "2-digit", month: "short", year: "numeric" })}
                     </div>
                     <div className="ml-4 text-mauve-wine-light">
-                      <span className="font-medium">6:00 PM - 8:00 PM</span>
+                      <span className="font-medium">{event.time}</span>
                     </div>
                   </div>
-                  <h3 className="text-xl font-semibold text-mauve-wine mb-3">
-                    Leadership Development Workshop
-                  </h3>
-                  <p className="text-mauve-wine-light mb-4 leading-relaxed">
-                    Interactive workshop on developing leadership skills and
-                    building effective teams. Perfect for young professionals.
-                  </p>
+                  <h3 className="text-xl font-semibold text-mauve-wine mb-3">{event.title}</h3>
+                  <p className="text-mauve-wine-light mb-4 leading-relaxed">{event.description}</p>
                   <p className="text-sm text-rose-tan font-medium">
-                    <span className="font-semibold">Location:</span> Community
-                    Center, Bibwewadi
+                    <span className="font-semibold">Location:</span> {event.location}
                   </p>
                 </div>
               </div>
             </div>
-
-            {/* You can map more events here */}
-          </div>
-        )}
+          ))}
+        </div>
+      )}
 
         {/* Calendar View */}
         {view === "calendar" && (
-          <div id="calendar-view" className="max-w-6xl mx-auto">
-            <div className="grid lg:grid-cols-3 gap-8">
-              {/* Calendar */}
-              <div className="lg:col-span-2">
-                <div className="glass-effect rounded-xl p-6 luxury-shadow">
-                  {/* Calendar Header */}
-                  <div className="flex items-center justify-between mb-6">
-                    <button className="p-2 text-mauve-wine hover:text-rose-tan transition-colors">
-                      <svg
-                        className="w-5 h-5"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M15 19l-7-7 7-7"
-                        ></path>
-                      </svg>
-                    </button>
-                    <h3 className="text-2xl font-semibold text-mauve-wine">
-                      September 2024
-                    </h3>
-                    <button className="p-2 text-mauve-wine hover:text-rose-tan transition-colors">
-                      <svg
-                        className="w-5 h-5"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M9 5l7 7-7 7"
-                        ></path>
-                      </svg>
-                    </button>
-                  </div>
-
-                  {/* Calendar Grid */}
-                  <div className="calendar-grid mb-4">
-                    {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map(
-                      (day) => (
-                        <div
-                          key={day}
-                          className="text-center font-semibold text-mauve-wine py-3"
-                        >
-                          {day}
-                        </div>
-                      )
-                    )}
-                  </div>
-                  <div id="calendar-days" className="calendar-grid">
-                    {/* Calendar days will be generated dynamically later */}
-                  </div>
-                </div>
-              </div>
-
-              {/* Event Details Panel */}
-              <div className="lg:col-span-1">
-                <div className="glass-effect rounded-xl p-6 luxury-shadow">
-                  <h4 className="text-xl font-semibold text-mauve-wine mb-4">
-                    Event Details
-                  </h4>
-                  <div id="event-details">
-                    <p className="text-mauve-wine-light text-center py-8">
-                      Click on a date with events to see details
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+           <main className="p-8">
+            <CalenderView />
+           </main>
+          
         )}
       </div>
     </section>

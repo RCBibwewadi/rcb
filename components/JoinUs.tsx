@@ -91,7 +91,7 @@ export default function JoinUs() {
                   <input
                     type={field.type}
                     placeholder={field.placeholder}
-                    className="w-full px-4 py-3 border border-rose-tan-light rounded-lg focus:ring-2 focus:ring-rose-tan focus:border-transparent transition-all"
+                    className="w-full px-4 py-3 border border-rose-tan-light rounded-lg focus:ring-2 focus:ring-rose-tan focus:border-transparent transition-all bg-white"
                   />
                 </div>
               ))}
@@ -102,15 +102,16 @@ export default function JoinUs() {
                 <textarea
                   rows={4}
                   placeholder="Tell us why you're interested in joining Rotaract..."
-                  className="w-full px-4 py-3 border border-rose-tan-light rounded-lg focus:ring-2 focus:ring-rose-tan focus:border-transparent transition-all"
+                  className="w-full px-4 py-3 border border-rose-tan-light rounded-lg focus:ring-2 focus:ring-rose-tan focus:border-transparent transition-all bg-white"
                 />
               </div>
               <button
-                type="submit"
-                className="w-full bg-gradient-to-r from-rose-tan to-mauve-wine hover:from-rose-tan-dark hover:to-mauve-wine-dark text-white font-semibold py-3 rounded-lg transition-all duration-300 luxury-shadow"
-              >
-                I&aposm Interested!
-              </button>
+  type="submit"
+  className="w-full bg-gradient-to-r from-rose-tan to-mauve-wine hover:from-rose-tan-dark hover:to-mauve-wine-dark text-white font-semibold py-3 rounded-lg transition-all duration-300 luxury-shadow"
+>
+  {`I'm Interested!`}
+</button>
+
             </form>
           </div>
         </div>

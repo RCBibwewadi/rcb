@@ -1,0 +1,258 @@
+{
+  "hero": {
+    "backgroundImage": "./data/images/main.jpeg",
+    "title": "Rotaract Club of Bibwewadi Pune",
+    "subtitle": "From solos to symphony",
+    "description": "Join us in creating positive change and impacting lives through service, leadership, and community engagement.",
+    "ctaText": "Join Our Mission"
+  },
+  "about": {
+    "title": "Who We Are",
+    "mainTitle": "About Rotaract",
+    "description1": "Rotaract is a youth organization of Rotary International for young and aspiring leaders (typically 18-30) who wish to grow their network and develop themselves both professionally and personally.",
+    "description2": "The Rotaract Club of Bibwewadi Pune is committed to making a difference in our local community while fostering leadership, fellowship, and service among young professionals.",
+    "description3": "We work across five main avenues: Professional Development, Community Service, Club Service, International Service, and Diversity, Equity & Inclusivity.",
+    "avenues": [
+      {
+        "title": "Professional Development",
+        "description": "Building careers and skills",
+        "gradient": "from-rose-tan to-rose-tan-dark"
+      },
+      {
+        "title": "Community Service",
+        "description": "Serving our local community",
+        "gradient": "from-mauve-wine to-mauve-wine-dark"
+      },
+      {
+        "title": "International Service",
+        "description": "Global impact initiatives",
+        "gradient": "from-luxury-gold to-rose-tan"
+      },
+      {
+        "title": "Club Service",
+        "description": "Strengthening our club",
+        "gradient": "from-rose-tan-light to-mauve-wine-light"
+      }
+    ]
+  },
+  "boardMembers": [
+    {
+      "id": 1,
+      "name": "President",
+      "position": "President",
+      "description": "Leading with Vision",
+      "image": "./public/Seha.jpeg",
+      "gradient": "from-rose-tan to-rose-tan-dark",
+      "initial": "P"
+    },
+    {
+      "id": 2,
+      "name": "Secretary",
+      "position": "Secretary",
+      "description": "Organizing Success",
+      "image": "./data/images/Rishi.jpeg",
+      "gradient": "from-luxury-gold to-rose-tan",
+      "initial": "S"
+    },
+    {
+      "id": 3,
+      "name": "Joint Secretary",
+      "position": "Joint Secretary",
+      "description": "Financial Stewardship",
+      "image": "./data/images/Hitansh.png",
+      "gradient": "from-rose-tan-light to-mauve-wine-light",
+      "initial": "JS"
+    },
+    {
+      "id": 4,
+      "name": "Treasurer",
+      "position": "Treasurer",
+      "description": "Financial Stewardship",
+      "image": "./data/images/ansh.jpeg",
+      "gradient": "from-rose-tan-light to-mauve-wine-light",
+      "initial": "T"
+    },
+    {
+      "id": 5,
+      "name": "Vice President",
+      "position": "Vice President",
+      "description": "Supporting Excellence",
+      "image": "./data/images/Jayendra.jpeg",
+      "gradient": "from-mauve-wine to-mauve-wine-dark",
+      "initial": "VP"
+    },
+    {
+      "id": 6,
+      "name": "Club Mentor",
+      "position": "Club Mentor",
+      "description": "Financial Stewardship",
+      "image": "./data/images/Disha.jpeg",
+      "gradient": "from-rose-tan-light to-mauve-wine-light",
+      "initial": "CM"
+    },
+    {
+      "id": 7,
+      "name": "Immediate Past President",
+      "position": "IPP",
+      "description": "Financial Stewardship",
+      "image": "",
+      "gradient": "from-rose-tan-light to-mauve-wine-light",
+      "initial": "IP"
+    },
+    {
+      "id": 8,
+      "name": "Sergeant at Arms",
+      "position": "SAA",
+      "description": "Financial Stewardship",
+      "image": "./data/images/Vanshita.jpeg",
+      "gradient": "from-rose-tan-light to-mauve-wine-light",
+      "initial": "SA"
+    },
+    {
+      "id": 9,
+      "name": "Club Service Director",
+      "position": "CSD",
+      "description": "Financial Stewardship",
+      "image": "./data/images/Pritesh.JPG",
+      "gradient": "from-rose-tan-light to-mauve-wine-light",
+      "initial": "CSD"
+    },
+    {
+      "id": 10,
+      "name": "Professional Development Director",
+      "position": "PDD",
+      "description": "Financial Stewardship",
+      "image": "./data/images/Shrenik.jpeg",
+      "gradient": "from-rose-tan-light to-mauve-wine-light",
+      "initial": "PDD"
+    },
+    {
+      "id": 11,
+      "name": "International Service Director",
+      "position": "ISD",
+      "description": "Financial Stewardship",
+      "image": "./data/images/Pranav.jpeg",
+      "gradient": "from-rose-tan-light to-mauve-wine-light",
+      "initial": "ISD"
+    },
+    {
+      "id": 12,
+      "name": "Community Service Director",
+      "position": "CMD",
+      "description": "Financial Stewardship",
+      "image": "./data/images/Lavish.png",
+      "gradient": "from-rose-tan-light to-mauve-wine-light",
+      "initial": "CMD"
+    },
+    {
+      "id": 13,
+      "name": "Rotary Rotaract Relationship Officer",
+      "position": "RRRO",
+      "description": "Financial Stewardship",
+      "image": "",
+      "gradient": "from-rose-tan-light to-mauve-wine-light",
+      "initial": "RRRO"
+    },
+    {
+      "id": 12,
+      "name": "Diversity Equity Inclusivity",
+      "position": "DEI",
+      "description": "Financial Stewardship",
+      "image": "",
+      "gradient": "from-rose-tan-light to-mauve-wine-light",
+      "initial": "DEI"
+    },
+    {
+      "id": 13,
+      "name": "Public Relations Officer",
+      "position": "PRO",
+      "description": "Financial Stewardship",
+      "image": "./data/images/Dinal.jpeg",
+      "gradient": "from-rose-tan-light to-mauve-wine-light",
+      "initial": "PRO"
+    }
+  ],
+  "projects": [
+    {
+      "id": 1,
+      "title": "Project Annapurna",
+      "description": "Food Donation Drive providing nutritious meals to underprivileged communities across Bibwewadi area.",
+      "image": "",
+      "gradient": "from-rose-tan to-rose-tan-dark",
+      "status": "active"
+    },
+    {
+      "id": 2,
+      "title": "Skill Development Initiative",
+      "description": "Empowering youth with essential skills through workshops and training programs for better employment opportunities.",
+      "image": "",
+      "gradient": "from-mauve-wine to-mauve-wine-dark",
+      "status": "active"
+    },
+    {
+      "id": 3,
+      "title": "Environmental Conservation",
+      "description": "Tree plantation drives and environmental awareness campaigns to create a greener, sustainable future.",
+      "image": "",
+      "gradient": "from-luxury-gold to-rose-tan",
+      "status": "active"
+    },
+    {
+      "id": 4,
+      "title": "Digital Literacy Program",
+      "description": "Bridging the digital divide by teaching computer and internet skills to seniors and underserved communities.",
+      "image": "",
+      "gradient": "from-rose-tan-light to-mauve-wine-light",
+      "status": "active"
+    }
+  ],
+  "events": [
+    {
+      "id": 1,
+      "title": "Leadership Development Workshop",
+      "date": "2024-09-15",
+      "time": "6:00 PM - 8:00 PM",
+      "location": "Community Center, Bibwewadi",
+      "description": "Interactive workshop on developing leadership skills and building effective teams. Perfect for young professionals looking to enhance their career prospects.",
+      "gradient": "from-rose-tan to-rose-tan-dark",
+      "status": "upcoming"
+    },
+    {
+      "id": 2,
+      "title": "Community Clean-up Drive",
+      "date": "2024-09-22",
+      "time": "9:00 AM - 1:00 PM",
+      "location": "Bibwewadi Park",
+      "description": "Join us for a community service project focused on cleaning and beautifying our local parks and public spaces.",
+      "gradient": "from-mauve-wine to-mauve-wine-dark",
+      "status": "upcoming"
+    },
+    {
+      "id": 3,
+      "title": "Networking Night & Fellowship",
+      "date": "2024-10-05",
+      "time": "7:00 PM - 9:00 PM",
+      "location": "Hotel Pune, Bibwewadi",
+      "description": "An evening of networking, fellowship, and fun activities. Connect with like-minded individuals and build lasting friendships.",
+      "gradient": "from-luxury-gold to-rose-tan",
+      "status": "upcoming"
+    }
+  ],
+  "contact": {
+    "email": "rotaractbibwewadi@example.com",
+    "phone": "+91 XXXXX XXXXX",
+    "address": "Bibwewadi, Pune, Maharashtra",
+    "socialLinks": {
+      "twitter": "#",
+      "facebook": "#",
+      "instagram": "#",
+      "linkedin": "#"
+    }
+  },
+  "siteConfig": {
+    "siteName": "Rotaract Club of Bibwewadi Pune",
+    "tagline": "From solos to symphony",
+    "clubLogo": "",
+    "adminPassword": "rotaract2025admin"
+  }
+}

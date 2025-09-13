@@ -1,7 +1,6 @@
 "use client";
-import { removeImage, setupImageUploader } from "@/lib/adminutils";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import React, { useState, useEffect } from "react";
 
 interface HeroData {
   backgroundImage: string;
@@ -20,106 +19,124 @@ export default function HeroEditor() {
     ctaText: "",
   });
 
-  // Text input change
+  const [file, setFile] = useState<File | null>(null);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setHero({ ...hero, [e.target.id]: e.target.value });
   };
 
-  // Remove image
-  const removeImageUploader = () => {
-    removeImage("hero-bg-uploader", (msg) => alert(msg));
-    setHero({ ...hero, backgroundImage: "" });
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files) return;
+    setFile(e.target.files[0]);
   };
 
-  // Save hero
-  const saveHeroContent = () => {
-    console.log("Hero data saved:", hero);
-    alert("Changes saved!");
+  const uploadImage = async (): Promise<string> => {
+    if (!file) return hero.backgroundImage;
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const res = await fetch("/api/hero/upload", {
+      method: "POST",
+      body: formData,
+    });
+
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || "Failed to upload image");
+    return data.url;
+  };
+
+  const saveHero = async () => {
+    try {
+      const imageUrl = await uploadImage();
+
+      const res = await fetch("/api/hero", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...hero, backgroundImage: imageUrl }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to save hero");
+
+      alert("Hero updated successfully!");
+    }catch (err) {
+  if (err instanceof Error) {
+    alert("Error: " + err.message);
+  } else {
+    alert("Error: " + String(err));
+  }
+}
   };
 
   useEffect(() => {
-    // Setup image uploader using utility
-    setupImageUploader("hero-bg-uploader", (msg, type) => alert(msg));
+    const fetchHero = async () => {
+      try {
+        const res = await fetch("/api/hero");
+        const data = await res.json();
+        if (res.ok) {
+          setHero({
+            backgroundImage: data.background_image || "",
+            title: data.title || "",
+            subtitle: data.subtitle || "",
+            description: data.description || "",
+            ctaText: data.cta_text || "",
+          });
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchHero();
   }, []);
 
   return (
     <div className="glass-effect rounded-xl p-6 luxury-shadow fade-in">
       <h3 className="text-2xl font-bold text-mauve-wine mb-6">Hero Section</h3>
-      <div className="space-y-6">
-        {/* Background Image */}
-        <div>
-          <label className="block text-sm font-medium text-mauve-wine-dark mb-2">Background Image</label>
-          <div className="image-uploader-container">
-            <div className="flex items-center space-x-4">
-              <div className="flex-1">
-                <input
-                  type="url"
-                  id="backgroundImage"
-                  value={hero.backgroundImage}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 border border-rose-tan-light rounded focus:ring-2 focus:ring-rose-tan"
-                  placeholder="Enter image URL or upload below"
-                />
-              </div>
-              <div className="flex flex-col space-y-2">
-                <input type="file" accept="image/*" id="hero-bg-uploader" className="hidden" />
-                <button
-                  type="button"
-                  onClick={() => document.getElementById("hero-bg-uploader")?.click()}
-                  className="bg-rose-tan text-white px-4 py-2 rounded-lg font-medium hover:bg-rose-tan-dark transition-colors text-sm"
-                >
-                  Upload Image
-                </button>
-                {hero.backgroundImage && (
-                  <button
-                    type="button"
-                    onClick={removeImageUploader}
-                    className="bg-red-500 text-white px-4 py-2 rounded-lg font-medium hover:bg-red-600 transition-colors text-sm"
-                  >
-                    Remove Image
-                  </button>
-                )}
-              </div>
-            </div>
-            <div className="mt-3">
-              {hero.backgroundImage && (
-                <Image src={hero.backgroundImage} alt="Preview" className="h-20 w-20 object-cover rounded-lg border" />
-              )}
-            </div>
-          </div>
-        </div>
 
-        {/* Other inputs */}
-        {["title", "subtitle", "description", "ctaText"].map((field) => (
-          <div key={field}>
-            <label className="block text-sm font-medium text-mauve-wine-dark mb-2">{field.charAt(0).toUpperCase() + field.slice(1)}</label>
-            {field === "description" ? (
-              <textarea
-                id={field}
-                rows={4}
-                value={hero.description}
-                onChange={handleChange}
-                className="w-full px-4 py-3 border border-rose-tan-light rounded-lg focus:ring-2 focus:ring-rose-tan focus:border-transparent"
-              />
-            ) : (
-              <input
-                type="text"
-                id={field}
-                value={hero[field as keyof HeroData]}
-                onChange={handleChange}
-                className="w-full px-4 py-3 border border-rose-tan-light rounded-lg focus:ring-2 focus:ring-rose-tan focus:border-transparent"
-              />
-            )}
+      {/* Image Upload */}
+      <div className="mb-4">
+        <label className="block mb-2 font-medium">Background Image</label>
+        <input type="file" accept="image/*" onChange={handleFileChange} />
+        {hero.backgroundImage && !file && (
+          <div className="mt-3">
+            <Image src={hero.backgroundImage} alt="Preview" width={120} height={80} className="rounded-lg" />
           </div>
-        ))}
-
-        <button
-          onClick={saveHeroContent}
-          className="luxury-gradient text-white px-6 py-3 rounded-lg font-semibold hover:opacity-90 transition-all"
-        >
-          Save Changes
-        </button>
+        )}
+        {file && (
+          <div className="mt-3">
+            <p>Selected: {file.name}</p>
+          </div>
+        )}
       </div>
+
+      {/* Other Fields */}
+      {["title", "subtitle", "description", "ctaText"].map((field) => (
+        <div key={field} className="mb-4">
+          <label className="block mb-1 font-medium">{field}</label>
+          {field === "description" ? (
+            <textarea
+              id={field}
+              value={hero[field as keyof HeroData]}
+              onChange={handleChange}
+              rows={4}
+              className="w-full px-3 py-2 border rounded focus:ring-2"
+            />
+          ) : (
+            <input
+              type="text"
+              id={field}
+              value={hero[field as keyof HeroData]}
+              onChange={handleChange}
+              className="w-full px-3 py-2 border rounded focus:ring-2"
+            />
+          )}
+        </div>
+      ))}
+
+      <button onClick={saveHero} className="bg-rose-tan text-white px-6 py-3 rounded-lg">
+        Save Hero
+      </button>
     </div>
   );
 }
