@@ -12,6 +12,7 @@ import ProjectsEditor from "@/components/editors/ProjectsEditor";
 import SiteSettingsEditor from "@/components/editors/SiteSettingsEditor";
 import ContactEditor from "@/components/editors/ContactEditor";
 import EventsEditor from "@/components/editors/EventsEditor";
+import { useToast } from "@/components/ui/ToastProvider";
 
 const initialContent: ContentData = {
   hero: {
@@ -172,6 +173,7 @@ const initialContent: ContentData = {
 };
 
 export default function AdminPage() {
+  const { showToast } = useToast();
   const [authenticated, setAuthenticated] = useState(false);
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -222,7 +224,7 @@ export default function AdminPage() {
                 placeholder="Enter admin password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-3 border border-rose-tan-light rounded-lg focus:ring-2 focus:ring-rose-tan focus:border-transparent transition-all"
+                className="w-full px-4 py-3 border border-rose-tan-light rounded-lg focus:ring-2 focus:ring-rose-tan focus:border-transparent transition-all bg-white"
               />
               <button
                 type="submit"
@@ -266,7 +268,7 @@ export default function AdminPage() {
                 </div>
                 <div className="flex items-center space-x-4">
                   <button
-                    onClick={() => alert("🚀 Push changes to website")}
+                    onClick={() => showToast("Successfully saved event", "success")}
                     className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white px-6 py-2 rounded-lg font-semibold transition-all duration-300 luxury-shadow hover:scale-105 flex items-center space-x-2"
                   >
                     <span>Push to Website</span>

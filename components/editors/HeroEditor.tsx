@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import Image from "next/image";
 
 interface HeroData {
   backgroundImage: string;
@@ -100,7 +99,7 @@ export default function HeroEditor() {
         <input type="file" accept="image/*" onChange={handleFileChange} />
         {hero.backgroundImage && !file && (
           <div className="mt-3">
-            <Image src={hero.backgroundImage} alt="Preview" width={120} height={80} className="rounded-lg" />
+            <img src={hero.backgroundImage} alt="Preview" width={120} height={80} className="rounded-lg" />
           </div>
         )}
         {file && (
