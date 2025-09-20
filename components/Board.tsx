@@ -14,7 +14,7 @@ interface BoardMember {
 const boardMembers: BoardMember[] = [
   {
     id: 1,
-    name: "President",
+    name: "Sneha Jain",
     position: "President",
     description: "Leading with Vision",
     image: "/Seha.jpeg",
@@ -23,7 +23,7 @@ const boardMembers: BoardMember[] = [
   },
   {
     id: 2,
-    name: "Secretary",
+    name: "Rishi Oswal",
     position: "Secretary",
     description: "Organizing Success",
     image: "/Rishi.jpeg",
@@ -32,16 +32,16 @@ const boardMembers: BoardMember[] = [
   },
   {
     id: 3,
-    name: "Joint Secretary",
+    name: "Hitansh Parmar",
     position: "Joint Secretary",
-    description: "Financial Stewardship",
+    description: "Ensuring Smooth Operations",
     image: "/Hitansh.png",
     gradient: "from-rose-tan-light to-mauve-wine-light",
     initial: "JS",
   },
   {
     id: 4,
-    name: "Treasurer",
+    name: "Ansh Gandhi",
     position: "Treasurer",
     description: "Financial Stewardship",
     image: "/ansh.jpeg",
@@ -50,7 +50,7 @@ const boardMembers: BoardMember[] = [
   },
   {
     id: 5,
-    name: "Vice President",
+    name: "Jayendra Shroff",
     position: "Vice President",
     description: "Supporting Excellence",
     image: "/Jayendra.jpeg",
@@ -59,90 +59,90 @@ const boardMembers: BoardMember[] = [
   },
   {
     id: 6,
-    name: "Club Mentor",
+    name: "Disha Daga",
     position: "Club Mentor",
-    description: "Financial Stewardship",
+    description: "Guiding with Experience",
     image: "/Disha.jpeg",
     gradient: "from-rose-tan-light to-mauve-wine-light",
     initial: "CM",
   },
   {
     id: 7,
-    name: "Immediate Past President",
+    name: "Sahil Oswal",
     position: "IPP",
-    description: "Financial Stewardship",
+    description: "Continuing Legacy",
     image: "",
     gradient: "from-rose-tan-light to-mauve-wine-light",
     initial: "IP",
   },
   {
     id: 8,
-    name: "Sergeant at Arms",
+    name: "Vanshita Jain",
     position: "SAA",
-    description: "Financial Stewardship",
+    description: "Maintaining Order & Discipline",
     image: "/Vanshita.jpeg",
     gradient: "from-rose-tan-light to-mauve-wine-light",
     initial: "SA",
   },
   {
     id: 9,
-    name: "Club Service Director",
+    name: "Pritesh Gadiya",
     position: "CSD",
-    description: "Financial Stewardship",
+    description: "Fostering Fellowship",
     image: "/Pritesh.JPG",
     gradient: "from-rose-tan-light to-mauve-wine-light",
     initial: "CSD",
   },
   {
     id: 10,
-    name: "Professional Development Director",
+    name: "Shrenik Dugad",
     position: "PDD",
-    description: "Financial Stewardship",
+    description: "Encouraging Growth & Learning",
     image: "/Shrenik.jpeg",
     gradient: "from-rose-tan-light to-mauve-wine-light",
     initial: "PDD",
   },
   {
     id: 11,
-    name: "International Service Director",
+    name: "Pranav Gandhi",
     position: "ISD",
-    description: "Financial Stewardship",
+    description: "Building Global Connections",
     image: "/Pranav.jpeg",
     gradient: "from-rose-tan-light to-mauve-wine-light",
     initial: "ISD",
   },
   {
     id: 12,
-    name: "Community Service Director",
+    name: "Lavish Lodha",
     position: "CMD",
-    description: "Financial Stewardship",
+    description: "Driving Social Impact",
     image: "/Lavish.png",
     gradient: "from-rose-tan-light to-mauve-wine-light",
     initial: "CMD",
   },
   {
     id: 13,
-    name: "Rotary Rotaract Relationship Officer",
+    name: "Jay Agarwal",
     position: "RRRO",
-    description: "Financial Stewardship",
+    description: "Strengthening Rotary Bonds",
     image: "",
     gradient: "from-rose-tan-light to-mauve-wine-light",
     initial: "RRRO",
   },
   {
     id: 14,
-    name: "Diversity Equity Inclusivity",
+    name: "Viraj Soni",
     position: "DEI",
-    description: "Financial Stewardship",
+    description: "Promoting Inclusivity",
     image: "",
     gradient: "from-rose-tan-light to-mauve-wine-light",
     initial: "DEI",
   },
   {
     id: 15,
-    name: "Public Relations Officer",
+    name: "Dinal Jain",
     position: "PRO",
-    description: "Financial Stewardship",
+    description: "Spreading Awareness",
     image: "/Dinal.jpeg",
     gradient: "from-rose-tan-light to-mauve-wine-light",
     initial: "PRO",
@@ -153,13 +153,13 @@ export default function Board() {
   return (
     <section id="board" className="py-16 px-6 lg:px-20 ">
       <div className="flex flex-col items-center justify-center text-center mb-8">
-  <h3 className="text-2xl md:text-3xl font-bold text-mauve-wine mb-4">
-    Board of Directors - RIY 2025-2026
-  </h3>
-  <p className="text-mauve-wine-light">
-    Meet the dedicated leaders driving our mission forward
-  </p>
-</div>
+        <h3 className="text-2xl md:text-3xl font-bold text-mauve-wine mb-4">
+          Board of Directors - RIY 2025-2026
+        </h3>
+        <p className="text-mauve-wine-light">
+          Meet the dedicated leaders driving our mission forward
+        </p>
+      </div>
 
       <div className="grid  md:grid-cols-2 grid-cols-1 gap-8">
         {boardMembers.map((member) => (

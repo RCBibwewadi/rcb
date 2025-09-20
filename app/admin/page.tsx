@@ -7,12 +7,12 @@ import Link from "next/link";
 import HeroEditor from "@/components/editors/HeroEditor";
 import AboutEditor from "@/components/editors/AboutEditor";
 import { ContentData } from "@/lib/types";
-import BoardEditor from "@/components/editors/BoardEditor";
 import ProjectsEditor from "@/components/editors/ProjectsEditor";
 import SiteSettingsEditor from "@/components/editors/SiteSettingsEditor";
 import ContactEditor from "@/components/editors/ContactEditor";
 import EventsEditor from "@/components/editors/EventsEditor";
 import { useToast } from "@/components/ui/ToastProvider";
+import BoardMembersEditor from "@/components/editors/BoardEditor";
 
 const initialContent: ContentData = {
   hero: {
@@ -298,7 +298,7 @@ export default function AdminPage() {
                 <ul className="space-y-2">
                   {[
                     "hero",
-                    "about",
+                    // "about",
                     "board",
                     "projects",
                     "events",
@@ -316,8 +316,8 @@ export default function AdminPage() {
                       >
                         {sec === "hero"
                           ? "Hero Section"
-                          : sec === "about"
-                          ? "About Section"
+                          // : sec === "about"
+                          // ? "About Section"
                           : sec === "board"
                           ? "Board Members"
                           : sec === "projects"
@@ -355,14 +355,14 @@ export default function AdminPage() {
                   <HeroEditor />
                 )}
 
-                {section === "about" && (
+                {/* {section === "about" && (
                   <AboutEditor
                     initialData={contentData.about}
                   />
-                )}
+                )} */}
                  {/* ✅ New Sections */}
     {section === "board" && (
-      <BoardEditor
+      <BoardMembersEditor
       />
     )}
 

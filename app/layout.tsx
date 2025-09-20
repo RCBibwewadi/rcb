@@ -29,7 +29,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-luxury-cream`}
       >
-        <main className="pt-16"><ToastProvider>{children}</ToastProvider></main>
+        <main><ToastProvider>{children}</ToastProvider></main>
       </body>
     </html>
   );
