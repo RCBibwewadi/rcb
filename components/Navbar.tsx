@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -11,9 +12,7 @@ export default function Navbar() {
       <div className="flex justify-between items-center h-16 px-4 sm:px-6 lg:px-8">
         {/* Logo */}
         <div className="flex items-center space-x-3 flex-shrink-0">
-          <div className="w-10 h-10 luxury-gradient rounded-full flex items-center justify-center">
-            <span className="text-white font-bold text-lg">R</span>
-          </div>
+          <Image src={"/logo.jpg"} alt={"Logo"} height={40} width={40} />
           <div className="hidden sm:block">
             <h1 className="text-lg font-semibold text-mauve-wine whitespace-nowrap">
               Rotaract Club of Bibwewadi Pune
@@ -32,7 +31,6 @@ export default function Navbar() {
           <Link href="#projects" className="text-mauve-wine hover:text-rose-tan font-medium transition-colors">Projects</Link>
           <Link href="#events" className="text-mauve-wine hover:text-rose-tan font-medium transition-colors">Events</Link>
           <Link href="#join" className="text-mauve-wine hover:text-rose-tan font-medium transition-colors">Join Us</Link>
-          <Link href="#contact" className="text-mauve-wine hover:text-rose-tan font-medium transition-colors">Contact</Link>
         </div>
 
         {/* Mobile Menu Button */}
@@ -74,7 +72,6 @@ export default function Navbar() {
             <Link href="#projects" className="text-mauve-wine hover:text-rose-tan font-medium py-2">Projects</Link>
             <Link href="#events" className="text-mauve-wine hover:text-rose-tan font-medium py-2">Events</Link>
             <Link href="#join" className="text-mauve-wine hover:text-rose-tan font-medium py-2">Join Us</Link>
-            <Link href="#contact" className="text-mauve-wine hover:text-rose-tan font-medium py-2">Contact</Link>
           </div>
         </div>
       )}

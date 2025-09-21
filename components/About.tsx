@@ -15,7 +15,7 @@ export default function About() {
           {/* Text Side */}
           <div>
             <h3 className="text-2xl font-semibold text-mauve-wine mb-6">
-              About Rotaract
+              About Rotaract Club of Bibwewadi
             </h3>
             <p className="text-mauve-wine-light mb-6 leading-relaxed">
               Rotaract is a youth organization of Rotary International for young
@@ -23,14 +23,22 @@ export default function About() {
               network and develop themselves both professionally and personally.
             </p>
             <p className="text-mauve-wine-light mb-6 leading-relaxed">
-              The Rotaract Club of Bibwewadi Pune is committed to making a
-              difference in our local community while fostering leadership,
-              fellowship, and service among young professionals.
+              <span className="font-bold">
+                The Rotaract Club of Bibwewadi Pune
+              </span>{" "}
+              is committed to making a difference in our local community while
+              fostering leadership, fellowship, and service among young
+              professionals.
             </p>
             <p className="text-mauve-wine-light leading-relaxed">
-              We work across five main avenues: Professional Development,
-              Community Service, Club Service, International Service, and
-              Diversity, Equity & Inclusivity.
+              As a Board of Directors, we work collectively across all avenues
+              to create a holistic impact in the lives of our members. From
+              social bonding and fundraising initiatives to hosting delegates
+              from other states and countries, our efforts go beyond projects —
+              they build lasting friendships, networks, and opportunities for
+              growth. At its core, our club is a close-knit family where
+              professionalism meets purpose, leaders are nurtured, and every
+              member is encouraged to grow, connect, and serve with meaning.
             </p>
           </div>
 
