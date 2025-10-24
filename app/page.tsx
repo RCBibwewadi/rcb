@@ -1,6 +1,5 @@
 import About from "@/components/About";
 import Board from "@/components/Board";
-import ContactSection from "@/components/ContactUs";
 import Events from "@/components/Events";
 import Footer from "@/components/Footer";
 import Hero from "@/components/Hero";

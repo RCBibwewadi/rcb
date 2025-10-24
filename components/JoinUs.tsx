@@ -1,6 +1,9 @@
 "use client";
+import { useForm, ValidationError } from "@formspree/react";
+
 
 export default function JoinUs() {
+  const [state, handleSubmit] = useForm("xvgweenl");
   return (
     <section
       id="join"
@@ -66,52 +69,95 @@ export default function JoinUs() {
             <h3 className="text-2xl font-semibold mb-6 text-center">
               Express Your Interest
             </h3>
-            <form className="space-y-6">
-              {[
-                {
-                  label: "Full Name",
-                  type: "text",
-                  placeholder: "Enter your full name",
-                },
-                {
-                  label: "Email Address",
-                  type: "email",
-                  placeholder: "Enter your email",
-                },
-                {
-                  label: "Phone Number",
-                  type: "tel",
-                  placeholder: "Enter your phone number",
-                },
-              ].map((field, i) => (
-                <div key={i}>
-                  <label className="block text-sm font-medium text-mauve-wine-dark mb-2">
-                    {field.label}
-                  </label>
-                  <input
-                    type={field.type}
-                    placeholder={field.placeholder}
-                    className="w-full px-4 py-3 border border-rose-tan-light rounded-lg focus:ring-2 focus:ring-rose-tan focus:border-transparent transition-all bg-white"
-                  />
-                </div>
-              ))}
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div>
+                <label className="block text-sm font-medium text-mauve-wine-dark mb-2">
+                  Full Name
+                </label>
+                <input
+                  id="name"
+                  type="text"
+                  name="name"
+                  placeholder="Enter your full name"
+                  required
+                  className="w-full px-4 py-3 border border-rose-tan-light rounded-lg focus:ring-2 focus:ring-rose-tan focus:border-transparent transition-all bg-white"
+                />
+                <ValidationError
+                  prefix="Name"
+                  field="name"
+                  errors={state.errors}
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-mauve-wine-dark mb-2">
+                  Email Address
+                </label>
+                <input
+                  id="email"
+                  type="email"
+                  name="email"
+                  placeholder="Enter your email"
+                  required
+                  className="w-full px-4 py-3 border border-rose-tan-light rounded-lg focus:ring-2 focus:ring-rose-tan focus:border-transparent transition-all bg-white"
+                />
+                <ValidationError
+                  prefix="Email"
+                  field="email"
+                  errors={state.errors}
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-mauve-wine-dark mb-2">
+                  Phone Number
+                </label>
+                <input
+                  id="phone"
+                  type="tel"
+                  name="phone"
+                  placeholder="Enter your phone number"
+                  required
+                  className="w-full px-4 py-3 border border-rose-tan-light rounded-lg focus:ring-2 focus:ring-rose-tan focus:border-transparent transition-all bg-white"
+                />
+                <ValidationError
+                  prefix="Phone"
+                  field="phone"
+                  errors={state.errors}
+                />
+              </div>
+
               <div>
                 <label className="block text-sm font-medium text-mauve-wine-dark mb-2">
                   Message
                 </label>
                 <textarea
+                  id="message"
+                  name="message"
                   rows={4}
                   placeholder="Tell us why you're interested in joining Rotaract..."
                   className="w-full px-4 py-3 border border-rose-tan-light rounded-lg focus:ring-2 focus:ring-rose-tan focus:border-transparent transition-all bg-white"
                 />
+                <ValidationError
+                  prefix="Message"
+                  field="message"
+                  errors={state.errors}
+                />
               </div>
-              <button
-  type="submit"
-  className="w-full bg-gradient-to-r from-rose-tan to-mauve-wine hover:from-rose-tan-dark hover:to-mauve-wine-dark text-white font-semibold py-3 rounded-lg transition-all duration-300 luxury-shadow"
->
-  {`I'm Interested!`}
-</button>
 
+              <button
+                type="submit"
+                disabled={state.submitting}
+                className="w-full bg-gradient-to-r from-rose-tan to-mauve-wine hover:from-rose-tan-dark hover:to-mauve-wine-dark text-white font-semibold py-3 rounded-lg transition-all duration-300 luxury-shadow"
+              >
+                {state.submitting ? "Sending..." : `I'm Interested!`}
+              </button>
+
+              {state.succeeded && (
+                <p className="text-center text-green-600 mt-4">
+                  ✅ Thanks for your interest! We’ll contact you soon.
+                </p>
+              )}
             </form>
           </div>
         </div>
