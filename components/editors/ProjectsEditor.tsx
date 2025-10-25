@@ -1,70 +1,179 @@
 "use client";
-import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+
+interface ProjectImage {
+  id?: string;
+  image_url: string;
+}
 
 interface Project {
-  title: string;
-  description: string;
-  image: string;
+  id?: string;
+  project_title: string;
+  project_description: string;
+  project_detail_description?: string;
+  project_images?: ProjectImage[];
 }
 
-interface ProjectsEditorProps {
-  initialData: Project[];
-  onSave: (projects: Project[]) => void;
-}
+const ProjectsEditor: React.FC = () => {
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [loading, setLoading] = useState(false);
+  console.log(projects);
+  // Fetch existing projects on mount
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const res = await fetch("/api/projects", { cache: "no-store" });
+        const data = await res.json();
+        setProjects(data);
+      } catch (err) {
+        console.error("Error fetching projects:", err);
+      }
+    };
+    fetchProjects();
+  }, []);
 
-const ProjectsEditor: React.FC<ProjectsEditorProps> = ({ initialData, onSave }) => {
-  const [projects, setProjects] = useState<Project[]>(initialData || []);
-
-  // Add a new project
+  // Add a new blank project
   const addProject = () => {
     setProjects([
       ...projects,
-      { title: "", description: "", image: "" },
+      {
+        project_title: "",
+        project_description: "",
+        project_detail_description: "",
+        project_images: [],
+      },
     ]);
   };
 
-  // Delete a project
-  const deleteProject = (index: number) => {
-    const updated = [...projects];
-    updated.splice(index, 1);
-    setProjects(updated);
-  };
-
-  // Update a project field
-  const updateProject = (index: number, field: keyof Project, value: string) => {
+  // Update string fields safely
+  const updateProjectField = (
+    index: number,
+    field:
+      | "project_title"
+      | "project_description"
+      | "project_detail_description",
+    value: string
+  ) => {
     const updated = [...projects];
     updated[index][field] = value;
     setProjects(updated);
   };
 
-  // Save all projects
-  const saveProjects = () => {
-    onSave(projects);
+  // Update images safely
+  const updateProjectImages = (index: number, images: ProjectImage[]) => {
+    const updated = [...projects];
+    updated[index].project_images = images;
+    setProjects(updated);
   };
 
-  // Image upload handler
-  const handleImageUpload = (index: number, file: File) => {
+  // Upload image to Supabase
+  const handleImageUpload = async (index: number, file: File) => {
     if (!file.type.startsWith("image/")) {
       alert("Please select a valid image file.");
       return;
     }
+
     if (file.size > 5 * 1024 * 1024) {
       alert("Image size must be less than 5MB.");
       return;
     }
 
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      updateProject(index, "image", e.target?.result as string);
-    };
-    reader.readAsDataURL(file);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const res = await fetch("/api/projects/upload", {
+        method: "POST",
+        body: formData,
+      });
+      const data = await res.json();
+
+      if (data.url) {
+        const newImage: ProjectImage = { image_url: data.url };
+        updateProjectImages(index, [
+          ...(projects[index].project_images || []),
+          newImage,
+        ]);
+      } else {
+        alert("Image upload failed.");
+      }
+    } catch (err) {
+      console.error("Error uploading image:", err);
+      alert("Failed to upload image.");
+    }
+  };
+
+  // Delete an image from project
+  const deleteProjectImage = (projectIndex: number, imageIndex: number) => {
+    const images = [...(projects[projectIndex].project_images || [])];
+    images.splice(imageIndex, 1);
+    updateProjectImages(projectIndex, images);
+  };
+
+  // Delete a project
+  const deleteProject = async (index: number) => {
+    const project = projects[index];
+    if (project.id) {
+      try {
+        await fetch(`/api/projects/${project.id}`, { method: "DELETE" });
+      } catch (err) {
+        console.error("Error deleting project:", err);
+      }
+    }
+    const updated = [...projects];
+    updated.splice(index, 1);
+    setProjects(updated);
+  };
+
+  // Save all projects
+  const saveProjects = async () => {
+    setLoading(true);
+    try {
+      for (const project of projects) {
+        if (project.id) {
+          // Update existing project
+          await fetch(`/api/projects/${project.id}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              project_title: project.project_title,
+              project_description: project.project_description,
+              project_detail_description: project.project_detail_description,
+              images: project.project_images?.map((img) => img.image_url),
+            }),
+          });
+        } else {
+          // Create new project
+          const res = await fetch("/api/projects", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              project_title: project.project_title,
+              project_description: project.project_description,
+              project_detail_description: project.project_detail_description,
+              images: project.project_images?.map((img) => img.image_url) || [],
+            }),
+          });
+          const data = await res.json();
+          project.id = data.project?.id;
+        }
+      }
+
+      alert("Projects saved successfully!");
+    } catch (err) {
+      console.error("Error saving projects:", err);
+      alert("Error saving projects.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="glass-effect rounded-xl p-6 luxury-shadow fade-in">
+    <div className="glass-effect rounded-xl p-6 lg:p-8 luxury-shadow fade-in bg-luxury-cream">
       <div className="flex justify-between items-center mb-6">
-        <h3 className="text-2xl font-bold text-mauve-wine">Projects</h3>
+        <h3 className="text-2xl font-bold text-mauve-wine">
+          Manage Community Projects
+        </h3>
         <button
           onClick={addProject}
           className="bg-rose-tan text-white px-4 py-2 rounded-lg font-semibold hover:bg-rose-tan-dark transition-colors"
@@ -73,128 +182,133 @@ const ProjectsEditor: React.FC<ProjectsEditorProps> = ({ initialData, onSave }) 
         </button>
       </div>
 
-      <div className="space-y-4">
+      <div className="space-y-6">
         {projects.map((project, index) => (
           <div
-            key={index}
-            className="border border-rose-tan-light rounded-lg p-4"
+            key={project.id || index}
+            className="bg-white rounded-xl p-5 border border-rose-tan-light luxury-shadow transition-transform duration-300 hover:scale-[1.01]"
           >
             <div className="grid grid-cols-1 gap-4">
               {/* Title */}
               <div>
                 <label className="block text-sm font-medium text-mauve-wine-dark mb-2">
-                  Title
+                  Project Title
                 </label>
                 <input
                   type="text"
-                  value={project.title}
+                  value={project.project_title}
                   onChange={(e) =>
-                    updateProject(index, "title", e.target.value)
+                    updateProjectField(index, "project_title", e.target.value)
                   }
                   className="w-full px-3 py-2 border border-rose-tan-light rounded focus:ring-2 focus:ring-rose-tan"
                 />
               </div>
 
-              {/* Description */}
+              {/* Short Description */}
               <div>
                 <label className="block text-sm font-medium text-mauve-wine-dark mb-2">
-                  Description
+                  Short Description
+                </label>
+                <textarea
+                  rows={2}
+                  value={project.project_description}
+                  onChange={(e) =>
+                    updateProjectField(
+                      index,
+                      "project_description",
+                      e.target.value
+                    )
+                  }
+                  className="w-full px-3 py-2 border border-rose-tan-light rounded focus:ring-2 focus:ring-rose-tan"
+                />
+              </div>
+
+              {/* Detailed Description */}
+              <div>
+                <label className="block text-sm font-medium text-mauve-wine-dark mb-2">
+                  Detailed Description
                 </label>
                 <textarea
                   rows={3}
-                  value={project.description}
+                  value={project.project_detail_description || ""}
                   onChange={(e) =>
-                    updateProject(index, "description", e.target.value)
+                    updateProjectField(
+                      index,
+                      "project_detail_description",
+                      e.target.value
+                    )
                   }
                   className="w-full px-3 py-2 border border-rose-tan-light rounded focus:ring-2 focus:ring-rose-tan"
                 />
               </div>
 
-              {/* Image uploader */}
+              {/* Images */}
               <div>
                 <label className="block text-sm font-medium text-mauve-wine-dark mb-2">
-                  Project Image
+                  Project Images
                 </label>
-
-                <div className="flex items-center space-x-4">
-                  <div className="flex-1">
-                    <input
-                      type="url"
-                      placeholder="Enter image URL"
-                      value={project.image}
-                      onChange={(e) =>
-                        updateProject(index, "image", e.target.value)
-                      }
-                      className="w-full px-3 py-2 border border-rose-tan-light rounded focus:ring-2 focus:ring-rose-tan"
-                    />
-                  </div>
-
-                  <div className="flex flex-col space-y-2">
-                    <input
-                      type="file"
-                      accept="image/*"
-                      id={`file-${index}`}
-                      className="hidden"
-                      onChange={(e) => {
-                        if (e.target.files?.[0]) {
-                          handleImageUpload(index, e.target.files[0]);
-                        }
-                      }}
-                    />
-                    <button
-                      type="button"
-                      onClick={() =>
-                        document.getElementById(`file-${index}`)?.click()
-                      }
-                      className="bg-rose-tan text-white px-4 py-2 rounded-lg font-medium hover:bg-rose-tan-dark transition-colors text-sm"
-                    >
-                      Upload Image
-                    </button>
-
-                    {project.image && (
+                <div className="flex flex-wrap gap-3 mb-2">
+                  {(project.project_images || []).map((img, imgIndex) => (
+                    <div key={imgIndex} className="relative w-24 h-24">
+                      <img
+                        src={img.image_url}
+                        alt="Project"
+                        className="w-full h-full object-cover rounded border"
+                      />
                       <button
-                        type="button"
-                        onClick={() => updateProject(index, "image", "")}
-                        className="bg-red-500 text-white px-4 py-2 rounded-lg font-medium hover:bg-red-600 transition-colors text-sm"
+                        onClick={() => deleteProjectImage(index, imgIndex)}
+                        className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs"
                       >
-                        Remove Image
+                        ×
                       </button>
-                    )}
-                  </div>
+                    </div>
+                  ))}
                 </div>
-
-                {project.image && (
-                  <div className="mt-3">
-                    <Image
-                      src={project.image}
-                      alt="Preview"
-                      className="h-20 w-20 object-cover rounded-lg border"
-                    />
-                  </div>
-                )}
+                <input
+                  type="file"
+                  accept="image/*"
+                  id={`file-${index}`}
+                  className="hidden"
+                  onChange={(e) => {
+                    if (e.target.files?.[0])
+                      handleImageUpload(index, e.target.files[0]);
+                  }}
+                />
+                <button
+                  type="button"
+                  onClick={() =>
+                    document.getElementById(`file-${index}`)?.click()
+                  }
+                  className="bg-rose-tan text-white px-4 py-2 rounded-lg font-medium hover:bg-rose-tan-dark transition-colors text-sm"
+                >
+                  Upload Image
+                </button>
               </div>
             </div>
 
-            {/* Delete project */}
+            {/* Delete Project */}
             <div className="mt-4 flex justify-end">
               <button
                 onClick={() => deleteProject(index)}
                 className="text-red-500 hover:text-red-700 font-medium"
               >
-                Delete
+                Delete Project
               </button>
             </div>
           </div>
         ))}
       </div>
 
-      {/* Save all projects */}
-      <div className="mt-6">
+      {/* Save All */}
+      <div className="mt-8 flex justify-end">
         <button
           onClick={saveProjects}
-          className="luxury-gradient text-white px-6 py-3 rounded-lg font-semibold hover:opacity-90 transition-all"
+          disabled={loading}
+          className={`luxury-gradient text-white px-6 py-3 rounded-lg font-semibold transition-all ${
+            loading ? "opacity-60 cursor-not-allowed" : "hover:opacity-90"
+          }`}
         >
-          Save All Changes
+          {loading ? "Saving..." : "Save All Changes"}
         </button>
       </div>
     </div>

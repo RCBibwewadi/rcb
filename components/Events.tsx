@@ -58,38 +58,49 @@ export default function EventsSection() {
         </div>
 
         {/* List View */}
-         {view === "list" && (
-        <div className="max-w-4xl mx-auto space-y-6">
-          {events.map((event) => (
-            <div key={event.id} className="glass-effect rounded-xl p-6 lg:p-8 hover-scale luxury-shadow">
-              <div className="flex flex-col md:flex-row md:items-center justify-between">
-                <div className="flex-1">
-                  <div className="flex items-center mb-4">
-                    <div className="bg-gradient-to-r from-rose-tan to-rose-tan-dark text-white px-4 py-2 rounded-lg font-semibold text-sm luxury-shadow">
-                      {new Date(event.date).toLocaleDateString("en-US", { day: "2-digit", month: "short", year: "numeric" })}
+        {view === "list" && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto space-y-6">
+            {events.map((event) => (
+              <div
+                key={event.id}
+                className="glass-effect rounded-xl p-6 lg:p-8 hover-scale luxury-shadow"
+              >
+                <div className="flex flex-col md:flex-row md:items-center justify-between">
+                  <div className="flex-1">
+                    <div className="flex items-center mb-4">
+                      <div className="bg-gradient-to-r from-rose-tan to-rose-tan-dark text-white px-4 py-2 rounded-lg font-semibold text-sm luxury-shadow">
+                        {new Date(event.date).toLocaleDateString("en-US", {
+                          day: "2-digit",
+                          month: "short",
+                          year: "numeric",
+                        })}
+                      </div>
+                      <div className="ml-4 text-mauve-wine-light">
+                        <span className="font-medium">{event.time}</span>
+                      </div>
                     </div>
-                    <div className="ml-4 text-mauve-wine-light">
-                      <span className="font-medium">{event.time}</span>
-                    </div>
+                    <h3 className="text-xl font-semibold text-mauve-wine mb-3">
+                      {event.title}
+                    </h3>
+                    <p className="text-mauve-wine-light mb-4 leading-relaxed">
+                      {event.description}
+                    </p>
+                    <p className="text-sm text-rose-tan font-medium">
+                      <span className="font-semibold">Location:</span>{" "}
+                      {event.location}
+                    </p>
                   </div>
-                  <h3 className="text-xl font-semibold text-mauve-wine mb-3">{event.title}</h3>
-                  <p className="text-mauve-wine-light mb-4 leading-relaxed">{event.description}</p>
-                  <p className="text-sm text-rose-tan font-medium">
-                    <span className="font-semibold">Location:</span> {event.location}
-                  </p>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
-      )}
+            ))}
+          </div>
+        )}
 
         {/* Calendar View */}
         {view === "calendar" && (
-           <main className="p-8">
+          <main className="p-8">
             <CalenderView />
-           </main>
-          
+          </main>
         )}
       </div>
     </section>
