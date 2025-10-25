@@ -7,12 +7,12 @@ import Link from "next/link";
 import HeroEditor from "@/components/editors/HeroEditor";
 import AboutEditor from "@/components/editors/AboutEditor";
 import { ContentData } from "@/lib/types";
-import ProjectsEditor from "@/components/editors/ProjectsEditor";
 import SiteSettingsEditor from "@/components/editors/SiteSettingsEditor";
 import ContactEditor from "@/components/editors/ContactEditor";
 import EventsEditor from "@/components/editors/EventsEditor";
 import { useToast } from "@/components/ui/ToastProvider";
 import BoardMembersEditor from "@/components/editors/BoardEditor";
+import ProjectsEditor from "@/components/editors/ProjectsEditor";
 
 const initialContent: ContentData = {
   hero: {
@@ -368,8 +368,6 @@ export default function AdminPage() {
 
     {section === "projects" && (
       <ProjectsEditor
-        initialData={contentData.projects}
-        onSave={(d) => handleSave("projects", d)}
       />
     )}
 

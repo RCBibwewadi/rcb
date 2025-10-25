@@ -1,58 +1,88 @@
-import { supabaseServer } from "@/lib/supabaseClient";
 import { NextRequest, NextResponse } from "next/server";
+import { supabaseServer } from "@/lib/supabaseClient";
 
-// ✅ GET one project with images
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
-  const { id } = params;
-  const { data, error } = await supabaseServer
-    .from("projects")
-    .select("*, project_images(image_url)")
-    .eq("id", id)
-    .single();
+  try {
+    const { id } = await context.params;
 
-  if (error)
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    const { data, error } = await supabaseServer
+      .from("projects")
+      .select(
+        `
+        *,
+        project_images:project_images (image_url)
+      `
+      )
+      .eq("id", id)
+      .single();
 
-  return NextResponse.json(data);
+    if (error) throw error;
+
+    return NextResponse.json(data);
+  } catch (err) {
+    console.error(err);
+    return NextResponse.json({ error: "Project not found" }, { status: 404 });
+  }
 }
 
-// ✅ UPDATE project details
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
-  const { id } = params;
-  const updates = await req.json();
+  try {
+    const { id } = await context.params;
+    const updates = await req.json();
 
-  const { error } = await supabaseServer
-    .from("projects")
-    .update(updates)
-    .eq("id", id);
+    const { data, error } = await supabaseServer
+      .from("projects")
+      .update({
+        project_title: updates.project_title,
+        project_description: updates.project_description,
+        project_detail_description: updates.project_detail_description,
+      })
+      .eq("id", id)
+      .select()
+      .single();
 
-  if (error)
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    if (error) throw error;
 
-  return NextResponse.json({ message: "Project updated successfully" });
+    return NextResponse.json({ project: data });
+  } catch (err) {
+    console.error(err);
+    return NextResponse.json(
+      { error: "Failed to update project" },
+      { status: 500 }
+    );
+  }
 }
 
-// ✅ DELETE project and its images
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
-  const { id } = params;
+  try {
+    const { id } = await context.params;
 
-  // Delete images (optional — Supabase can cascade delete if FK is set)
-  await supabaseServer.from("project_images").delete().eq("project_id", id);
+    // Delete related project images first
+    await supabaseServer.from("project_images").delete().eq("project_id", id);
 
-  // Delete project
-  const { error } = await supabaseServer.from("projects").delete().eq("id", id);
+    // Delete the project
+    const { error } = await supabaseServer
+      .from("projects")
+      .delete()
+      .eq("id", id);
 
-  if (error)
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    if (error) throw error;
 
-  return NextResponse.json({ message: "Project deleted successfully" });
+    return NextResponse.json({ message: "Project deleted successfully" });
+  } catch (err) {
+    console.error(err);
+    return NextResponse.json(
+      { error: "Failed to delete project" },
+      { status: 500 }
+    );
+  }
 }
