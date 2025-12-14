@@ -69,6 +69,13 @@ const ProjectsEditor: React.FC = () => {
 
   // Upload image to Supabase
   const handleImageUpload = async (index: number, file: File) => {
+    const project = projects[index];
+
+    if (!project.id) {
+      alert("Please save the project before uploading images.");
+      return;
+    }
+
     if (!file.type.startsWith("image/")) {
       alert("Please select a valid image file.");
       return;
@@ -80,36 +87,74 @@ const ProjectsEditor: React.FC = () => {
     }
 
     try {
+      // 1️⃣ Upload to storage
       const formData = new FormData();
       formData.append("file", file);
 
-      const res = await fetch("/api/projects/upload", {
+      const uploadRes = await fetch("/api/projects/upload", {
         method: "POST",
         body: formData,
       });
-      const data = await res.json();
 
-      if (data.url) {
-        const newImage: ProjectImage = { image_url: data.url };
-        updateProjectImages(index, [
-          ...(projects[index].project_images || []),
-          newImage,
-        ]);
-      } else {
-        alert("Image upload failed.");
+      const uploadData = await uploadRes.json();
+
+      if (!uploadData.url) {
+        alert("Image upload failed");
+        return;
       }
+
+      // 2️⃣ Attach image to project
+      const attachRes = await fetch("/api/projects/images", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          project_id: project.id,
+          image_url: uploadData.url,
+        }),
+      });
+
+      const attachData = await attachRes.json();
+
+      if (!attachData.image) {
+        alert("Failed to attach image");
+        return;
+      }
+
+      // 3️⃣ Update UI with DB-returned row
+      updateProjectImages(index, [
+        ...(project.project_images || []),
+        attachData.image,
+      ]);
     } catch (err) {
       console.error("Error uploading image:", err);
       alert("Failed to upload image.");
     }
   };
+  
 
   // Delete an image from project
-  const deleteProjectImage = (projectIndex: number, imageIndex: number) => {
-    const images = [...(projects[projectIndex].project_images || [])];
-    images.splice(imageIndex, 1);
-    updateProjectImages(projectIndex, images);
+  const deleteProjectImage = async (
+    projectIndex: number,
+    imageIndex: number
+  ) => {
+    const project = projects[projectIndex];
+    const image = project.project_images?.[imageIndex];
+
+    if (!image?.id) return;
+
+    try {
+      await fetch(`/api/projects/images/${image.id}`, {
+        method: "DELETE",
+      });
+
+      const images = [...project.project_images!];
+      images.splice(imageIndex, 1);
+      updateProjectImages(projectIndex, images);
+    } catch (err) {
+      console.error("Failed to delete image", err);
+    }
   };
+  
 
   // Delete a project
   const deleteProject = async (index: number) => {
@@ -132,7 +177,6 @@ const ProjectsEditor: React.FC = () => {
     try {
       for (const project of projects) {
         if (project.id) {
-          // Update existing project
           await fetch(`/api/projects/${project.id}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
@@ -140,11 +184,9 @@ const ProjectsEditor: React.FC = () => {
               project_title: project.project_title,
               project_description: project.project_description,
               project_detail_description: project.project_detail_description,
-              images: project.project_images?.map((img) => img.image_url),
             }),
           });
         } else {
-          // Create new project
           const res = await fetch("/api/projects", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -152,11 +194,11 @@ const ProjectsEditor: React.FC = () => {
               project_title: project.project_title,
               project_description: project.project_description,
               project_detail_description: project.project_detail_description,
-              images: project.project_images?.map((img) => img.image_url) || [],
             }),
           });
+
           const data = await res.json();
-          project.id = data.project?.id;
+          project.id = data.project.id;
         }
       }
 
@@ -168,6 +210,7 @@ const ProjectsEditor: React.FC = () => {
       setLoading(false);
     }
   };
+  
 
   return (
     <div className="glass-effect rounded-xl p-6 lg:p-8 luxury-shadow fade-in bg-luxury-cream">

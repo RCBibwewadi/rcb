@@ -32,10 +32,10 @@ const boardMembers: BoardMember[] = [
   },
   {
     id: 3,
-    name: "Hitansh Parmar",
+    name: "Anisha Shah",
     position: "Joint Secretary",
     description: "Ensuring Smooth Operations",
-    image: "/Hitansh.png",
+    image: "/Anisha.jpeg",
     gradient: "from-rose-tan-light to-mauve-wine-light",
     initial: "JS",
   },
@@ -122,30 +122,12 @@ const boardMembers: BoardMember[] = [
   },
   {
     id: 13,
-    name: "Jay Agarwal",
-    position: "RRRO",
-    description: "Strengthening Rotary Bonds",
-    image: "",
-    gradient: "from-rose-tan-light to-mauve-wine-light",
-    initial: "RRRO",
-  },
-  {
-    id: 14,
     name: "Viraj Soni",
     position: "DEI",
     description: "Promoting Inclusivity",
     image: "",
     gradient: "from-rose-tan-light to-mauve-wine-light",
     initial: "DEI",
-  },
-  {
-    id: 15,
-    name: "Dinal Jain",
-    position: "PRO",
-    description: "Spreading Awareness",
-    image: "/Dinal.jpeg",
-    gradient: "from-rose-tan-light to-mauve-wine-light",
-    initial: "PRO",
   },
 ];
 
