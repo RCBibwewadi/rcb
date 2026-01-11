@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef, JSX } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface QuickItem {
   id: string | number;
@@ -24,7 +25,6 @@ export default function QuickPage() {
     try {
       const res = await fetch("/api/quick", { cache: "force-cache" });
       const data = await res.json();
-
       setItems(Array.isArray(data) ? data : []);
     } catch (err) {
       console.error("Failed fetching quick items", err);
@@ -52,15 +52,53 @@ export default function QuickPage() {
       </div>
     );
   }
+
+  const renderItem = (item: QuickItem) => (
+    <div
+      key={item.id}
+      className="min-w-[300px] bg-white rounded-2xl shadow-md overflow-hidden border snap-start"
+    >
+      <div className="relative w-full aspect-video bg-gray-200">
+        {item.media_type === "image" && (
+          <>
+            <img
+              src={item.thumbnail_url}
+              alt={item.title || ""}
+              className="w-full h-full object-cover"
+            />
+            <button
+              onClick={() =>
+                setPreviewImage(item.media_url || item.thumbnail_url)
+              }
+              className="absolute bottom-2 right-2 px-3 py-1 rounded bg-black/60 text-white text-sm hover:bg-black/80"
+            >
+              Preview
+            </button>
+          </>
+        )}
+
+        {item.media_type === "video" && (
+          <video controls className="w-full h-full object-cover">
+            <source src={item.media_url} />
+          </video>
+        )}
+      </div>
+
+      <div className="p-4">
+        <h3 className="font-semibold text-gray-800 text-lg">{item.title}</h3>
+        <p className="text-gray-600 text-sm mt-1">{item.description}</p>
+      </div>
+    </div>
+  );
+
   return (
     <>
       <div className="min-h-screen bg-rose-tan-light">
         <div className="max-w-6xl mx-auto px-4 py-5">
           <div className="flex items-center justify-center h-16 gap-2">
             <Link href="/">
-              <Image src={"/logo.jpg"} alt={"Logo"} height={40} width={40} />
+              <Image src="/logo.jpg" alt="Logo" height={40} width={40} />
             </Link>
-
             <h1 className="text-4xl font-bold text-mauve-wine">
               Rotaract Moments
             </h1>
@@ -79,63 +117,22 @@ export default function QuickPage() {
                   {section.label}
                 </h2>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                  {filtered.map((item) => (
-                    <div
-                      key={item.id}
-                      className="bg-white rounded-2xl shadow-md overflow-hidden border"
-                    >
-                      <div className="relative w-full aspect-video bg-gray-200">
-                        {item.media_type === "image" && (
-                          <>
-                            <img
-                              src={item.thumbnail_url}
-                              alt={item.title || ""}
-                              loading="lazy"
-                              decoding="async"
-                              className="w-full h-full object-cover"
-                            />
-                            <button
-                              onClick={() =>
-                                setPreviewImage(
-                                  item.media_url || item.thumbnail_url
-                                )
-                              }
-                              className="absolute bottom-2 right-2 px-3 py-1 rounded bg-black/60 text-white text-sm hover:bg-black/80"
-                            >
-                              Preview
-                            </button>
-                          </>
-                        )}
-
-                        {item.media_type === "video" && (
-                          <video
-                            controls
-                            preload="metadata"
-                            className="w-full h-full object-cover"
-                          >
-                            <source src={item.media_url} />
-                          </video>
-                        )}
-                      </div>
-
-                      <div className="p-4">
-                        <h3 className="font-semibold text-gray-800 text-lg">
-                          {item.title}
-                        </h3>
-
-                        <p className="text-gray-600 text-sm mt-1">
-                          {item.description}
-                        </p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                {filtered.length <= 3 ? (
+                  /* GRID */
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                    {filtered.map(renderItem)}
+                  </div>
+                ) : (
+                  /* SLIDER */
+                  <Slider items={filtered} renderItem={renderItem} />
+                )}
               </div>
             );
           })}
         </div>
       </div>
+
+      {/* IMAGE PREVIEW MODAL */}
       {previewImage && (
         <div className="fixed inset-0 bg-black/70 z-50 flex">
           <div className="relative bg-white max-w-5xl w-full mx-auto my-6 rounded shadow overflow-y-auto max-h-[90vh]">
@@ -151,5 +148,54 @@ export default function QuickPage() {
         </div>
       )}
     </>
+  );
+}
+
+/* ================= SLIDER COMPONENT ================= */
+
+function Slider({
+  items,
+  renderItem,
+}: {
+  items: QuickItem[];
+  renderItem: (item: QuickItem) => JSX.Element;
+}) {
+  const sliderRef = useRef<HTMLDivElement>(null);
+
+  const scroll = (dir: "left" | "right") => {
+    if (!sliderRef.current) return;
+    const width = sliderRef.current.clientWidth;
+    sliderRef.current.scrollBy({
+      left: dir === "left" ? -width : width,
+      behavior: "smooth",
+    });
+  };
+
+  return (
+    <div className="relative">
+      {/* LEFT CHEVRON */}
+      <button
+        onClick={() => scroll("left")}
+        className="absolute -left-4 top-1/2 -translate-y-1/2 z-10 bg-white shadow rounded-full p-2"
+      >
+        <ChevronLeft />
+      </button>
+
+      {/* SLIDER */}
+      <div
+        ref={sliderRef}
+        className="flex gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory scrollbar-hide px-2"
+      >
+        {items.map(renderItem)}
+      </div>
+
+      {/* RIGHT CHEVRON */}
+      <button
+        onClick={() => scroll("right")}
+        className="absolute -right-4 top-1/2 -translate-y-1/2 z-10 bg-white shadow rounded-full p-2"
+      >
+        <ChevronRight />
+      </button>
+    </div>
   );
 }

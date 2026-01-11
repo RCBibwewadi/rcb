@@ -80,3 +80,10 @@ body {
   gap: 0.5rem; /* adjust spacing */
 }
 
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
