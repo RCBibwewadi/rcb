@@ -12,31 +12,37 @@ export interface IEvent {
   description: string;
 }
 
-export default function EventsEditor({ initialData }: { initialData: IEvent[] }) {
+export default function EventsEditor() {
   const { showToast } = useToast();
-  const [events, setEvents] = useState<IEvent[]>(initialData || []);
+  const [events, setEvents] = useState<IEvent[]>([]);
   const [loading, setLoading] = useState(false);
-  const [popup, setPopup] = useState<{ message: string; type: "success" | "error" } | null>(null);
+  const [popup, setPopup] = useState<{
+    message: string;
+    type: "success" | "error";
+  } | null>(null);
 
-
-   useEffect(() => {
+  useEffect(() => {
     const fetchEvents = async () => {
-      try{
-      const res = await fetch("/api/events");
-      if (res.ok) {
-        const data = await res.json();
-        setEvents(data);
-      } else {
+      try {
+        const res = await fetch("/api/events");
+        if (res.ok) {
+          const data = await res.json();
+          setEvents(data);
+        } else {
           showToast("Failed to fetch events", "error");
         }
       } catch {
         showToast("Error fetching events", "error");
-      }  
+      }
     };
     fetchEvents();
   }, []);
 
-  const addEvent = () => setEvents([...events, { title: "", date: "", time: "", location: "", description: "" }]);
+  const addEvent = () =>
+    setEvents([
+      ...events,
+      { title: "", date: "", time: "", location: "", description: "" },
+    ]);
   const updateEvent = (index: number, field: keyof IEvent, value: string) => {
     const updated = [...events];
     updated[index][field] = value;
@@ -61,7 +67,7 @@ export default function EventsEditor({ initialData }: { initialData: IEvent[] })
       );
       showToast(event.id ? "Event updated!" : "Event created!", "success");
     } catch (err) {
-       showToast("Error saving event", "error");
+      showToast("Error saving event", "error");
       console.error(err);
     } finally {
       setLoading(false);
@@ -92,7 +98,7 @@ export default function EventsEditor({ initialData }: { initialData: IEvent[] })
     }
   };
 
-   return (
+  return (
     <div className="glass-effect rounded-xl p-6 luxury-shadow fade-in">
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
@@ -117,35 +123,27 @@ export default function EventsEditor({ initialData }: { initialData: IEvent[] })
                 type="text"
                 placeholder="Title"
                 value={event.title}
-                onChange={(e) =>
-                  updateEvent(index, "title", e.target.value)
-                }
+                onChange={(e) => updateEvent(index, "title", e.target.value)}
                 className="w-full px-3 py-2 border rounded"
               />
               <input
                 type="date"
                 value={event.date}
-                onChange={(e) =>
-                  updateEvent(index, "date", e.target.value)
-                }
+                onChange={(e) => updateEvent(index, "date", e.target.value)}
                 className="w-full px-3 py-2 border rounded"
               />
               <input
                 type="text"
                 placeholder="Time"
                 value={event.time}
-                onChange={(e) =>
-                  updateEvent(index, "time", e.target.value)
-                }
+                onChange={(e) => updateEvent(index, "time", e.target.value)}
                 className="w-full px-3 py-2 border rounded"
               />
               <input
                 type="text"
                 placeholder="Location"
                 value={event.location}
-                onChange={(e) =>
-                  updateEvent(index, "location", e.target.value)
-                }
+                onChange={(e) => updateEvent(index, "location", e.target.value)}
                 className="w-full px-3 py-2 border rounded"
               />
             </div>

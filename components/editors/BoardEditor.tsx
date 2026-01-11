@@ -4,7 +4,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { createClient } from "@supabase/supabase-js";
 import { useToast } from "../ui/ToastProvider";
-import Image from "next/image";
 
 // ==========================
 // 🔹 Supabase Configuration
@@ -26,24 +25,7 @@ enum ToastType {
   Success = "success",
 }
 
-enum DefaultValues {
-  Gradient = "from-mauve-wine to-rose-tan",
-  Initial = "M",
-  Label = "LEADER",
-}
-
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
-
-const cardColors = [
-  "bg-gradient-to-br from-mauve-wine-dark to-mauve-wine",
-  "bg-gradient-to-br from-rose-tan to-rose-tan-dark",
-  "bg-gradient-to-br from-luxury-gold to-rose-tan",
-  "bg-gradient-to-br from-rose-tan-light to-mauve-wine-light",
-  "bg-gradient-to-br from-mauve-wine to-rose-tan",
-  "bg-gradient-to-br from-luxury-gold to-mauve-wine-dark",
-  "bg-gradient-to-br from-rose-tan-dark to-mauve-wine-light",
-  "bg-gradient-to-br from-mauve-wine-light to-luxury-gold",
-];
 
 // ==========================
 // 🔹 Interfaces
@@ -53,11 +35,12 @@ interface BoardMember {
   name: string;
   position: string;
   description: string;
-  image: string; // Supabase public URL
-  gradient: string;
+  image_url: string;
   initial: string;
-  label: string;
   sequence: number;
+  linkedIn?: string;
+  instagram?: string;
+  email?: string;
 }
 
 // ==========================
@@ -107,7 +90,7 @@ export default function BoardMembersEditor() {
   };
 
   const removeImage = (index: number) => {
-    updateMemberField(index, "image", "");
+    updateMemberField(index, "image_url", "");
   };
 
   // ==========================
@@ -121,21 +104,43 @@ export default function BoardMembersEditor() {
         name: "",
         position: "",
         description: "",
-        image: "",
-        gradient: DefaultValues.Gradient,
-        initial: DefaultValues.Initial,
-        label: DefaultValues.Label,
+        image_url: "",
+        initial: "",
         sequence: prev.length + 1,
+        linkedIn: "",
+        instagram: "",
+        email: "",
       },
     ]);
   };
 
   const deleteMember = (index: number) => {
-    setBoardMembers((prev) => {
-      const updated = [...prev];
-      updated.splice(index, 1);
-      return updated;
-    });
+    setBoardMembers((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const handleDeleteMember = async (id: number, index: number) => {
+    try {
+      // If it's not saved yet (only in UI), just remove
+      if (!id) {
+        deleteMember(index);
+        return;
+      }
+
+      const res = await fetch("/api/bod", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id }),
+      });
+
+      if (!res.ok) throw new Error("Failed to delete member");
+
+      // Remove from UI
+      deleteMember(index);
+
+      showToast("🗑️ Member deleted", ToastType.Success);
+    } catch (err: any) {
+      showToast(err.message || "Delete failed", ToastType.Error);
+    }
   };
 
   const saveMembers = async () => {
@@ -176,7 +181,7 @@ export default function BoardMembersEditor() {
     const formData = new FormData();
     formData.append("file", file);
 
-    const res = await fetch("/api/board", {
+    const res = await fetch("/api/bod/upload", {
       method: "POST",
       body: formData,
     });
@@ -188,9 +193,8 @@ export default function BoardMembersEditor() {
       return;
     }
 
-    updateMemberField(index, "image", data.url);
+    updateMemberField(index, "image_url", data.url);
   };
-
 
   // ==========================
   // 🔹 Render
@@ -226,8 +230,6 @@ export default function BoardMembersEditor() {
       {/* Members Grid */}
       <div className="grid md:grid-cols-2 gap-6">
         {boardMembers.map((member, index) => {
-          const cardColor = cardColors[index % cardColors.length];
-
           return (
             <div
               key={member.id}
@@ -235,71 +237,24 @@ export default function BoardMembersEditor() {
             >
               {/* Card Preview */}
               <div className="mb-4">
-                <div className="text-xs text-mauve-wine-light mb-2">
-                  Preview ({member.label || DefaultValues.Label} Card)
-                </div>
                 <div
-                  className={`h-40 ${cardColor} rounded-lg relative overflow-hidden`}
+                  className={`h-18 bg-rose-tan rounded-lg relative overflow-hidden`}
                 >
-                  {/* Card Label */}
-                  <div className="absolute top-2 left-3 text-white text-sm font-bold">
-                    {member.label || DefaultValues.Label}
-                  </div>
-
                   {/* Card Bottom Info */}
-                  <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-90 p-3 text-center">
+                  <div className="absolute bottom-0 left-0 right-0 bg-opacity-90 p-3 text-center">
                     <div className="text-white font-bold text-sm">
                       {member.name || "Name"}
                     </div>
-                    <div className="text-rose-tan-light text-xs">
+                    <div className="text-white text-xs">
                       {member.position || "Position"},{" "}
                       {member.description || "Description"}
                     </div>
                   </div>
-
-                  {/* Card Image or Initial */}
-                  {member.image ? (
-                    <Image
-                      src={member.image}
-                      alt={member.name}
-                      className="object-cover absolute inset-0"
-                      height={160}
-                      width={120}
-                    />
-                  ) : (
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="w-16 h-16 bg-white bg-opacity-30 rounded-full flex items-center justify-center">
-                        <span className="text-white text-2xl font-bold">
-                          {member.name?.charAt(0).toUpperCase() ||
-                            DefaultValues.Initial}
-                        </span>
-                      </div>
-                    </div>
-                  )}
                 </div>
               </div>
 
               {/* Form */}
               <div className="space-y-4">
-                {/* Label */}
-                <div>
-                  <label className="block text-sm font-medium text-mauve-wine-dark mb-2">
-                    Card Label
-                  </label>
-                  <input
-                    type="text"
-                    value={member.label}
-                    onChange={(e) =>
-                      updateMemberField(index, "label", e.target.value)
-                    }
-                    className="w-full px-3 py-2 border border-rose-tan-light rounded focus:ring-2 focus:ring-rose-tan"
-                    placeholder="e.g., VISIONARY, STRATEGIC"
-                  />
-                  <p className="text-xs text-mauve-wine-light mt-1">
-                    This appears in the top-left corner of the card
-                  </p>
-                </div>
-
                 {/* Name & Position */}
                 <div className="grid grid-cols-2 gap-4">
                   <div>
@@ -331,7 +286,6 @@ export default function BoardMembersEditor() {
                     />
                   </div>
                 </div>
-
                 {/* Description */}
                 <div>
                   <label className="block text-sm font-medium text-mauve-wine-dark mb-2">
@@ -347,7 +301,29 @@ export default function BoardMembersEditor() {
                     placeholder="e.g., Leading with Vision"
                   />
                 </div>
+                {/* Initial */}
+                <div>
+                  <label className="block text-sm font-medium text-mauve-wine-dark mb-2">
+                    Initial
+                  </label>
 
+                  <input
+                    type="text"
+                    value={member.initial}
+                    maxLength={2}
+                    onChange={(e) =>
+                      updateMemberField(
+                        index,
+                        "initial",
+                        e.target.value
+                          .toUpperCase() // optional: make uppercase
+                          .replace(/[^A-Za-z]/g, "") // only letters
+                      )
+                    }
+                    className="w-full px-3 py-2 border border-rose-tan-light rounded focus:ring-2 focus:ring-rose-tan"
+                    placeholder="e.g., PG"
+                  />
+                </div>
                 {/* Sequence */}
                 <div>
                   <label className="block text-sm font-medium text-mauve-wine-dark mb-2">
@@ -367,15 +343,51 @@ export default function BoardMembersEditor() {
                     placeholder="e.g., 1"
                   />
                 </div>
-
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-mauve-wine-dark mb-2">
+                    LinkedIn
+                  </label>
+                  <input
+                    type="text"
+                    value={member.linkedIn || ""}
+                    onChange={(e) =>
+                      updateMemberField(index, "linkedIn", e.target.value)
+                    }
+                    className="w-full px-3 py-2 border border-rose-tan-light rounded focus:ring-2 focus:ring-rose-tan"
+                    placeholder="e.g., https://www.linkedIn.com/rotaract"
+                  />
+                  <label className="block text-sm font-medium text-mauve-wine-dark mb-2">
+                    Instagram
+                  </label>
+                  <input
+                    type="text"
+                    value={member.instagram || ""}
+                    onChange={(e) =>
+                      updateMemberField(index, "instagram", e.target.value)
+                    }
+                    className="w-full px-3 py-2 border border-rose-tan-light rounded focus:ring-2 focus:ring-rose-tan"
+                    placeholder="e.g., https://www.instagram.com/rotaract"
+                  />
+                  <label className="block text-sm font-medium text-mauve-wine-dark mb-2">
+                    Email
+                  </label>
+                  <input
+                    type="text"
+                    value={member.email || ""}
+                    onChange={(e) =>
+                      updateMemberField(index, "email", e.target.value)
+                    }
+                    className="w-full px-3 py-2 border border-rose-tan-light rounded focus:ring-2 focus:ring-rose-tan"
+                    placeholder="e.g., rotaract@gmail.com"
+                  />
+                </div>
                 {/* Image Upload */}
                 <div>
                   <label className="block text-sm font-medium text-mauve-wine-dark mb-2">
                     Professional Photo
                   </label>
                   <p className="text-xs text-mauve-wine-light mb-2">
-                    Upload a professional headshot for the{" "}
-                    {member.label || DefaultValues.Label} card
+                    Upload a professional headshot
                   </p>
 
                   <div className="flex items-center space-x-4">
@@ -384,7 +396,7 @@ export default function BoardMembersEditor() {
                       htmlFor={`uploader-board-${index}`}
                       className="w-full px-3 py-2 border border-rose-tan-light rounded bg-white text-mauve-wine-dark cursor-pointer text-center hover:bg-rose-tan-light hover:text-white transition-colors"
                     >
-                      {member.image ? "Change Image" : "Choose File"}
+                      {member.image_url ? "Change Image" : "Choose File"}
                     </label>
 
                     <input
@@ -397,7 +409,7 @@ export default function BoardMembersEditor() {
                       }
                     />
 
-                    {member.image && (
+                    {member.image_url && (
                       <button
                         type="button"
                         onClick={() => removeImage(index)}
@@ -408,10 +420,10 @@ export default function BoardMembersEditor() {
                     )}
                   </div>
 
-                  {member.image && (
+                  {member.image_url && (
                     <div className="mt-3">
-                      <Image
-                        src={member.image}
+                      <img
+                        src={member.image_url}
                         alt="Preview"
                         className="object-cover rounded-lg border"
                         height={80}
@@ -420,18 +432,15 @@ export default function BoardMembersEditor() {
                     </div>
                   )}
                 </div>
-
                 {/* Delete Button */}
-                {boardMembers.length > 1 && (
-                  <div className="flex justify-end mt-4">
-                    <button
-                      onClick={() => deleteMember(index)}
-                      className="text-red-500 hover:text-red-700 font-medium text-sm"
-                    >
-                      Delete Member
-                    </button>
-                  </div>
-                )}
+                <div className="flex justify-end mt-4">
+                  <button
+                    onClick={() => handleDeleteMember(member.id, index)}
+                    className="text-red-500 hover:text-red-700 font-medium text-sm"
+                  >
+                    Delete Member
+                  </button>
+                </div>
               </div>
             </div>
           );

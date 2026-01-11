@@ -9,9 +9,25 @@ const supabase = createClient(
 );
 
 // ==========================
-// PUT - Bulk update members
+// GET - Fetch all members
 // ==========================
-export async function PUT(req: Request) {
+export async function GET() {
+  const { data, error } = await supabase
+    .from("bod")
+    .select("*")
+    .order("sequence", { ascending: true });
+
+  if (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+
+  return NextResponse.json(data, { status: 200 });
+}
+
+// ==========================
+// POST - Add member(s)
+// ==========================
+export async function POST(req: Request) {
   const body = await req.json();
 
   if (!Array.isArray(body)) {
@@ -21,30 +37,14 @@ export async function PUT(req: Request) {
     );
   }
 
-  const results: any[] = [];
+  const { data, error } = await supabase.from("bod").upsert(body, {
+    onConflict: "id",
+  });
 
-  for (const member of body) {
-    const { data, error } = await supabase
-      .from("bod")
-      .update({
-        name: member.name,
-        position: member.position,
-        description: member.description,
-        image_url: member.image_url,
-        gradient: member.gradient,
-        label: member.label,
-        sequence: member.sequence,
-      })
-      .eq("id", member.id);
+  if (error)
+    return NextResponse.json({ error: error.message }, { status: 500 });
 
-    if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
-    }
-
-    results.push(data);
-  }
-
-  return NextResponse.json(results, { status: 200 });
+  return NextResponse.json(data);
 }
 
 // ==========================

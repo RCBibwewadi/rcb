@@ -1,7 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
 
-
 interface ProjectImage {
   id?: string;
   image_url: string;
@@ -130,7 +129,6 @@ const ProjectsEditor: React.FC = () => {
       alert("Failed to upload image.");
     }
   };
-  
 
   // Delete an image from project
   const deleteProjectImage = async (
@@ -154,7 +152,6 @@ const ProjectsEditor: React.FC = () => {
       console.error("Failed to delete image", err);
     }
   };
-  
 
   // Delete a project
   const deleteProject = async (index: number) => {
@@ -210,7 +207,6 @@ const ProjectsEditor: React.FC = () => {
       setLoading(false);
     }
   };
-  
 
   return (
     <div className="glass-effect rounded-xl p-6 lg:p-8 luxury-shadow fade-in bg-luxury-cream">

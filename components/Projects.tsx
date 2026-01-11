@@ -31,15 +31,15 @@ export default function Projects() {
   }, []);
 
   return (
-    <section id="projects" className="py-20 bg-luxury-cream relative">
+    <section id="projects" className="py-20 luxury-gradient relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-mauve-wine mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
             Making a Difference in Our Community
           </h2>
-          <div className="w-24 h-1 luxury-gradient mx-auto mb-8"></div>
-          <p className="text-mauve-wine-light max-w-2xl mx-auto">
+          <div className="w-24 h-1 bg-luxury-gold mx-auto mb-8"></div>
+          <p className="text-white max-w-2xl mx-auto">
             Our impactful projects address real community needs and create
             lasting positive change.
           </p>
@@ -84,7 +84,7 @@ export default function Projects() {
 
                 {/* Card Body */}
                 <div className="p-6">
-                  <h3 className="text-xl font-semibold text-mauve-wine mb-3">
+                  <h3 className="text-xl font-semibold text-rose-tan-dark mb-3">
                     {project.project_title}
                   </h3>
                   <p className="text-mauve-wine-light mb-4">

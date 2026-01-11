@@ -13,7 +13,9 @@ export async function POST(req: NextRequest) {
 
     // Create a unique filename
     const ext = file.name.split(".").pop();
-    const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${ext}`;
+    const fileName = `${Date.now()}-${Math.random()
+      .toString(36)
+      .substring(2)}.${ext}`;
 
     // Upload to Supabase storage
     const { error: uploadError } = await supabaseServer.storage
@@ -33,11 +35,11 @@ export async function POST(req: NextRequest) {
       .getPublicUrl(fileName);
 
     return NextResponse.json({ url: publicUrlData.publicUrl });
-  }catch (err) {
-  if (err instanceof Error) {
-    alert("Error: " + err.message);
-  } else {
-    alert("Error: " + String(err));
+  } catch (err) {
+    if (err instanceof Error) {
+      alert("Error: " + err.message);
+    } else {
+      alert("Error: " + String(err));
+    }
   }
-}
 }

@@ -5,172 +5,12 @@ import { useState } from "react";
 import { Lock } from "lucide-react";
 import Link from "next/link";
 import HeroEditor from "@/components/editors/HeroEditor";
-import AboutEditor from "@/components/editors/AboutEditor";
 import { ContentData } from "@/lib/types";
-import SiteSettingsEditor from "@/components/editors/SiteSettingsEditor";
-import ContactEditor from "@/components/editors/ContactEditor";
 import EventsEditor from "@/components/editors/EventsEditor";
 import { useToast } from "@/components/ui/ToastProvider";
 import BoardMembersEditor from "@/components/editors/BoardEditor";
 import ProjectsEditor from "@/components/editors/ProjectsEditor";
-
-const initialContent: ContentData = {
-  hero: {
-    backgroundImage: "/public/main.jpeg",
-    title: "Rotaract Club of Bibwewadi Pune",
-    subtitle: "From solos to symphony",
-    description: "Join us in creating positive change and impacting lives through service, leadership, and community engagement.",
-    ctaText: "Join Our Mission",
-  },
-  about: {
-    title: "",
-    mainTitle: "",
-    description1: "",
-    description2: "",
-    description3: "",
-  },
-  boardMembers: [
-    {
-      "id": 1,
-      "name": "President",
-      "position": "President",
-      "description": "Leading with Vision",
-      "image": "./data/images/Seha.jpeg",
-      "gradient": "from-rose-tan to-rose-tan-dark",
-      "initial": "P"
-    },
-    {
-      "id": 2,
-      "name": "Secretary",
-      "position": "Secretary",
-      "description": "Organizing Success",
-      "image": "./data/images/Rishi.jpeg",
-      "gradient": "from-luxury-gold to-rose-tan",
-      "initial": "S"
-    },
-    {
-      "id": 3,
-      "name": "Joint Secretary",
-      "position": "Joint Secretary",
-      "description": "Financial Stewardship",
-      "image": "./data/images/Hitansh.png",
-      "gradient": "from-rose-tan-light to-mauve-wine-light",
-      "initial": "JS"
-    },
-    {
-      "id": 4,
-      "name": "Treasurer",
-      "position": "Treasurer",
-      "description": "Financial Stewardship",
-      "image": "./data/images/ansh.jpeg",
-      "gradient": "from-rose-tan-light to-mauve-wine-light",
-      "initial": "T"
-    },
-    {
-      "id": 5,
-      "name": "Vice President",
-      "position": "Vice President",
-      "description": "Supporting Excellence",
-      "image": "./data/images/Jayendra.jpeg",
-      "gradient": "from-mauve-wine to-mauve-wine-dark",
-      "initial": "VP"
-    },
-    {
-      "id": 6,
-      "name": "Club Mentor",
-      "position": "Club Mentor",
-      "description": "Financial Stewardship",
-      "image": "./data/images/Disha.jpeg",
-      "gradient": "from-rose-tan-light to-mauve-wine-light",
-      "initial": "CM"
-    },
-    {
-      "id": 7,
-      "name": "Immediate Past President",
-      "position": "IPP",
-      "description": "Financial Stewardship",
-      "image": "",
-      "gradient": "from-rose-tan-light to-mauve-wine-light",
-      "initial": "IP"
-    },
-    {
-      "id": 8,
-      "name": "Sergeant at Arms",
-      "position": "SAA",
-      "description": "Financial Stewardship",
-      "image": "./data/images/Vanshita.jpeg",
-      "gradient": "from-rose-tan-light to-mauve-wine-light",
-      "initial": "SA"
-    },
-    {
-      "id": 9,
-      "name": "Club Service Director",
-      "position": "CSD",
-      "description": "Financial Stewardship",
-      "image": "./data/images/Pritesh.JPG",
-      "gradient": "from-rose-tan-light to-mauve-wine-light",
-      "initial": "CSD"
-    },
-    {
-      "id": 10,
-      "name": "Professional Development Director",
-      "position": "PDD",
-      "description": "Financial Stewardship",
-      "image": "./data/images/Shrenik.jpeg",
-      "gradient": "from-rose-tan-light to-mauve-wine-light",
-      "initial": "PDD"
-    },
-    {
-      "id": 11,
-      "name": "International Service Director",
-      "position": "ISD",
-      "description": "Financial Stewardship",
-      "image": "./data/images/Pranav.jpeg",
-      "gradient": "from-rose-tan-light to-mauve-wine-light",
-      "initial": "ISD"
-    },
-    {
-      "id": 12,
-      "name": "Community Service Director",
-      "position": "CMD",
-      "description": "Financial Stewardship",
-      "image": "./data/images/Lavish.png",
-      "gradient": "from-rose-tan-light to-mauve-wine-light",
-      "initial": "CMD"
-    },
-    {
-      "id": 13,
-      "name": "Rotary Rotaract Relationship Officer",
-      "position": "RRRO",
-      "description": "Financial Stewardship",
-      "image": "",
-      "gradient": "from-rose-tan-light to-mauve-wine-light",
-      "initial": "RRRO"
-    },
-    {
-      "id": 12,
-      "name": "Diversity Equity Inclusivity",
-      "position": "DEI",
-      "description": "Financial Stewardship",
-      "image": "",
-      "gradient": "from-rose-tan-light to-mauve-wine-light",
-      "initial": "DEI"
-    },
-    {
-      "id": 13,
-      "name": "Public Relations Officer",
-      "position": "PRO",
-      "description": "Financial Stewardship",
-      "image": "./data/images/Dinal.jpeg",
-      "gradient": "from-rose-tan-light to-mauve-wine-light",
-      "initial": "PRO"
-    }
-  ],
-  projects: [],
-  events: [],
-  contact: {},
-  siteConfig: { siteName: "", tagline: "", clubLogo: "" , adminPassword: "" },
-};
+import QuickEditor from "@/components/editors/QuickEditor";
 
 export default function AdminPage() {
   const { showToast } = useToast();
@@ -178,7 +18,7 @@ export default function AdminPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [section, setSection] = useState<string>("welcome");
-  const [contentData, setContentData] = useState<ContentData>(initialContent);
+  const [contentData, setContentData] = useState<ContentData>();
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -194,11 +34,6 @@ export default function AdminPage() {
     setAuthenticated(false);
     setPassword("");
     setSection("welcome");
-  };
-
-  const handleSave = (section: string, data: any) => {
-    setContentData({ ...contentData, [section]: data });
-    console.log("✅ Saved locally:", { section, data });
   };
 
   return (
@@ -268,7 +103,9 @@ export default function AdminPage() {
                 </div>
                 <div className="flex items-center space-x-4">
                   <button
-                    onClick={() => showToast("Successfully saved event", "success")}
+                    onClick={() =>
+                      showToast("Successfully saved event", "success")
+                    }
                     className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white px-6 py-2 rounded-lg font-semibold transition-all duration-300 luxury-shadow hover:scale-105 flex items-center space-x-2"
                   >
                     <span>Push to Website</span>
@@ -296,40 +133,32 @@ export default function AdminPage() {
             <nav className="w-64 bg-white border-r border-rose-tan-light luxury-shadow min-h-screen">
               <div className="p-4">
                 <ul className="space-y-2">
-                  {[
-                    "hero",
-                    // "about",
-                    "board",
-                    "projects",
-                    "events",
-                    "contact",
-                    "siteConfig",
-                  ].map((sec) => (
-                    <li key={sec}>
-                      <button
-                        onClick={() => setSection(sec)}
-                        className={`nav-btn w-full text-left px-4 py-3 rounded-lg font-medium transition-colors ${
-                          section === sec
-                            ? "bg-luxury-cream text-mauve-wine"
-                            : "text-mauve-wine hover:bg-luxury-cream"
-                        }`}
-                      >
-                        {sec === "hero"
-                          ? "Hero Section"
-                          // : sec === "about"
-                          // ? "About Section"
-                          : sec === "board"
-                          ? "Board Members"
-                          : sec === "projects"
-                          ? "Projects"
-                          : sec === "events"
-                          ? "Events"
-                          : sec === "contact"
-                          ? "Contact Info"
-                          : "Site Settings"}
-                      </button>
-                    </li>
-                  ))}
+                  {["hero", "board", "projects", "events", "quick"].map(
+                    (sec) => (
+                      <li key={sec}>
+                        <button
+                          onClick={() => setSection(sec)}
+                          className={`nav-btn w-full text-left px-4 py-3 rounded-lg font-medium transition-colors ${
+                            section === sec
+                              ? "bg-luxury-cream text-mauve-wine"
+                              : "text-mauve-wine hover:bg-luxury-cream"
+                          }`}
+                        >
+                          {sec === "hero"
+                            ? "Hero Section"
+                            : sec === "board"
+                            ? "Board Members"
+                            : sec === "projects"
+                            ? "Projects"
+                            : sec === "events"
+                            ? "Events"
+                            : sec === "quick"
+                            ? "Quick Section"
+                            : ""}
+                        </button>
+                      </li>
+                    )
+                  )}
                 </ul>
               </div>
             </nav>
@@ -351,47 +180,16 @@ export default function AdminPage() {
                   </div>
                 )}
 
-                {section === "hero" && (
-                  <HeroEditor />
-                )}
+                {section === "hero" && <HeroEditor />}
 
-                {/* {section === "about" && (
-                  <AboutEditor
-                    initialData={contentData.about}
-                  />
-                )} */}
-                 {/* ✅ New Sections */}
-    {section === "board" && (
-      <BoardMembersEditor
-      />
-    )}
+                {section === "board" && <BoardMembersEditor />}
 
-    {section === "projects" && (
-      <ProjectsEditor
-      />
-    )}
+                {section === "projects" && <ProjectsEditor />}
 
-     {section === "events" && (
-      <EventsEditor
-        initialData={contentData.events}
-      />
-    )}
+                {section === "events" && <EventsEditor />}
 
-    {section === "contact" && (
-      <ContactEditor
-        initialData={contentData.contact}
-        onSave={(d) => handleSave("contact", d)}
-      />
-    )}
-
-    {section === "siteConfig" && (
-      <SiteSettingsEditor
-        initialData={contentData.siteConfig}
-        onSave={(d) => handleSave("siteConfig", d)}
-      />
-    )}
-
-               </div>
+                {section === "quick" && <QuickEditor />}
+              </div>
             </main>
           </div>
         </div>

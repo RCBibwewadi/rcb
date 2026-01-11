@@ -1,6 +1,6 @@
 "use client";
 import { useForm, ValidationError } from "@formspree/react";
-
+import { motion } from "framer-motion";
 
 export default function JoinUs() {
   const [state, handleSubmit] = useForm("xvgweenl");
@@ -11,7 +11,13 @@ export default function JoinUs() {
     >
       <div className="absolute inset-0 bg-mauve-wine-dark opacity-50"></div>
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
+        <motion.div
+          className="text-center mb-16"
+          initial={{ opacity: 0, y: -40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+        >
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
             Become a Part of the Family
           </h2>
@@ -20,13 +26,27 @@ export default function JoinUs() {
             Join a community of passionate young leaders committed to making a
             difference through service and fellowship.
           </p>
-        </div>
+        </motion.div>
 
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Benefits */}
-          <div>
+          <motion.div
+            initial={{ opacity: 0, x: -60 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
             <h3 className="text-2xl font-semibold mb-8">Why Join Rotaract?</h3>
-            <div className="space-y-6">
+            <motion.div
+              className="space-y-6"
+              initial="hidden"
+              whileInView="show"
+              viewport={{ once: true }}
+              variants={{
+                hidden: {},
+                show: { transition: { staggerChildren: 0.15 } },
+              }}
+            >
               {[
                 {
                   title: "Professional Development",
@@ -49,7 +69,15 @@ export default function JoinUs() {
                   color: "bg-rose-tan-light",
                 },
               ].map((item, i) => (
-                <div key={i} className="flex items-start">
+                <motion.div
+                  key={i}
+                  className="flex items-start"
+                  variants={{
+                    hidden: { opacity: 0, y: 25 },
+                    show: { opacity: 1, y: 0 },
+                  }}
+                  transition={{ duration: 0.4, ease: "easeOut" }}
+                >
                   <div
                     className={`w-8 h-8 ${item.color} rounded-full flex items-center justify-center mr-4 mt-1 luxury-shadow`}
                   >
@@ -59,13 +87,19 @@ export default function JoinUs() {
                     <h4 className="font-semibold mb-2">{item.title}</h4>
                     <p className="text-luxury-cream opacity-90">{item.text}</p>
                   </div>
-                </div>
+                </motion.div>
               ))}
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
 
           {/* Contact Form */}
-          <div className="glass-effect rounded-xl p-8 text-mauve-wine luxury-shadow">
+          <motion.div
+            className="glass-effect rounded-xl p-8 text-mauve-wine luxury-shadow"
+            initial={{ opacity: 0, x: 80 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+          >
             <h3 className="text-2xl font-semibold mb-6 text-center">
               Express Your Interest
             </h3>
@@ -159,7 +193,7 @@ export default function JoinUs() {
                 </p>
               )}
             </form>
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>

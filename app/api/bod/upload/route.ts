@@ -2,32 +2,44 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabaseServer } from "@/lib/supabaseClient";
 
-// GET request: fetch bod data
-export async function GET() {
-  const { data, error } = await supabaseServer
-    .from("bod")
-    .select("*")
-    .eq("slug", "bod")
-    .maybeSingle();
-
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-  return NextResponse.json(data || {});
-}
-
 // POST request: update bod data
 export async function POST(req: NextRequest) {
-  const body = await req.json();
-  if (!Array.isArray(body)) {
-    return NextResponse.json(
-      { error: "Expected an array of board members" },
-      { status: 400 }
-    );
-  }
-  const { data, error } = await supabaseServer.from("bod").insert(body);
+  try {
+    const formData = await req.formData();
+    const file = formData.get("file") as File | null;
 
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
-  }
+    if (!file) {
+      return NextResponse.json({ error: "No file uploaded" }, { status: 400 });
+    }
 
-  return NextResponse.json(data, { status: 201 });
+    // Create a unique filename
+    const ext = file.name.split(".").pop();
+    const fileName = `${Date.now()}-${Math.random()
+      .toString(36)
+      .substring(2)}.${ext}`;
+    // Upload to Supabase storage
+    const { error: uploadError } = await supabaseServer.storage
+      .from("board-members")
+      .upload(fileName, file, {
+        cacheControl: "3600",
+        upsert: false,
+      });
+
+    if (uploadError) {
+      return NextResponse.json({ error: uploadError.message }, { status: 500 });
+    }
+
+    // Get the public URL
+    const { data: publicUrlData } = supabaseServer.storage
+      .from("board-members")
+      .getPublicUrl(fileName);
+
+    return NextResponse.json({ url: publicUrlData.publicUrl });
+  } catch (err) {
+    if (err instanceof Error) {
+      alert("Error: " + err.message);
+    } else {
+      alert("Error: " + String(err));
+    }
+  }
 }
