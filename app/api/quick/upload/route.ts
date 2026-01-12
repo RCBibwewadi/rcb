@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
   const { error: uploadError } = await supabase.storage
     .from("quick-media")
     .upload(filePath, file, {
-      cacheControl: "86400",
+      cacheControl: "public, max-age=1800, stale-while-revalidate=600",
       upsert: false,
     });
 
