@@ -4,6 +4,8 @@ import React, { useEffect, useState, useRef, JSX } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import MomentsHero from "@/components/MomentsHero";
+import MomentsFilter from "@/components/MomentsFilters";
 
 interface QuickItem {
   id: string | number;
@@ -20,6 +22,7 @@ export default function QuickPage() {
   const [items, setItems] = useState<QuickItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const [activeCategory, setActiveCategory] = useState<string>("dances");
 
   async function fetchItems() {
     try {
@@ -38,13 +41,6 @@ export default function QuickPage() {
     fetchItems();
   }, []);
 
-  const sections = [
-    { key: "dances", label: "Dances" },
-    { key: "fun", label: "Fun Moments" },
-    { key: "talent", label: "Talent" },
-    { key: "articles", label: "Articles" },
-  ];
-
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -53,18 +49,23 @@ export default function QuickPage() {
     );
   }
 
-  const renderItem = (item: QuickItem) => (
+  const renderItem = (item: QuickItem, index: number) => (
     <div
       key={item.id}
-      className="min-w-[300px] bg-white rounded-2xl shadow-md overflow-hidden border snap-start"
-    >
-      <div className="relative w-full aspect-video bg-gray-200">
+      style={{
+        animation: `fadeInUp 0.6s ease-out ${index * 0.08}s both`,
+      }}
+      className="min-w-75 bg-white rounded-2xl shadow-md overflow-hidden snap-start cursor-pointer"
+    > 
+    <div className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
+     
+      <div className="relative w-full aspect-video overflow-hidden">
         {item.media_type === "image" && (
           <>
             <img
               src={item.thumbnail_url}
               alt={item.title || ""}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
             />
             <button
               onClick={() =>
@@ -78,7 +79,7 @@ export default function QuickPage() {
         )}
 
         {item.media_type === "video" && (
-          <video controls className="w-full h-full object-cover">
+          <video controls className="absolute w-full h-full bg-black/70 text-white text-xs">
             <source src={item.media_url} />
           </video>
         )}
@@ -89,113 +90,53 @@ export default function QuickPage() {
         <p className="text-gray-600 text-sm mt-1">{item.description}</p>
       </div>
     </div>
+    </div>
   );
-
+  const filteredItems = items
+    .filter((item) => item.section === activeCategory)
+    .sort((a, b) => (a.sequence || 0) - (b.sequence || 0));
   return (
     <>
-      <div className="min-h-screen bg-rose-tan-light">
-        <div className="max-w-6xl mx-auto px-4 py-5">
-          <div className="flex items-center justify-center h-16 gap-2">
-            <Link href="/">
-              <Image src="/logo.jpg" alt="Logo" height={40} width={40} />
-            </Link>
-            <h1 className="text-4xl font-bold text-mauve-wine">
-              Rotaract Moments
-            </h1>
+      <div className="min-h-screen glass-effect luxury-shadow">
+        <MomentsHero />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <MomentsFilter
+            activeCategory={activeCategory}
+            onCategoryChange={setActiveCategory}
+          />
+
+          {/* CONTENT GRID */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            {filteredItems.length > 0 ? (
+              filteredItems.map((item, index) => renderItem(item, index))
+            ) : (
+              <p className="text-center col-span-full text-gray-600">
+                No content available
+              </p>
+            )}
           </div>
-
-          {sections.map((section) => {
-            const filtered = items
-              .filter((i) => i.section === section.key)
-              .sort((a, b) => (a.sequence || 0) - (b.sequence || 0));
-
-            if (!filtered.length) return null;
-
-            return (
-              <div key={section.key} className="mb-12">
-                <h2 className="text-2xl font-semibold mb-4 text-gray-800">
-                  {section.label}
-                </h2>
-
-                {filtered.length <= 3 ? (
-                  /* GRID */
-                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                    {filtered.map(renderItem)}
-                  </div>
-                ) : (
-                  /* SLIDER */
-                  <Slider items={filtered} renderItem={renderItem} />
-                )}
-              </div>
-            );
-          })}
         </div>
       </div>
 
       {/* IMAGE PREVIEW MODAL */}
       {previewImage && (
-        <div className="fixed inset-0 bg-black/70 z-50 flex">
-          <div className="relative bg-white max-w-5xl w-full mx-auto my-6 rounded shadow overflow-y-auto max-h-[90vh]">
-            <img src={previewImage} alt="Full view" className="w-full h-auto" />
+        <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center px-4">
+          <div className="relative bg-white max-w-5xl w-full rounded-2xl shadow-xl overflow-hidden">
+            <img
+              src={previewImage}
+              alt="Preview"
+              className="w-full h-auto max-h-[80vh] object-contain bg-black"
+            />
 
             <button
               onClick={() => setPreviewImage(null)}
-              className="absolute top-2 right-2 bg-black text-white px-3 py-1 rounded"
+              className="absolute top-4 right-4 bg-black/70 hover:bg-black text-white px-4 py-2 rounded-full text-sm"
             >
-              Close
+              ✕ Close
             </button>
           </div>
         </div>
       )}
     </>
-  );
-}
-
-/* ================= SLIDER COMPONENT ================= */
-
-function Slider({
-  items,
-  renderItem,
-}: {
-  items: QuickItem[];
-  renderItem: (item: QuickItem) => JSX.Element;
-}) {
-  const sliderRef = useRef<HTMLDivElement>(null);
-
-  const scroll = (dir: "left" | "right") => {
-    if (!sliderRef.current) return;
-    const width = sliderRef.current.clientWidth;
-    sliderRef.current.scrollBy({
-      left: dir === "left" ? -width : width,
-      behavior: "smooth",
-    });
-  };
-
-  return (
-    <div className="relative">
-      {/* LEFT CHEVRON */}
-      <button
-        onClick={() => scroll("left")}
-        className="absolute -left-4 top-1/2 -translate-y-1/2 z-10 bg-white shadow rounded-full p-2"
-      >
-        <ChevronLeft />
-      </button>
-
-      {/* SLIDER */}
-      <div
-        ref={sliderRef}
-        className="flex gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory scrollbar-hide px-2"
-      >
-        {items.map(renderItem)}
-      </div>
-
-      {/* RIGHT CHEVRON */}
-      <button
-        onClick={() => scroll("right")}
-        className="absolute -right-4 top-1/2 -translate-y-1/2 z-10 bg-white shadow rounded-full p-2"
-      >
-        <ChevronRight />
-      </button>
-    </div>
   );
 }

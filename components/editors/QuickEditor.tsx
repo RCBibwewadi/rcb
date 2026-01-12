@@ -2,11 +2,19 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useToast } from "../ui/ToastProvider";
+
+
+enum ToastType {
+  Error = "error",
+  Success = "success",
+}
 
 export default function QuickEditor() {
   const [items, setItems] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [hasFile, setHasFile] = useState(false);
+  const { showToast } = useToast();
   async function fetchItems() {
     const res = await fetch("/api/quick");
     const data = await res.json();
@@ -20,7 +28,8 @@ export default function QuickEditor() {
   }, []);
 
   async function handleSubmit(e: any) {
-    e.preventDefault();
+    try{
+      e.preventDefault();
     setLoading(true);
 
     const form = e.target;
@@ -41,7 +50,8 @@ export default function QuickEditor() {
 
       const uploadJson = await uploadRes.json();
       if (uploadJson.error) {
-        alert(uploadJson.error);
+        showToast(uploadJson.error || "Something went wrong", ToastType.Error);
+        alert(uploadJson.error)
         setLoading(false);
         return;
       }
@@ -69,11 +79,20 @@ export default function QuickEditor() {
     });
 
     const result = await res.json();
-    if (result.error) alert(result.error);
+    if (result.error) {
+      showToast(result.error || "Something went wrong", ToastType.Error);
+      alert(result.error)
+    };
 
     form.reset();
     setLoading(false);
     fetchItems();
+    } catch(error) {
+      showToast("Something went wrong" , ToastType.Error)
+    } finally {
+      setHasFile(false);
+    }
+    
   }
 
   async function handleDelete(id: string) {
