@@ -292,12 +292,14 @@ const ProjectsEditor: React.FC = () => {
                     <div key={imgIndex} className="relative w-24 h-24">
                       <img
                         src={img.image_url}
-                        alt="Project"
-                        className="w-full h-full object-cover rounded border"
+                        className="w-full h-full object-cover rounded border pointer-events-none"
                       />
                       <button
-                        onClick={() => deleteProjectImage(index, imgIndex)}
-                        className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          deleteProjectImage(index, imgIndex);
+                        }}
+                        className="absolute -top-2 -right-2 z-[9999] pointer-events-auto bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs cursor-pointer"
                       >
                         ×
                       </button>

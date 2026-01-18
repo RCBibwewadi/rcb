@@ -12,26 +12,67 @@ interface HeroData {
 
 export default function Hero() {
   const [hero, setHero] = useState<HeroData>({
-    background_image: "/main.jpeg",
-    title: "Rotaract Club of Bibwewadi Pune",
-    subtitle: "From solos to symphony",
-    description: "Join us in creating positive change and impacting lives through service, leadership, and community engagement.",
-    cta_text: "Join Our Mission",
+    background_image: "",
+    title: "",
+    subtitle: "",
+    description: "",
+    cta_text: "",
   });
 
-  // useEffect(() => {
-  //   const fetchHero = async () => {
-  //     try {
-  //       const res = await fetch("/api/hero");
-  //       const data = await res.json();
-  //       if (res.ok) setHero(data);
-  //     } catch (err) {
-  //       console.error("Failed to fetch hero:", err);
-  //     }
-  //   };
+  useEffect(() => {
+    const fetchHero = async () => {
+      try {
+        const res = await fetch("/api/hero");
+        const data = await res.json();
+        if (res.ok) setHero(data);
+      } catch (err) {
+        console.error("Failed to fetch hero:", err);
+      }
+    };
 
-  //   fetchHero();
-  // }, []);
+    fetchHero();
+  }, []);
+
+  useEffect(() => {
+    const fetchHero = async () => {
+      try {
+        const res = await fetch("/api/hero");
+        const data = await res.json();
+        if (res.ok) {
+          setHero({
+            background_image: data.background_image || "",
+            title: data.title || "",
+            subtitle: data.subtitle || "",
+            description: data.description || "",
+            cta_text: data.cta_text || "",
+          });
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchHero();
+  }, []);
+
+  useEffect(() => {
+    const cached = localStorage.getItem("hero");
+
+    if (cached) {
+      setHero(JSON.parse(cached));
+    }
+
+    const fetchHero = async () => {
+      const res = await fetch("/api/hero");
+      const data = await res.json();
+
+      if (res.ok) {
+        setHero(data);
+        localStorage.setItem("hero", JSON.stringify(data));
+      }
+    };
+
+    fetchHero();
+  }, []);
 
   return (
     <section
