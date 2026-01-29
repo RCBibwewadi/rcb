@@ -17,6 +17,15 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Rotaract Club of Bibwewadi Pune",
   description: "From solos to symphony",
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "none",
+    },
+  },
 };
 
 export default function RootLayout({
