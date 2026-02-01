@@ -33,7 +33,7 @@ export default function Navbar() {
         {/* Desktop Links */}
         <div className="hidden md:flex space-x-8 flex-shrink-0">
           {[
-            { href: "/quick", label: "Quick" },
+            { href: "/quick", label: "FOMO" },
             { href: "#home", label: "Home" },
             { href: "#about", label: "About" },
             { href: "#board", label: "BOD" },

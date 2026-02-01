@@ -9,7 +9,7 @@ import { Film, Laugh, Sparkles, FileText } from "lucide-react";
 
 const categories = [
   { id: "dances", label: "Dances", icon: Film },
-  { id: "fun", label: "Fun Moments", icon: Laugh },
+  { id: "fun", label: "Moments", icon: Laugh },
   { id: "talent", label: "Talent", icon: Sparkles },
   { id: "articles", label: "Articles", icon: FileText },
 ];

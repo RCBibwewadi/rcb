@@ -102,7 +102,7 @@ export default function Hero() {
           </p>
           {hero.cta_text && (
             <a
-              href="#join"
+              href="/quick"
               className="inline-block luxury-gradient hover:opacity-90 text-white font-semibold px-8 py-4 rounded-full transition-all duration-300 hover:scale-105 luxury-shadow"
             >
               {hero.cta_text}

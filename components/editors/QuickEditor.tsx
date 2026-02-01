@@ -120,7 +120,7 @@ export default function QuickEditor() {
             Dances
           </option>
           <option value="fun" className="text-gray-800 bg-white">
-            Fun
+            Moments
           </option>
           <option value="articles" className="text-gray-800 bg-white">
             Articles
