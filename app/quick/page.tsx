@@ -22,7 +22,7 @@ export default function QuickPage() {
   const [items, setItems] = useState<QuickItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
-  const [activeCategory, setActiveCategory] = useState<string>("dances");
+  const [activeCategory, setActiveCategory] = useState<string>("fun");
 
   async function fetchItems() {
     try {

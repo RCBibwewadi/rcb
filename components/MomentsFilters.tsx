@@ -8,8 +8,8 @@ interface MomentsFilterProps {
 import { Film, Laugh, Sparkles, FileText } from "lucide-react";
 
 const categories = [
-  { id: "dances", label: "Dances", icon: Film },
   { id: "fun", label: "Moments", icon: Laugh },
+  { id: "dances", label: "Dances", icon: Film },
   { id: "talent", label: "Talent", icon: Sparkles },
   { id: "articles", label: "Articles", icon: FileText },
 ];

@@ -5,7 +5,10 @@ import {
   Phone,
   MapPin,
   Instagram,
+  ArrowDownToLine,
+  InboxIcon,
 } from "lucide-react";
+import { HiOutlineArrowDown } from "react-icons/hi2";
 import { MdEmail } from "react-icons/md";
 
 export default function Footer() {
@@ -89,6 +92,15 @@ export default function Footer() {
           <p className="text-[#d1c2a2]">
             &copy; 2025 Rotaract Club of Bibwewadi Pune. All Rights Reserved.
           </p>
+          <div className="flex items-center justify-center gap-2">
+          <p className="text-[#d1c2a2]">
+            Designed By USP Face
+          </p>
+          <a href="mailto:uspface@gmail.com">
+            <InboxIcon  className="h-4 w-4 cursor-pointer text-luxury-gold" />
+          </a>
+          </div>
+          
         </div>
       </div>
     </footer>
