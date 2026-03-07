@@ -5,12 +5,15 @@ import Link from "next/link";
 import Image from "next/image";
 import { Instagram } from "lucide-react";
 
+/* eslint-disable @next/next/no-html-link-for-pages */
+
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setIsScrolled(window.scrollY > 50);
+    const onScroll = () => {
+      // Scroll handler can be used for future features
+    };
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
@@ -32,24 +35,62 @@ export default function Navbar() {
         </div>
         {/* Desktop Links */}
         <div className="hidden md:flex space-x-8 flex-shrink-0">
-          {[
-            { href: "/quick", label: "FOMO" },
-            { href: "#home", label: "Home" },
-            { href: "#about", label: "About" },
-            { href: "#board", label: "BOD" },
-            { href: "#projects", label: "Projects" },
-            { href: "#events", label: "Events" },
-            { href: "#join", label: "Join Us" },
-          ].map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="relative font-medium text-mauve-wine hover:text-rose-tan transition-colors group"
-            >
-              {item.label}
-              <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-rose-tan transition-all duration-300 group-hover:w-full" />
-            </Link>
-          ))}
+          <Link
+            href="/game"
+            className="relative font-medium text-mauve-wine hover:text-rose-tan transition-colors group"
+          >
+            Game
+            <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-rose-tan transition-all duration-300 group-hover:w-full" />
+          </Link>
+          <Link
+            href="/quick"
+            className="relative font-medium text-mauve-wine hover:text-rose-tan transition-colors group"
+          >
+            FOMO
+            <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-rose-tan transition-all duration-300 group-hover:w-full" />
+          </Link>
+          <a
+            href="/#home"
+            className="relative font-medium text-mauve-wine hover:text-rose-tan transition-colors group"
+          >
+            Home
+            <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-rose-tan transition-all duration-300 group-hover:w-full" />
+          </a>
+          <a
+            href="/#about"
+            className="relative font-medium text-mauve-wine hover:text-rose-tan transition-colors group"
+          >
+            About
+            <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-rose-tan transition-all duration-300 group-hover:w-full" />
+          </a>
+          <a
+            href="/#board"
+            className="relative font-medium text-mauve-wine hover:text-rose-tan transition-colors group"
+          >
+            BOD
+            <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-rose-tan transition-all duration-300 group-hover:w-full" />
+          </a>
+          <a
+            href="/#projects"
+            className="relative font-medium text-mauve-wine hover:text-rose-tan transition-colors group"
+          >
+            Projects
+            <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-rose-tan transition-all duration-300 group-hover:w-full" />
+          </a>
+          <a
+            href="/#events"
+            className="relative font-medium text-mauve-wine hover:text-rose-tan transition-colors group"
+          >
+            Events
+            <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-rose-tan transition-all duration-300 group-hover:w-full" />
+          </a>
+          <a
+            href="/#join"
+            className="relative font-medium text-mauve-wine hover:text-rose-tan transition-colors group"
+          >
+            Join Us
+            <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-rose-tan transition-all duration-300 group-hover:w-full" />
+          </a>
           <a
             href="https://www.instagram.com/rotaractclubofbibwewadipune?igsh=Z2s0bTEwd2hoaTFj"
             target="_blank"
@@ -102,41 +143,53 @@ export default function Navbar() {
         <div className="md:hidden pb-4 px-4">
           <div className="flex flex-col space-y-2">
             <Link
+              href="/game"
+              className="text-mauve-wine hover:text-rose-tan font-medium py-2"
+            >
+              Game
+            </Link>
+            <Link
               href="/quick"
               className="text-mauve-wine hover:text-rose-tan font-medium py-2"
             >
-              Quick
+              FOMO
             </Link>
-            <Link
-              href="#home"
+            <a
+              href="/#home"
               className="text-mauve-wine hover:text-rose-tan font-medium py-2"
             >
               Home
-            </Link>
-            <Link
-              href="#about"
+            </a>
+            <a
+              href="/#about"
               className="text-mauve-wine hover:text-rose-tan font-medium py-2"
             >
               About
-            </Link>
-            <Link
-              href="#projects"
+            </a>
+            <a
+              href="/#board"
+              className="text-mauve-wine hover:text-rose-tan font-medium py-2"
+            >
+              BOD
+            </a>
+            <a
+              href="/#projects"
               className="text-mauve-wine hover:text-rose-tan font-medium py-2"
             >
               Projects
-            </Link>
-            <Link
-              href="#events"
+            </a>
+            <a
+              href="/#events"
               className="text-mauve-wine hover:text-rose-tan font-medium py-2"
             >
               Events
-            </Link>
-            <Link
-              href="#join"
+            </a>
+            <a
+              href="/#join"
               className="text-mauve-wine hover:text-rose-tan font-medium py-2"
             >
               Join Us
-            </Link>
+            </a>
           </div>
         </div>
       )}
