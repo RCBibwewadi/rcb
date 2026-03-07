@@ -102,7 +102,7 @@ export default function AuthModal({ onClose, onSuccess, defaultMode = "register"
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto">
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-start justify-center p-4 overflow-y-auto">
       <div className="bg-white rounded-2xl max-w-2xl w-full p-8 relative luxury-shadow my-8">
         <button
           onClick={onClose}
