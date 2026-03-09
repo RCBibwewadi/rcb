@@ -16,7 +16,7 @@ export default function QuizModal({ series, onClose, onQuizComplete }: QuizModal
   const [started, setStarted] = useState(false);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
-  const [timeLeft, setTimeLeft] = useState(420); // 7 minutes in seconds
+  const [timeLeft, setTimeLeft] = useState(180); // 3 minutes in seconds
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [result, setResult] = useState<{
@@ -101,7 +101,7 @@ export default function QuizModal({ series, onClose, onQuizComplete }: QuizModal
     if (submitted || submitting ) return;
 
     setSubmitting(true);
-    const timeTaken = 420 - timeLeft;
+    const timeTaken = 180 - timeLeft;
 
     try {
       console.log('Submitting quiz:', { seriesId: series.id, answers, timeTaken });
@@ -219,7 +219,7 @@ export default function QuizModal({ series, onClose, onQuizComplete }: QuizModal
               📝 <span className="font-semibold">11 Questions</span>
             </p>
             <p className="text-mauve-wine">
-              ⏱️ <span className="font-semibold">7 Minutes</span>
+              ⏱️ <span className="font-semibold">3 Minutes</span>
             </p>
             <p className="text-mauve-wine">
               🎯 <span className="font-semibold">Multiple Choice</span>
