@@ -3,6 +3,8 @@ import { ParticlesBackground } from "./ui/ParticlesBackground";
 
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
+import { Variants } from "framer-motion";
+
 
 const values = [
   {
@@ -27,6 +29,19 @@ const values = [
   },
 ];
 
+
+const fadeUp: Variants = {
+  hidden: { opacity: 0, y: 80 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.8,
+      ease: "easeOut" as const,
+    },
+  },
+};
+
 export default function About() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
@@ -39,10 +54,10 @@ export default function About() {
         {/* Section Header */}
         <motion.div
           className="text-center mb-16"
-          initial={{ opacity: 0, y: -50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, ease: "easeOut" }}
-          viewport={{ once: true }}
+          variants={fadeUp}
+          initial="hidden"
+          whileInView="visible"
+  viewport={{ once: true, margin: "-100px" }}
         >
           <h2 className="text-3xl md:text-4xl font-bold text-luxury-gold mb-4">
             About Us
@@ -55,10 +70,10 @@ export default function About() {
 
         {/* Intro */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
+         variants={fadeUp}
+         initial="hidden"
+         whileInView="visible"
+ viewport={{ once: true, margin: "-100px" }}
           className="text-center max-w-3xl mx-auto mb-16"
         >
           <p className="text-white text-lg md:text-xl leading-relaxed">
@@ -68,10 +83,10 @@ export default function About() {
 
         {/* What We Stand For - Cards */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-          viewport={{ once: true }}
+         variants={fadeUp}
+         initial="hidden"
+         whileInView="visible"
+ viewport={{ once: true, margin: "-100px" }}
           className="mb-16"
         >
           <h3 className="text-2xl md:text-3xl font-semibold text-rose-tan text-center mb-8">
@@ -81,10 +96,10 @@ export default function About() {
             {values.map((item, i) => (
               <motion.div
                 key={i}
-                initial={{ opacity: 0, scale: 0.8, y: 20 }}
-                whileInView={{ opacity: 1, scale: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: i * 0.1 }}
-                viewport={{ once: true }}
+                variants={fadeUp}
+                initial="hidden"
+                whileInView="visible"
+        viewport={{ once: true, margin: "-100px" }}
                 whileHover={{ scale: 1.03, y: -5 }}
                 className="bg-gradient-to-br from-mauve-wine to-mauve-wine-dark p-6 rounded-xl text-white luxury-shadow hover:shadow-2xl transition-all duration-300"
               >
@@ -98,10 +113,10 @@ export default function About() {
 
         {/* Who We Are - Accordion Style */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          viewport={{ once: true }}
+          variants={fadeUp}
+          initial="hidden"
+          whileInView="visible"
+  viewport={{ once: true, margin: "-100px" }}
           className="mb-16"
         >
           <h3 className="text-2xl md:text-3xl font-semibold text-rose-tan text-center mb-8">
@@ -116,10 +131,10 @@ export default function About() {
             ].map((item, i) => (
               <motion.div
                 key={i}
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5, delay: i * 0.1 }}
-                viewport={{ once: true }}
+                variants={fadeUp}
+                initial="hidden"
+                whileInView="visible"
+        viewport={{ once: true, margin: "-100px" }}
                 className="bg-gradient-to-r from-mauve-wine/50 to-rose-tan-dark/30 rounded-xl overflow-hidden border border-white/10"
               >
                 <button
@@ -138,7 +153,10 @@ export default function About() {
                 <AnimatePresence>
                   {openIndex === i && (
                     <motion.div
-                      initial={{ height: 0, opacity: 0 }}
+                    variants={fadeUp}
+                    initial="hidden"
+                    whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
                       animate={{ height: "auto", opacity: 1 }}
                       exit={{ height: 0, opacity: 0 }}
                       transition={{ duration: 0.3 }}
@@ -157,10 +175,10 @@ export default function About() {
 
         {/* Our Vision */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-          viewport={{ once: true }}
+         variants={fadeUp}
+         initial="hidden"
+         whileInView="visible"
+ viewport={{ once: true, margin: "-100px" }}
           className="text-center"
         >
           <h3 className="text-2xl md:text-3xl font-semibold text-rose-tan mb-6">
@@ -175,10 +193,10 @@ export default function About() {
 
         {/* CTA */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          viewport={{ once: true }}
+          variants={fadeUp}
+          initial="hidden"
+          whileInView="visible"
+  viewport={{ once: true, margin: "-100px" }}
           className="text-center mt-16"
         >
           <p className="text-white text-lg mb-4">

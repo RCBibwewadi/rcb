@@ -6,14 +6,13 @@ import Hero from "@/components/Hero";
 import JoinUsSection from "@/components/JoinUs";
 import Navbar from "@/components/Navbar";
 import Projects from "@/components/Projects";
-import GameBanner from "@/components/GameBanner";
 
 export default function Home() {
   return (
     <main className="flex flex-col">
       <Navbar />
       <Hero />
-      <GameBanner />
+      {/* <GameBanner /> */}
       <About />
       <Board />
       <Projects />

@@ -193,7 +193,7 @@ export default function AdminPage() {
 
                 {section === "quick" && <QuickEditor />}
 
-                {section === "game" && <GameEditor />}
+                {/* {section === "game" && <GameEditor />} */}
               </div>
             </main>
           </div>
