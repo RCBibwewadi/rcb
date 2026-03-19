@@ -240,7 +240,7 @@ export default function QuizModal({ series, onClose, onQuizComplete }: QuizModal
   const currentQ = questions[currentQuestion];
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-start justify-center p-4 overflow-y-auto">
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto">
       <div className="bg-white rounded-2xl max-w-2xl w-full p-6 md:p-8 my-8 relative">
         {/* Error Banner */}
         {errorBanner && (
