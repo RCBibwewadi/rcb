@@ -87,7 +87,7 @@ export default function EventsSection() {
                   className={`px-5 py-2 rounded-md text-sm font-medium transition-all ${
                     listTab === "upcoming"
                       ? "bg-rose-tan text-black"
-                      : "text-rose-tan-light"
+                      : "text-rose-tan hover:text-rose-tan-light"
                   }`}
                 >
                   Upcoming Events
@@ -101,7 +101,7 @@ export default function EventsSection() {
                   className={`px-5 py-2 rounded-md text-sm font-medium transition-all ${
                     listTab === "previous"
                       ? "bg-rose-tan text-black"
-                      : "text-rose-tan-light"
+                      : "text-rose-tan hover:text-rose-tan-light"
                   }`}
                 >
                   Previous Events

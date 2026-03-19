@@ -18,7 +18,7 @@ export default function MomentsHero() {
           </Link>
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-pretty leading-tight">
             Memorable{" "}
-            <span className=" bg-clip-text text-mauve-wine">Moments</span>
+            <span className="text-luxury-gold">Moments</span>
           </h1>
 
           <p className="text-lg sm:text-xl text-slate-300 text-pretty max-w-xl">

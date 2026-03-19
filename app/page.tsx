@@ -12,7 +12,6 @@ export default function Home() {
     <main className="flex flex-col">
       <Navbar />
       <Hero />
-      {/* <GameBanner /> */}
       <About />
       <Board />
       <Projects />

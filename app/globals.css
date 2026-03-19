@@ -23,14 +23,14 @@
   --color-foreground: var(--foreground);
 
   /* Register custom colors for Tailwind usage */
-  --color-rose-tan: var(--color-rose-tan);
-  --color-rose-tan-light: var(--color-rose-tan-light);
-  --color-rose-tan-dark: var(--color-rose-tan-dark);
-  --color-mauve-wine: var(--color-mauve-wine);
-  --color-mauve-wine-light: var(--color-mauve-wine-light);
-  --color-mauve-wine-dark: var(--color-mauve-wine-dark);
-  --color-luxury-cream: var(--color-luxury-cream);
-  --color-luxury-gold: var(--color-luxury-gold);
+  --color-rose-tan: #D4A574;
+  --color-rose-tan-light: #E6BF94;
+  --color-rose-tan-dark: #B8956B;
+  --color-mauve-wine: #6B4C57;
+  --color-mauve-wine-light: #8B6B77;
+  --color-mauve-wine-dark: #4A3440;
+  --color-luxury-cream: #FAF7F4;
+  --color-luxury-gold: #D4AF37;
 
   /* Fonts */
   --font-sans: var(--font-inter);
@@ -44,10 +44,23 @@
 }
 
 /* Base styles */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-inter);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 /* Utilities */
@@ -65,6 +78,7 @@ body {
   background: linear-gradient(135deg, #D4A574 0%, #6B4C57 100%);
 }
 .glass-effect {
+  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   background: rgba(250, 247, 244, 0.95);
   border: 1px solid rgba(212, 165, 116, 0.2);
@@ -108,6 +122,17 @@ body {
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
 }
 
-html {
-  scroll-behavior: smooth;
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
