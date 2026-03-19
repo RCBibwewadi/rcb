@@ -31,6 +31,14 @@
   --color-mauve-wine-dark: #4A3440;
   --color-luxury-cream: #FAF7F4;
   --color-luxury-gold: #D4AF37;
+  --color-rose-tan: #D4A574;
+  --color-rose-tan-light: #E6BF94;
+  --color-rose-tan-dark: #B8956B;
+  --color-mauve-wine: #6B4C57;
+  --color-mauve-wine-light: #8B6B77;
+  --color-mauve-wine-dark: #4A3440;
+  --color-luxury-cream: #FAF7F4;
+  --color-luxury-gold: #D4AF37;
 
   /* Fonts */
   --font-sans: var(--font-inter);
@@ -100,39 +108,4 @@ body {
 .scrollbar-hide {
   -ms-overflow-style: none;
   scrollbar-width: none;
-}
-
-/* Animations */
-@keyframes slide-down {
-  from {
-    opacity: 0;
-    transform: translate(-50%, -100%);
-  }
-  to {
-    opacity: 1;
-    transform: translate(-50%, 0);
-  }
-}
-
-.animate-slide-down {
-  animation: slide-down 0.5s ease-out;
-}
-
-.luxury-shadow-lg {
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-}
-
-.animate-fade-in {
-  animation: fadeIn 0.3s ease-out;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
 }
