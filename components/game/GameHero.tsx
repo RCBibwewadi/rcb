@@ -50,7 +50,7 @@ export default function GameHero() {
               <span className="font-semibold">11 Questions</span> per quiz
             </div>
             <div className="bg-white/20 backdrop-blur-sm px-6 py-3 rounded-full">
-              <span className="font-semibold">1.5 Minutes</span> to complete
+              <span className="font-semibold">3 Minutes</span> to complete
             </div>
             <div className="bg-white/20 backdrop-blur-sm px-6 py-3 rounded-full">
               <span className="font-semibold">Multiple Series</span> to explore
