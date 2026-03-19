@@ -270,7 +270,7 @@ export default function GameEditor() {
                     defaultValue={existingQ?.question_text || ""}
                     placeholder="Question text"
                     required
-                    className="w-full px-3 py-2 text-gray-900 border border-rose-tan-light rounded focus:ring-2 focus:ring-rose-tan"
+                    className="w-full px-3 py-2 border border-rose-tan-light rounded focus:ring-2 focus:ring-rose-tan"
                   />
                   <div className="grid grid-cols-2 gap-3">
                     <input
@@ -279,7 +279,7 @@ export default function GameEditor() {
                       defaultValue={existingQ?.option_a || ""}
                       placeholder="Option A"
                       required
-                      className="px-3 py-2 border text-gray-900 border-rose-tan-light rounded focus:ring-2 focus:ring-rose-tan"
+                      className="px-3 py-2 border border-rose-tan-light rounded focus:ring-2 focus:ring-rose-tan"
                     />
                     <input
                       type="text"
@@ -287,7 +287,7 @@ export default function GameEditor() {
                       defaultValue={existingQ?.option_b || ""}
                       placeholder="Option B"
                       required
-                      className="px-3 py-2 border text-gray-900 border-rose-tan-light rounded focus:ring-2 focus:ring-rose-tan"
+                      className="px-3 py-2 border border-rose-tan-light rounded focus:ring-2 focus:ring-rose-tan"
                     />
                     <input
                       type="text"
@@ -295,7 +295,7 @@ export default function GameEditor() {
                       defaultValue={existingQ?.option_c || ""}
                       placeholder="Option C"
                       required
-                      className="px-3 py-2 border text-gray-900 border-rose-tan-light rounded focus:ring-2 focus:ring-rose-tan"
+                      className="px-3 py-2 border border-rose-tan-light rounded focus:ring-2 focus:ring-rose-tan"
                     />
                     <input
                       type="text"
@@ -303,14 +303,14 @@ export default function GameEditor() {
                       defaultValue={existingQ?.option_d || ""}
                       placeholder="Option D"
                       required
-                      className="px-3 py-2 border text-gray-900 border-rose-tan-light rounded focus:ring-2 focus:ring-rose-tan"
+                      className="px-3 py-2 border border-rose-tan-light rounded focus:ring-2 focus:ring-rose-tan"
                     />
                   </div>
                   <select
                     name={`q${i}_correct`}
                     defaultValue={existingQ?.correct_answer || "A"}
                     required
-                    className="w-full px-3 py-2 border text-gray-900 border-rose-tan-light rounded focus:ring-2 focus:ring-rose-tan"
+                    className="w-full px-3 py-2 border border-rose-tan-light rounded focus:ring-2 focus:ring-rose-tan"
                   >
                     <option value="A">Correct Answer: A</option>
                     <option value="B">Correct Answer: B</option>
@@ -362,7 +362,7 @@ export default function GameEditor() {
               name="name"
               defaultValue={editingSeries?.name || ""}
               required
-              className="w-full px-3 py-2 text-gray-900 border border-rose-tan-light rounded focus:ring-2 focus:ring-rose-tan"
+              className="w-full px-3 py-2 border border-rose-tan-light rounded focus:ring-2 focus:ring-rose-tan"
             />
           </div>
 
@@ -429,7 +429,7 @@ export default function GameEditor() {
               name="description"
               defaultValue={editingSeries?.description || ""}
               rows={3}
-              className="w-full px-3 py-2 text-gray-900 border border-rose-tan-light rounded focus:ring-2 focus:ring-rose-tan"
+              className="w-full px-3 py-2 border border-rose-tan-light rounded focus:ring-2 focus:ring-rose-tan"
             />
           </div>
 
@@ -441,7 +441,7 @@ export default function GameEditor() {
               type="number"
               name="display_order"
               defaultValue={editingSeries?.display_order || 0}
-              className="w-full px-3 py-2 text-gray-900 border border-rose-tan-light rounded focus:ring-2 focus:ring-rose-tan"
+              className="w-full px-3 py-2 border border-rose-tan-light rounded focus:ring-2 focus:ring-rose-tan"
             />
           </div>
 
