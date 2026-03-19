@@ -59,7 +59,7 @@ export default function AdminPage() {
                 placeholder="Enter admin password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full text-black px-4 py-3 border border-rose-tan-light rounded-lg focus:ring-2 focus:ring-rose-tan focus:border-transparent transition-all bg-white"
+                className="w-full px-4 py-3 border border-rose-tan-light rounded-lg focus:ring-2 focus:ring-rose-tan focus:border-transparent transition-all bg-white"
               />
               <button
                 type="submit"
