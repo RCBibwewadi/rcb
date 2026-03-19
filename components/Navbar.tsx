@@ -5,15 +5,12 @@ import Link from "next/link";
 import Image from "next/image";
 import { Instagram } from "lucide-react";
 
-/* eslint-disable @next/next/no-html-link-for-pages */
-
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => {
-      // Scroll handler can be used for future features
-    };
+    const onScroll = () => setIsScrolled(window.scrollY > 50);
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
@@ -42,56 +39,56 @@ export default function Navbar() {
             FOMO
             <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-rose-tan transition-all duration-300 group-hover:w-full" />
           </Link>
-          <a
+          <Link
             href="/#home"
             className="relative font-medium text-mauve-wine hover:text-rose-tan transition-colors group"
           >
             Home
             <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-rose-tan transition-all duration-300 group-hover:w-full" />
-          </a>
-          <a
+          </Link>
+          <Link
             href="/#about"
             className="relative font-medium text-mauve-wine hover:text-rose-tan transition-colors group"
           >
             About
             <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-rose-tan transition-all duration-300 group-hover:w-full" />
-          </a>
-          <a
+          </Link>
+          <Link
             href="/#board"
             className="relative font-medium text-mauve-wine hover:text-rose-tan transition-colors group"
           >
             BOD
             <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-rose-tan transition-all duration-300 group-hover:w-full" />
-          </a>
-          <a
+          </Link>
+          <Link
             href="/#projects"
             className="relative font-medium text-mauve-wine hover:text-rose-tan transition-colors group"
           >
             Projects
             <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-rose-tan transition-all duration-300 group-hover:w-full" />
-          </a>
-          <a
+          </Link>
+          <Link
             href="/#events"
             className="relative font-medium text-mauve-wine hover:text-rose-tan transition-colors group"
           >
             Events
             <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-rose-tan transition-all duration-300 group-hover:w-full" />
-          </a>
-          <a
+          </Link>
+          <Link
             href="/#join"
             className="relative font-medium text-mauve-wine hover:text-rose-tan transition-colors group"
           >
             Join Us
             <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-rose-tan transition-all duration-300 group-hover:w-full" />
-          </a>
-          <a
+          </Link>
+          <Link
             href="https://www.instagram.com/rotaractclubofbibwewadipune?igsh=Z2s0bTEwd2hoaTFj"
             target="_blank"
             rel="noopener noreferrer"
             className="mr-2"
           >
             <Instagram className="w-6 h-6 hover:text-rose-tan" />
-          </a>
+          </Link>
         </div>
         <a
           href="https://www.instagram.com/rotaractclubofbibwewadipune?igsh=Z2s0bTEwd2hoaTFj"
@@ -139,44 +136,38 @@ export default function Navbar() {
               href="/quick"
               className="text-mauve-wine hover:text-rose-tan font-medium py-2"
             >
-              FOMO
+              Quick
             </Link>
-            <a
-              href="/#home"
+            <Link
+              href="#home"
               className="text-mauve-wine hover:text-rose-tan font-medium py-2"
             >
               Home
-            </a>
-            <a
-              href="/#about"
+            </Link>
+            <Link
+              href="#about"
               className="text-mauve-wine hover:text-rose-tan font-medium py-2"
             >
               About
-            </a>
-            <a
-              href="/#board"
-              className="text-mauve-wine hover:text-rose-tan font-medium py-2"
-            >
-              BOD
-            </a>
-            <a
-              href="/#projects"
+            </Link>
+            <Link
+              href="#projects"
               className="text-mauve-wine hover:text-rose-tan font-medium py-2"
             >
               Projects
-            </a>
-            <a
-              href="/#events"
+            </Link>
+            <Link
+              href="#events"
               className="text-mauve-wine hover:text-rose-tan font-medium py-2"
             >
               Events
-            </a>
-            <a
-              href="/#join"
+            </Link>
+            <Link
+              href="#join"
               className="text-mauve-wine hover:text-rose-tan font-medium py-2"
             >
               Join Us
-            </a>
+            </Link>
           </div>
         </div>
       )}
