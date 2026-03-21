@@ -156,8 +156,8 @@ export default function AdminPage() {
                             ? "Events"
                             : sec === "quick"
                             ? "Quick Section"
-                            : sec === "matchup"
-                            ? "MatchUp"
+                            // : sec === "matchup"
+                            // ? "MatchUp"
                             : ""}
                         </button>
                       </li>
@@ -194,7 +194,7 @@ export default function AdminPage() {
 
                 {section === "quick" && <QuickEditor />}
 
-                 {section === "matchup" && <MatchUp />}
+                 {/* {section === "matchup" && <MatchUp />} */}
               </div>
             </main>
           </div>
