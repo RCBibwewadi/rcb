@@ -74,7 +74,9 @@ CREATE TABLE IF NOT EXISTS matchup_matches (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   user1_id UUID NOT NULL REFERENCES matchup_users(id) ON DELETE CASCADE,
   user2_id UUID NOT NULL REFERENCES matchup_users(id) ON DELETE CASCADE,
-  status VARCHAR(20) NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'accepted', 'rejected', 'auto_matched')),
+  status VARCHAR(20) NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'confirmed', 'rejected', 'auto_matched')),
+  user1_status VARCHAR(20) NOT NULL DEFAULT 'pending' CHECK (user1_status IN ('pending', 'accepted', 'rejected')),
+  user2_status VARCHAR(20) NOT NULL DEFAULT 'pending' CHECK (user2_status IN ('pending', 'accepted', 'rejected')),
   match_score DECIMAL(5,2),
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW(),
@@ -119,6 +121,8 @@ CREATE INDEX IF NOT EXISTS idx_matchup_swipes_swiped_id ON matchup_swipes(swiped
 CREATE INDEX IF NOT EXISTS idx_matchup_matches_user1_id ON matchup_matches(user1_id);
 CREATE INDEX IF NOT EXISTS idx_matchup_matches_user2_id ON matchup_matches(user2_id);
 CREATE INDEX IF NOT EXISTS idx_matchup_matches_status ON matchup_matches(status);
+CREATE INDEX IF NOT EXISTS idx_matchup_matches_user1_status ON matchup_matches(user1_status);
+CREATE INDEX IF NOT EXISTS idx_matchup_matches_user2_status ON matchup_matches(user2_status);
 CREATE INDEX IF NOT EXISTS idx_matchup_notifications_user_id ON matchup_notifications(user_id);
 CREATE INDEX IF NOT EXISTS idx_matchup_notifications_is_read ON matchup_notifications(is_read);
 CREATE INDEX IF NOT EXISTS idx_matchup_preference_questions_active ON matchup_preference_questions(is_active);

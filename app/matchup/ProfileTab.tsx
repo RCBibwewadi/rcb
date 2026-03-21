@@ -239,7 +239,7 @@ export default function ProfileTab({ user, profile, onUpdate }: ProfileTabProps)
               required
               minLength={2}
               maxLength={50}
-              className="w-full px-4 py-3 border border-rose-tan-light rounded-lg focus:ring-2 focus:ring-rose-tan focus:border-transparent text-mauve-wine"
+              className="w-full px-4 py-3 border border-rose-tan-light rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-tan focus:border-transparent text-mauve-wine"
               placeholder="Choose a username"
             />
           </div>
@@ -252,7 +252,7 @@ export default function ProfileTab({ user, profile, onUpdate }: ProfileTabProps)
               type="date"
               value={formData.dob}
               onChange={(e) => setFormData({ ...formData, dob: e.target.value })}
-              className="w-full px-4 py-3 border border-rose-tan-light rounded-lg focus:ring-2 focus:ring-rose-tan focus:border-transparent text-mauve-wine"
+              className="w-full px-4 py-3 border border-rose-tan-light rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-tan focus:border-transparent text-mauve-wine"
             />
             {zodiacSign && (
               <p className="text-sm text-mauve-wine-light mt-1">
@@ -338,7 +338,7 @@ export default function ProfileTab({ user, profile, onUpdate }: ProfileTabProps)
                 }
                 rows={2}
                 maxLength={500}
-                className="w-full px-4 py-3 border border-rose-tan-light rounded-lg focus:ring-2 focus:ring-rose-tan focus:border-transparent text-mauve-wine resize-none"
+                className="w-full px-4 py-3 border border-rose-tan-light rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-tan focus:border-transparent text-mauve-wine resize-none"
                 placeholder="Your answer..."
               />
             </div>

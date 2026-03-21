@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseServer } from '@/lib/supabaseClient';
 import { jwtVerify } from 'jose';
+import { UserMatchStatus } from '@/lib/types';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
 
@@ -14,6 +15,34 @@ async function getUserId(request: NextRequest): Promise<string | null> {
   } catch {
     return null;
   }
+}
+
+async function lockUsersAndRejectOtherMatches(
+  userId: string, 
+  partnerId: string, 
+  confirmedMatchId: string
+): Promise<void> {
+  await supabaseServer
+    .from('matchup_users')
+    .update({ is_matched: true, matched_with: partnerId })
+    .eq('id', userId);
+
+  await supabaseServer
+    .from('matchup_users')
+    .update({ is_matched: true, matched_with: userId })
+    .eq('id', partnerId);
+
+  await supabaseServer
+    .from('matchup_matches')
+    .update({ 
+      status: 'rejected', 
+      user1_status: 'rejected', 
+      user2_status: 'rejected',
+      updated_at: new Date().toISOString() 
+    })
+    .or(`user1_id.eq.${userId},user2_id.eq.${userId}`)
+    .neq('id', confirmedMatchId)
+    .in('status', ['pending']);
 }
 
 export async function GET(request: NextRequest) {
@@ -37,6 +66,8 @@ export async function GET(request: NextRequest) {
 
     const enrichedMatches = await Promise.all((matches || []).map(async (match) => {
       const partnerId = match.user1_id === userId ? match.user2_id : match.user1_id;
+      const userStatus = match.user1_id === userId ? match.user1_status : match.user2_status;
+      const partnerStatus = match.user1_id === userId ? match.user2_status : match.user1_status;
       
       const { data: partnerProfile } = await supabaseServer
         .from('matchup_profiles')
@@ -49,6 +80,8 @@ export async function GET(request: NextRequest) {
       return {
         ...match,
         partner_id: partnerId,
+        user_status: userStatus,
+        partner_status: partnerStatus,
         partner: {
           ...partner,
           profile: partnerProfile
@@ -57,17 +90,17 @@ export async function GET(request: NextRequest) {
     }));
 
     const pendingMatches = enrichedMatches.filter(m => m.status === 'pending');
-    const acceptedMatch = enrichedMatches.find(m => 
-      m.status === 'accepted' || m.status === 'auto_matched'
+    const confirmedMatch = enrichedMatches.find(m => 
+      m.status === 'confirmed' || m.status === 'auto_matched'
     );
     const rejectedMatches = enrichedMatches.filter(m => m.status === 'rejected');
 
     return NextResponse.json({
       matches: enrichedMatches,
       pending_matches: pendingMatches,
-      accepted_match: acceptedMatch || null,
+      confirmed_match: confirmedMatch || null,
       rejected_matches: rejectedMatches,
-      has_accepted_match: !!acceptedMatch,
+      has_confirmed_match: !!confirmedMatch,
       pending_count: pendingMatches.length
     });
   } catch (error) {
@@ -93,6 +126,16 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Invalid action' }, { status: 400 });
     }
 
+    const { data: currentUser } = await supabaseServer
+      .from('matchup_users')
+      .select('is_matched')
+      .eq('id', userId)
+      .single();
+
+    if (currentUser?.is_matched && action === 'accept') {
+      return NextResponse.json({ error: 'You are already matched with someone' }, { status: 400 });
+    }
+
     const { data: match, error: matchError } = await supabaseServer
       .from('matchup_matches')
       .select('*')
@@ -104,41 +147,92 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Match not found' }, { status: 404 });
     }
 
-    if (match.status !== 'pending') {
-      return NextResponse.json({ error: 'Match is not in pending state' }, { status: 400 });
+    if (match.status === 'rejected') {
+      return NextResponse.json({ error: 'Match has already been rejected' }, { status: 400 });
     }
 
-    if (action === 'accept') {
-      const partnerId = match.user1_id === userId ? match.user2_id : match.user1_id;
+    if (match.status === 'confirmed') {
+      return NextResponse.json({ error: 'Match has already been confirmed' }, { status: 400 });
+    }
 
+    const isUser1 = match.user1_id === userId;
+    const partnerId = isUser1 ? match.user2_id : match.user1_id;
+    const userStatusField = isUser1 ? 'user1_status' : 'user2_status';
+    const partnerStatusField = isUser1 ? 'user2_status' : 'user1_status';
+    const currentUserStatus: UserMatchStatus = isUser1 ? match.user1_status : match.user2_status;
+    const partnerStatus: UserMatchStatus = isUser1 ? match.user2_status : match.user1_status;
+
+    if (action === 'reject') {
       const { error: updateError } = await supabaseServer
         .from('matchup_matches')
-        .update({ status: 'accepted', updated_at: new Date().toISOString() })
+        .update({ 
+          status: 'rejected', 
+          [userStatusField]: 'rejected',
+          updated_at: new Date().toISOString() 
+        })
         .eq('id', match_id);
 
       if (updateError) throw updateError;
 
       await supabaseServer
-        .from('matchup_users')
-        .update({ is_matched: true, matched_with: partnerId })
-        .eq('id', userId);
+        .from('matchup_notifications')
+        .insert({
+          user_id: partnerId,
+          type: 'match_rejected',
+          title: 'Match Declined',
+          message: 'Your match has been declined by the other person.',
+          related_user_id: userId
+        });
 
-      await supabaseServer
-        .from('matchup_users')
-        .update({ is_matched: true, matched_with: userId })
-        .eq('id', partnerId);
+      return NextResponse.json({ 
+        message: 'Match rejected',
+        status: 'rejected'
+      });
+    }
 
-      await supabaseServer
-        .from('matchup_matches')
-        .update({ status: 'rejected', updated_at: new Date().toISOString() })
-        .or(`user1_id.eq.${userId},user2_id.eq.${userId}`)
-        .neq('id', match_id)
-        .eq('status', 'pending');
+    if (currentUserStatus === 'accepted') {
+      return NextResponse.json({ 
+        message: 'You have already accepted this match',
+        status: match.status,
+        user_status: currentUserStatus,
+        partner_status: partnerStatus
+      });
+    }
+
+    const newMatchData: Record<string, unknown> = {
+      [userStatusField]: 'accepted',
+      updated_at: new Date().toISOString()
+    };
+
+    let finalStatus = match.status;
+    let bothAccepted = false;
+
+    if (partnerStatus === 'accepted') {
+      newMatchData.status = 'confirmed';
+      finalStatus = 'confirmed';
+      bothAccepted = true;
+    }
+
+    const { error: updateError } = await supabaseServer
+      .from('matchup_matches')
+      .update(newMatchData)
+      .eq('id', match_id);
+
+    if (updateError) throw updateError;
+
+    if (bothAccepted) {
+      await lockUsersAndRejectOtherMatches(userId, partnerId, match_id);
 
       const { data: partnerUser } = await supabaseServer
         .from('matchup_users')
         .select('name')
         .eq('id', partnerId)
+        .single();
+
+      const { data: currentUserData } = await supabaseServer
+        .from('matchup_users')
+        .select('name')
+        .eq('id', userId)
         .single();
 
       await supabaseServer
@@ -155,28 +249,35 @@ export async function POST(request: NextRequest) {
             user_id: partnerId,
             type: 'final_partner',
             title: 'Match Confirmed!',
-            message: `You are now matched with someone!`,
+            message: `You are now matched with ${currentUserData?.name || 'someone'}!`,
             related_user_id: userId
           }
         ]);
 
       return NextResponse.json({ 
-        message: 'Match accepted successfully',
-        status: 'accepted'
-      });
-    } else {
-      const { error: updateError } = await supabaseServer
-        .from('matchup_matches')
-        .update({ status: 'rejected', updated_at: new Date().toISOString() })
-        .eq('id', match_id);
-
-      if (updateError) throw updateError;
-
-      return NextResponse.json({ 
-        message: 'Match rejected',
-        status: 'rejected'
+        message: 'Match confirmed! Both users accepted.',
+        status: 'confirmed',
+        both_accepted: true
       });
     }
+
+    await supabaseServer
+      .from('matchup_notifications')
+      .insert({
+        user_id: partnerId,
+        type: 'match_accepted',
+        title: 'Match Accepted!',
+        message: 'Someone accepted your match! Check your matches to respond.',
+        related_user_id: userId
+      });
+
+    return NextResponse.json({ 
+      message: 'Match accepted. Waiting for the other person to respond.',
+      status: 'pending',
+      user_status: 'accepted',
+      partner_status: partnerStatus,
+      both_accepted: false
+    });
   } catch (error) {
     console.error('Match action error:', error);
     return NextResponse.json({ error: 'Failed to process match action' }, { status: 500 });

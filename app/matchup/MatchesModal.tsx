@@ -2,13 +2,18 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Heart, Check, UserX, Loader2 } from "lucide-react";
+import { X, Heart, Check, UserX, Loader2, Clock } from "lucide-react";
 import { MatchUpMatch } from "@/lib/types";
 
+interface EnrichedMatch extends MatchUpMatch {
+  user_status?: string;
+  partner_status?: string;
+}
+
 interface MatchesModalProps {
-  matches: MatchUpMatch[];
+  matches: EnrichedMatch[];
   onClose: () => void;
-  onAction: (accepted: boolean) => void;
+  onAction: (accepted: boolean, confirmed?: boolean) => void;
 }
 
 export default function MatchesModal({ matches, onClose, onAction }: MatchesModalProps) {
@@ -32,11 +37,51 @@ export default function MatchesModal({ matches, onClose, onAction }: MatchesModa
         throw new Error(data.error || "Failed to process action");
       }
 
-      onAction(action === "accept");
+      onAction(action === "accept", data.both_accepted === true);
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred");
       setProcessing(null);
     }
+  };
+
+  const getStatusBadge = (match: EnrichedMatch) => {
+    const userStatus = match.user_status;
+    const partnerStatus = match.partner_status;
+
+    if (userStatus === "accepted" && partnerStatus === "accepted") {
+      return (
+        <span className="px-2 py-1 text-xs bg-green-100 text-green-700 rounded-full">
+          Confirmed!
+        </span>
+      );
+    }
+
+    if (userStatus === "accepted" && partnerStatus === "pending") {
+      return (
+        <span className="px-2 py-1 text-xs bg-yellow-100 text-yellow-700 rounded-full flex items-center gap-1">
+          <Clock className="w-3 h-3" />
+          Waiting for response
+        </span>
+      );
+    }
+
+    if (userStatus === "pending" && partnerStatus === "accepted") {
+      return (
+        <span className="px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded-full">
+          They accepted!
+        </span>
+      );
+    }
+
+    return null;
+  };
+
+  const isMatchWaitingForUser = (match: EnrichedMatch) => {
+    return match.user_status === "pending" && match.partner_status === "accepted";
+  };
+
+  const hasUserAlreadyAccepted = (match: EnrichedMatch) => {
+    return match.user_status === "accepted";
   };
 
   return (
@@ -62,7 +107,7 @@ export default function MatchesModal({ matches, onClose, onAction }: MatchesModa
 
         <h2 className="text-2xl font-bold text-mauve-wine mb-2">Your Matches</h2>
         <p className="text-mauve-wine-light mb-6">
-          You have {matches.length} pending match{matches.length > 1 ? "es" : ""}. Accept one to complete your match!
+          You have {matches.length} pending match{matches.length > 1 ? "es" : ""}.
         </p>
 
         {error && (
@@ -94,9 +139,12 @@ export default function MatchesModal({ matches, onClose, onAction }: MatchesModa
                     )}
                   </div>
                   <div className="flex-1">
-                    <h3 className="font-semibold text-mauve-wine">
-                      {match.partner?.profile?.username || match.partner?.name || "Unknown"}
-                    </h3>
+                    <div className="flex items-center gap-2">
+                      <h3 className="font-semibold text-mauve-wine">
+                        {match.partner?.profile?.username || match.partner?.name || "Unknown"}
+                      </h3>
+                      {getStatusBadge(match)}
+                    </div>
                     {match.match_score && (
                       <p className="text-sm text-mauve-wine-light">
                         {Math.round(match.match_score)}% match
@@ -106,28 +154,42 @@ export default function MatchesModal({ matches, onClose, onAction }: MatchesModa
                 </div>
 
                 <div className="flex gap-3 mt-4">
-                  <button
-                    onClick={() => handleAction(match.id, "accept")}
-                    disabled={processing === match.id}
-                    className="flex-1 luxury-gradient text-white font-semibold py-2 rounded-lg flex items-center justify-center gap-2 disabled:opacity-50"
-                  >
-                    {processing === match.id ? (
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                    ) : (
-                      <>
-                        <Check className="w-4 h-4" />
-                        Accept
-                      </>
-                    )}
-                  </button>
-                  <button
-                    onClick={() => handleAction(match.id, "reject")}
-                    disabled={processing === match.id}
-                    className="flex-1 bg-gray-100 text-mauve-wine font-semibold py-2 rounded-lg flex items-center justify-center gap-2 hover:bg-gray-200 transition-colors disabled:opacity-50"
-                  >
-                    <UserX className="w-4 h-4" />
-                    Decline
-                  </button>
+                  {!hasUserAlreadyAccepted(match) && (
+                    <>
+                      <button
+                        onClick={() => handleAction(match.id, "accept")}
+                        disabled={processing === match.id}
+                        className={`flex-1 font-semibold py-2 rounded-lg flex items-center justify-center gap-2 disabled:opacity-50 ${
+                          isMatchWaitingForUser(match)
+                            ? "luxury-gradient text-white animate-pulse"
+                            : "luxury-gradient text-white"
+                        }`}
+                      >
+                        {processing === match.id ? (
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                        ) : (
+                          <>
+                            <Check className="w-4 h-4" />
+                            Accept
+                          </>
+                        )}
+                      </button>
+                      <button
+                        onClick={() => handleAction(match.id, "reject")}
+                        disabled={processing === match.id}
+                        className="flex-1 bg-gray-100 text-mauve-wine font-semibold py-2 rounded-lg flex items-center justify-center gap-2 hover:bg-gray-200 transition-colors disabled:opacity-50"
+                      >
+                        <UserX className="w-4 h-4" />
+                        Decline
+                      </button>
+                    </>
+                  )}
+                  {hasUserAlreadyAccepted(match) && match.partner_status === "pending" && (
+                    <div className="flex-1 text-center py-2 text-mauve-wine-light text-sm">
+                      <Clock className="w-4 h-4 inline mr-2 animate-pulse" />
+                      Waiting for their response...
+                    </div>
+                  )}
                 </div>
               </motion.div>
             ))}
@@ -136,7 +198,7 @@ export default function MatchesModal({ matches, onClose, onAction }: MatchesModa
 
         <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
           <p className="text-sm text-blue-800">
-            <strong>Note:</strong> You can only accept one match. Once you accept, all other pending matches will be automatically rejected.
+            <strong>Note:</strong> A match is only confirmed when BOTH users accept. If either declines, the match is cancelled.
           </p>
         </div>
       </motion.div>

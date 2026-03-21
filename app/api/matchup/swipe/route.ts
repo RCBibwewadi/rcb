@@ -47,6 +47,16 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'You are already matched' }, { status: 400 });
     }
 
+    const { data: swipedUser } = await supabaseServer
+      .from('matchup_users')
+      .select('is_matched')
+      .eq('id', swiped_id)
+      .single();
+
+    if (swipedUser?.is_matched) {
+      return NextResponse.json({ error: 'This user is already matched' }, { status: 400 });
+    }
+
     const { error: swipeError } = await supabaseServer
       .from('matchup_swipes')
       .upsert(
@@ -83,7 +93,9 @@ export async function POST(request: NextRequest) {
             .insert([{
               user1_id: userId,
               user2_id: swiped_id,
-              status: 'pending'
+              status: 'pending',
+              user1_status: 'pending',
+              user2_status: 'pending'
             }]);
 
           if (matchError) {

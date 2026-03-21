@@ -206,7 +206,7 @@ export default function PreferencesSection() {
               value={newQuestion.question}
               onChange={(e) => setNewQuestion({ ...newQuestion, question: e.target.value })}
               placeholder="Enter question text"
-              className="w-full px-3 py-2 border border-rose-tan-light rounded-lg focus:ring-2 focus:ring-rose-tan focus:border-transparent text-mauve-wine"
+              className="w-full px-3 py-2 border border-rose-tan-light rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-tan focus:border-transparent text-mauve-wine"
               autoFocus
             />
             <div className="flex items-center gap-4">
@@ -218,7 +218,7 @@ export default function PreferencesSection() {
                 step="0.1"
                 value={newQuestion.weight}
                 onChange={(e) => setNewQuestion({ ...newQuestion, weight: parseFloat(e.target.value) || 1 })}
-                className="w-24 px-3 py-2 border border-rose-tan-light rounded-lg focus:ring-2 focus:ring-rose-tan focus:border-transparent text-mauve-wine"
+                className="w-24 px-3 py-2 border border-rose-tan-light rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-tan focus:border-transparent text-mauve-wine"
               />
               <div className="flex gap-2 ml-auto">
                 <button

@@ -120,7 +120,9 @@ export async function POST(request: NextRequest) {
     const matchesToInsert = finalMatches.map(m => ({
       user1_id: m.user1_id,
       user2_id: m.user2_id,
-      status: 'auto_matched',
+      status: 'confirmed',
+      user1_status: 'accepted',
+      user2_status: 'accepted',
       match_score: m.score
     }));
 

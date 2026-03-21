@@ -115,7 +115,7 @@ export default function RegistrationModal({
                   required
                   minLength={2}
                   maxLength={100}
-                  className="w-full px-4 py-3 border border-rose-tan-light rounded-lg focus:ring-2 focus:ring-rose-tan focus:border-transparent text-mauve-wine"
+                  className="w-full px-4 py-3 border border-rose-tan-light rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-tan focus:border-transparent text-mauve-wine"
                   placeholder="Enter your full name"
                 />
               </div>
@@ -127,7 +127,7 @@ export default function RegistrationModal({
                 <select
                   name="gender"
                   required
-                  className="w-full px-4 py-3 border border-rose-tan-light rounded-lg focus:ring-2 focus:ring-rose-tan focus:border-transparent text-mauve-wine"
+                  className="w-full px-4 py-3 border border-rose-tan-light rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-tan focus:border-transparent text-mauve-wine"
                 >
                   <option value="">Select gender</option>
                   {GENDER_OPTIONS.map((opt) => (
@@ -147,7 +147,7 @@ export default function RegistrationModal({
                   name="rid"
                   required
                   minLength={3}
-                  className="w-full px-4 py-3 border border-rose-tan-light rounded-lg focus:ring-2 focus:ring-rose-tan focus:border-transparent text-mauve-wine"
+                  className="w-full px-4 py-3 border border-rose-tan-light rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-tan focus:border-transparent text-mauve-wine"
                   placeholder="Enter your Rotaract ID"
                 />
               </div>
@@ -162,7 +162,7 @@ export default function RegistrationModal({
               type="email"
               name="email"
               required
-              className="w-full px-4 py-3 border border-rose-tan-light rounded-lg focus:ring-2 focus:ring-rose-tan focus:border-transparent text-mauve-wine"
+              className="w-full px-4 py-3 border border-rose-tan-light rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-tan focus:border-transparent text-mauve-wine"
               placeholder="Enter your email"
             />
           </div>
@@ -177,7 +177,7 @@ export default function RegistrationModal({
                 name="password"
                 required
                 minLength={6}
-                className="w-full px-4 py-3 border border-rose-tan-light rounded-lg focus:ring-2 focus:ring-rose-tan focus:border-transparent text-mauve-wine pr-12"
+                className="w-full px-4 py-3 border border-rose-tan-light rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-tan focus:border-transparent text-mauve-wine pr-12"
                 placeholder="Enter your password"
               />
               <button

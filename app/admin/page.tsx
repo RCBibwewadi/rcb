@@ -61,7 +61,7 @@ export default function AdminPage() {
                 placeholder="Enter admin password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-3 border border-rose-tan-light rounded-lg focus:ring-2 focus:ring-rose-tan focus:border-transparent transition-all bg-white"
+                className="w-full px-4 py-3 border border-rose-tan-light rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-tan focus:border-transparent transition-all bg-white text-black"
               />
               <button
                 type="submit"
@@ -156,8 +156,8 @@ export default function AdminPage() {
                             ? "Events"
                             : sec === "quick"
                             ? "Quick Section"
-                            // : sec === "matchup"
-                            // ? "MatchUp"
+                            : sec === "matchup"
+                            ? "MatchUp"
                             : ""}
                         </button>
                       </li>
@@ -194,7 +194,7 @@ export default function AdminPage() {
 
                 {section === "quick" && <QuickEditor />}
 
-                {/* {section === "matchup" && <MatchUp />} */}
+                 {section === "matchup" && <MatchUp />}
               </div>
             </main>
           </div>

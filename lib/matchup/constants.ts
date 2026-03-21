@@ -31,6 +31,8 @@ export const GENDER_OPTIONS: { value: 'male' | 'female' | 'other'; label: string
 
 export const NOTIFICATION_TYPES = {
   NEW_MATCH: 'new_match',
+  MATCH_ACCEPTED: 'match_accepted',
+  MATCH_REJECTED: 'match_rejected',
   FINAL_PARTNER: 'final_partner',
   RECONCILIATION_MATCH: 'reconciliation_match',
   PROFILE_APPROVED: 'profile_approved',

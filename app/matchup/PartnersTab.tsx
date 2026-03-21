@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence, useMotionValue, useTransform } from "framer-motion";
 import { Heart, X, Loader2, RefreshCw, User } from "lucide-react";
 import { PartnerWithScore } from "@/lib/types";
-import { formatMatchScore } from "@/lib/matchup/utils";
+import { formatMatchScore, getAgeFromDOB } from "@/lib/matchup/utils";
 
 interface PartnersTabProps {
   userId: string;
@@ -80,45 +80,26 @@ export default function PartnersTab({ userId, userGender, isMatched, onMatch }: 
       const data = await res.json();
 
       if (!res.ok) {
-        throw new Error(data.error || "Failed to record swipe");
+        throw new Error(data.error || "Failed to swipe");
       }
 
       if (data.is_match) {
         setMatchPopup(true);
-        setTimeout(() => setMatchPopup(false), 3000);
-        onMatch();
+        setTimeout(() => {
+          setMatchPopup(false);
+          onMatch();
+        }, 2500);
       }
 
-      setCurrentIndex((prev) => prev + 1);
+      setTimeout(() => {
+        setCurrentIndex((prev) => prev + 1);
+        setSwiping(false);
+      }, 300);
     } catch (err) {
       console.error("Swipe error:", err);
-    } finally {
       setSwiping(false);
     }
   };
-
-  const handleDragEnd = (_: unknown, info: { offset: { x: number } }) => {
-    const threshold = 100;
-    if (info.offset.x > threshold) {
-      handleSwipe("right");
-    } else if (info.offset.x < -threshold) {
-      handleSwipe("left");
-    }
-  };
-
-  if (isMatched) {
-    return (
-      <div className="glass-effect rounded-2xl p-8 text-center luxury-shadow">
-        <div className="w-20 h-20 luxury-gradient rounded-full flex items-center justify-center mx-auto mb-4">
-          <Heart className="w-10 h-10 text-white" />
-        </div>
-        <h3 className="text-2xl font-bold text-mauve-wine mb-2">You're Matched!</h3>
-        <p className="text-mauve-wine-light">
-          Congratulations! You have been matched with someone special.
-        </p>
-      </div>
-    );
-  }
 
   if (loading) {
     return (
@@ -199,71 +180,98 @@ export default function PartnersTab({ userId, userGender, isMatched, onMatch }: 
         </p>
       </div>
 
-      <div className="relative h-[500px] sm:h-[550px]">
+      <div className="relative h-[600px] sm:h-[650px] overflow-hidden">
         <AnimatePresence mode="wait">
           <motion.div
             key={currentPartner.user.id}
+            initial={{ opacity: 0, x: 100 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -100 }}
             style={{ x, rotate, opacity }}
             drag="x"
             dragConstraints={{ left: 0, right: 0 }}
-            onDragEnd={handleDragEnd}
-            initial={{ scale: 0.95, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ x: 300, opacity: 0, transition: { duration: 0.2 } }}
-            className="absolute inset-0 glass-effect rounded-2xl luxury-shadow overflow-hidden cursor-grab active:cursor-grabbing"
+            onDragEnd={(_, info) => {
+              if (info.offset.x > 100) {
+                handleSwipe("right");
+              } else if (info.offset.x < -100) {
+                handleSwipe("left");
+              }
+            }}
+            className="absolute inset-0 glass-effect rounded-2xl luxury-shadow overflow-y-auto cursor-grab active:cursor-grabbing"
           >
-            <div className="h-full flex flex-col">
+            <div className="flex flex-col">
               {currentPartner.profile?.photo1_url ? (
-                <div className="h-64 sm:h-72 relative">
-                  <img
-                    src={currentPartner.profile.photo1_url}
-                    alt={currentPartner.profile.username || currentPartner.user.name}
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-                  <div className="absolute bottom-4 left-4 right-4">
-                    <h3 className="text-2xl font-bold text-white">
-                      {currentPartner.profile?.username || currentPartner.user.name}
-                    </h3>
-                    {currentPartner.profile?.zodiac_sign && (
-                      <p className="text-white/80 text-sm">{currentPartner.profile.zodiac_sign}</p>
-                    )}
-                  </div>
-                </div>
+                <img
+                  src={currentPartner.profile.photo1_url}
+                  alt={currentPartner.user.name}
+                  className="w-full h-72 sm:h-80 object-cover rounded-t-2xl"
+                />
               ) : (
-                <div className="h-64 sm:h-72 bg-luxury-cream flex items-center justify-center">
-                  <User className="w-20 h-20 text-mauve-wine-light" />
+                <div className="w-full h-72 sm:h-80 bg-luxury-cream rounded-t-2xl flex items-center justify-center">
+                  <User className="w-20 h-20 text-rose-tan-light" />
                 </div>
               )}
 
-              <div className="flex-1 p-4 overflow-y-auto">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="luxury-gradient text-white px-4 py-2 rounded-full text-sm font-medium">
-                    {formatMatchScore(currentPartner.match_score)} Match
-                  </div>
+              <div className="p-4 text-center border-b border-rose-tan-light/20">
+                <h2 className="text-xl font-bold text-mauve-wine">
+                  {currentPartner.profile?.username || currentPartner.user.name}
+                </h2>
+                <div className="flex items-center justify-center gap-3 mt-2 text-sm text-mauve-wine-light">
+                  {currentPartner.profile?.zodiac_sign && (
+                    <span>{currentPartner.profile.zodiac_sign}</span>
+                  )}
+                  {currentPartner.profile?.zodiac_sign && currentPartner.profile?.dob && (
+                    <span className="text-rose-tan-light">•</span>
+                  )}
+                  {currentPartner.profile?.dob && (
+                    <span>{getAgeFromDOB(currentPartner.profile.dob)} years old</span>
+                  )}
                 </div>
-
-                {currentPartner.profile?.prompt1 && (
-                  <div className="mb-3">
-                    <p className="text-xs text-mauve-wine-light mb-1">About</p>
-                    <p className="text-mauve-wine text-sm">{currentPartner.profile.prompt1}</p>
-                  </div>
-                )}
-
-                {currentPartner.profile?.prompt2 && (
-                  <div className="mb-3">
-                    <p className="text-xs text-mauve-wine-light mb-1">More about me</p>
-                    <p className="text-mauve-wine text-sm">{currentPartner.profile.prompt2}</p>
-                  </div>
-                )}
-
-                {currentPartner.profile?.prompt3 && (
-                  <div className="mb-3">
-                    <p className="text-xs text-mauve-wine-light mb-1">Fun fact</p>
-                    <p className="text-mauve-wine text-sm">{currentPartner.profile.prompt3}</p>
-                  </div>
-                )}
+                <div className="mt-3">
+                  <span className="luxury-gradient text-white px-3 py-1 rounded-full text-sm font-medium">
+                    {formatMatchScore(currentPartner.match_score)} Match
+                  </span>
+                </div>
               </div>
+
+              {currentPartner.profile?.photo2_url && (
+                <img
+                  src={currentPartner.profile.photo2_url}
+                  alt={`${currentPartner.user.name} photo 2`}
+                  className="w-full h-64 sm:h-72 object-cover"
+                />
+              )}
+
+              {currentPartner.profile?.prompt1 && (
+                <div className="p-4 border-b border-rose-tan-light/20">
+                  <p className="text-xs text-mauve-wine-light mb-1">About</p>
+                  <p className="text-mauve-wine text-sm">{currentPartner.profile.prompt1}</p>
+                </div>
+              )}
+
+              {currentPartner.profile?.prompt2 && (
+                <div className="p-4 border-b border-rose-tan-light/20">
+                  <p className="text-xs text-mauve-wine-light mb-1">More about me</p>
+                  <p className="text-mauve-wine text-sm">{currentPartner.profile.prompt2}</p>
+                </div>
+              )}
+
+              {currentPartner.profile?.photo3_url && (
+                <img
+                  src={currentPartner.profile.photo3_url}
+                  alt={`${currentPartner.user.name} photo 3`}
+                  className="w-full h-64 sm:h-72 object-cover"
+                />
+              )}
+
+              {currentPartner.profile?.prompt3 && (
+                <div className="p-4 border-b border-rose-tan-light/20">
+                  <p className="text-xs text-mauve-wine-light mb-1">Fun fact</p>
+                  <p className="text-mauve-wine text-sm">{currentPartner.profile.prompt3}</p>
+                </div>
+              )}
+
+              <div className="h-8"></div>
             </div>
           </motion.div>
         </AnimatePresence>

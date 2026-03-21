@@ -424,10 +424,10 @@ export default function MatchUpPage() {
           <MatchesModal
             matches={pendingMatches}
             onClose={() => setShowMatchesModal(false)}
-            onAction={(accepted) => {
+            onAction={(accepted, confirmed) => {
               fetchPendingMatches();
               fetchSession();
-              if (accepted) {
+              if (accepted && confirmed) {
                 setShowMatchesModal(false);
               }
             }}

@@ -6,8 +6,9 @@ import ToggleSection from "./ToggleSection";
 import RequestsSection from "./RequestsSection";
 import PreferencesSection from "./PreferencesSection";
 import ReconciliationSection from "./ReconciliationSection";
+import MatchesSection from "./MatchesSection";
 
-type TabType = "requests" | "toggle" | "preferences" | "reconciliation";
+type TabType = "requests" | "toggle" | "preferences" | "reconciliation" | "matches";
 
 interface Tab {
   id: TabType;
@@ -17,9 +18,10 @@ interface Tab {
 
 const tabs: Tab[] = [
   { id: "requests", label: "Requests", icon: Users },
-  { id: "toggle", label: "Toggle Matching", icon: ToggleLeft },
+  { id: "toggle", label: "Toggle", icon: ToggleLeft },
   { id: "preferences", label: "Preferences", icon: Sliders },
-  { id: "reconciliation", label: "Reconciliation", icon: Heart },
+  { id: "reconciliation", label: "Reconciliation", icon: RefreshCw },
+  { id: "matches", label: "Matches", icon: Heart },
 ];
 
 export default function MatchUp() {
@@ -40,6 +42,8 @@ export default function MatchUp() {
         return <PreferencesSection key={`preferences-${refreshKey}`} />;
       case "reconciliation":
         return <ReconciliationSection key={`reconciliation-${refreshKey}`} />;
+      case "matches":
+        return <MatchesSection key={`matches-${refreshKey}`} />;
       default:
         return null;
     }

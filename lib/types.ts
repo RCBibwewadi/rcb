@@ -50,7 +50,8 @@ export interface ContentData {
 export type MatchUpUserStatus = 'pending' | 'approved' | 'declined';
 export type MatchUpGender = 'male' | 'female' | 'other';
 export type SwipeDirection = 'left' | 'right';
-export type MatchStatus = 'pending' | 'accepted' | 'rejected' | 'auto_matched';
+export type MatchStatus = 'pending' | 'confirmed' | 'rejected' | 'auto_matched';
+export type UserMatchStatus = 'pending' | 'accepted' | 'rejected';
 
 export interface MatchUpUser {
   id: string;
@@ -113,6 +114,8 @@ export interface MatchUpMatch {
   user1_id: string;
   user2_id: string;
   status: MatchStatus;
+  user1_status: UserMatchStatus;
+  user2_status: UserMatchStatus;
   match_score?: number;
   created_at: string;
   updated_at: string;
