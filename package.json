@@ -11,7 +11,9 @@
   "dependencies": {
     "@formspree/react": "^3.0.0",
     "@supabase/supabase-js": "^2.57.4",
+    "bcryptjs": "^3.0.3",
     "framer-motion": "^12.25.0",
+    "jose": "^6.2.2",
     "lucide-react": "^0.542.0",
     "next": "^15.6.0-canary.58",
     "react": "19.1.0",
