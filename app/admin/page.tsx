@@ -12,6 +12,8 @@ import BoardMembersEditor from "@/components/editors/BoardEditor";
 import ProjectsEditor from "@/components/editors/ProjectsEditor";
 import QuickEditor from "@/components/editors/QuickEditor";
 
+import MatchUp from "@/components/admin/matchup/MatchUp";
+
 export default function AdminPage() {
   const { showToast } = useToast();
   const [authenticated, setAuthenticated] = useState(false);
@@ -133,7 +135,7 @@ export default function AdminPage() {
             <nav className="w-64 bg-white border-r border-rose-tan-light luxury-shadow min-h-screen">
               <div className="p-4">
                 <ul className="space-y-2">
-                  {["hero", "board", "projects", "events", "quick"].map(
+                  {["hero", "board", "projects", "events", "quick", "matchup"].map(
                     (sec) => (
                       <li key={sec}>
                         <button
@@ -154,6 +156,8 @@ export default function AdminPage() {
                             ? "Events"
                             : sec === "quick"
                             ? "Quick Section"
+                            // : sec === "matchup"
+                            // ? "MatchUp"
                             : ""}
                         </button>
                       </li>
@@ -189,6 +193,8 @@ export default function AdminPage() {
                 {section === "events" && <EventsEditor />}
 
                 {section === "quick" && <QuickEditor />}
+
+                {/* {section === "matchup" && <MatchUp />} */}
               </div>
             </main>
           </div>
