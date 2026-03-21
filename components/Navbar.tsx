@@ -32,32 +32,70 @@ export default function Navbar() {
         </div>
         {/* Desktop Links */}
         <div className="hidden md:flex space-x-8 flex-shrink-0">
-          {[
-            { href: "/quick", label: "FOMO" },
-            { href: "#home", label: "Home" },
-            { href: "#about", label: "About" },
-            { href: "#board", label: "BOD" },
-            { href: "#projects", label: "Projects" },
-            { href: "#events", label: "Events" },
-            { href: "#join", label: "Join Us" },
-          ].map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="relative font-medium text-mauve-wine hover:text-rose-tan transition-colors group"
-            >
-              {item.label}
-              <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-rose-tan transition-all duration-300 group-hover:w-full" />
-            </Link>
-          ))}
-          <a
+          {/* <Link
+            href="/matchup"
+            className="relative font-medium text-mauve-wine hover:text-rose-tan transition-colors group"
+          >
+            Match Up
+            <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-rose-tan transition-all duration-300 group-hover:w-full" />
+          </Link> */}
+          <Link
+            href="/quick"
+            className="relative font-medium text-mauve-wine hover:text-rose-tan transition-colors group"
+          >
+            FOMO
+            <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-rose-tan transition-all duration-300 group-hover:w-full" />
+          </Link>
+          <Link
+            href="/#home"
+            className="relative font-medium text-mauve-wine hover:text-rose-tan transition-colors group"
+          >
+            Home
+            <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-rose-tan transition-all duration-300 group-hover:w-full" />
+          </Link>
+          <Link
+            href="/#about"
+            className="relative font-medium text-mauve-wine hover:text-rose-tan transition-colors group"
+          >
+            About
+            <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-rose-tan transition-all duration-300 group-hover:w-full" />
+          </Link>
+          <Link
+            href="/#board"
+            className="relative font-medium text-mauve-wine hover:text-rose-tan transition-colors group"
+          >
+            BOD
+            <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-rose-tan transition-all duration-300 group-hover:w-full" />
+          </Link>
+          <Link
+            href="/#projects"
+            className="relative font-medium text-mauve-wine hover:text-rose-tan transition-colors group"
+          >
+            Projects
+            <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-rose-tan transition-all duration-300 group-hover:w-full" />
+          </Link>
+          <Link
+            href="/#events"
+            className="relative font-medium text-mauve-wine hover:text-rose-tan transition-colors group"
+          >
+            Events
+            <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-rose-tan transition-all duration-300 group-hover:w-full" />
+          </Link>
+          <Link
+            href="/#join"
+            className="relative font-medium text-mauve-wine hover:text-rose-tan transition-colors group"
+          >
+            Join Us
+            <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-rose-tan transition-all duration-300 group-hover:w-full" />
+          </Link>
+          <Link
             href="https://www.instagram.com/rotaractclubofbibwewadipune?igsh=Z2s0bTEwd2hoaTFj"
             target="_blank"
             rel="noopener noreferrer"
             className="mr-2"
           >
             <Instagram className="w-6 h-6 hover:text-rose-tan" />
-          </a>
+          </Link>
         </div>
         <a
           href="https://www.instagram.com/rotaractclubofbibwewadipune?igsh=Z2s0bTEwd2hoaTFj"
@@ -101,6 +139,12 @@ export default function Navbar() {
       {isOpen && (
         <div className="md:hidden pb-4 px-4">
           <div className="flex flex-col space-y-2">
+            {/* <Link
+              href="/matchup"
+              className="text-mauve-wine hover:text-rose-tan font-medium py-2"
+            >
+              Match Up
+            </Link> */}
             <Link
               href="/quick"
               className="text-mauve-wine hover:text-rose-tan font-medium py-2"

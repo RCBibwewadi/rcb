@@ -29,8 +29,8 @@ export default function MomentsFilter({
             onClick={() => onCategoryChange(category.id)}
             className={`px-6 py-3 rounded-full font-medium transition-all duration-300 flex items-center gap-2 cursor-pointer ${
               activeCategory === category.id
-                ? "luxury-gradient text-white font-semibold shadow-lg drop-shadow-luxury-gold scale-105"
-                : "bg-white hover:bg-slate-50 border border-slate-200"
+                ? "luxury-gradient text-white font-semibold shadow-lg scale-105"
+                : "bg-white text-gray-700 hover:bg-slate-50 border border-slate-200"
             }`}
           >
             <span className="flex items-center">
