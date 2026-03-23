@@ -204,7 +204,7 @@ export default function PartnersTab({ userId, userGender, isMatched, onMatch }: 
                 <img
                   src={currentPartner.profile.photo1_url}
                   alt={currentPartner.user.name}
-                  className="w-full h-72 sm:h-80 object-cover rounded-t-2xl"
+                  className="w-full max-h-[65vh] object-contain bg-black rounded-t-2xl"
                 />
               ) : (
                 <div className="w-full h-72 sm:h-80 bg-luxury-cream rounded-t-2xl flex items-center justify-center">
@@ -238,7 +238,8 @@ export default function PartnersTab({ userId, userGender, isMatched, onMatch }: 
                 <img
                   src={currentPartner.profile.photo2_url}
                   alt={`${currentPartner.user.name} photo 2`}
-                  className="w-full h-64 sm:h-72 object-cover"
+                  className="w-full max-h-[40vh] object-contain bg-black"
+
                 />
               )}
 
@@ -260,7 +261,8 @@ export default function PartnersTab({ userId, userGender, isMatched, onMatch }: 
                 <img
                   src={currentPartner.profile.photo3_url}
                   alt={`${currentPartner.user.name} photo 3`}
-                  className="w-full h-64 sm:h-72 object-cover"
+                  className="w-full max-h-[40vh] object-contain bg-black"
+
                 />
               )}
 

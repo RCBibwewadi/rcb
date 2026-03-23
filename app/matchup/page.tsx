@@ -237,6 +237,30 @@ export default function MatchUpPage() {
       <nav className="fixed top-0 left-0 right-0 z-50 glass-effect luxury-shadow">
         <div className="flex justify-between items-center h-16 px-4 sm:px-6 lg:px-8">
           <h1 className="text-xl font-bold text-mauve-wine">MatchUp</h1>
+          <div className="flex items-center gap-4">
+          <div className="relative pt-2">
+              <button
+                onClick={() => setShowNotifications(!showNotifications)}
+                className="relative text-mauve-wine hover:text-rose-tan transition-colors"
+              >
+                <Bell className="w-5 h-5" />
+                {unreadCount > 0 && (
+                  <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
+                    {unreadCount > 9 ? "9+" : unreadCount}
+                  </span>
+                )}
+              </button>
+
+              <AnimatePresence>
+                {showNotifications && (
+                  <NotificationDropdown
+                    notifications={notifications}
+                    onClose={() => setShowNotifications(false)}
+                    onMarkRead={fetchNotifications}
+                  />
+                )}
+              </AnimatePresence>
+            </div>
 
           <div className="hidden md:flex items-center gap-6">
             <button
@@ -265,30 +289,6 @@ export default function MatchUpPage() {
               </button>
             )}
 
-            <div className="relative">
-              <button
-                onClick={() => setShowNotifications(!showNotifications)}
-                className="relative text-mauve-wine hover:text-rose-tan transition-colors"
-              >
-                <Bell className="w-5 h-5" />
-                {unreadCount > 0 && (
-                  <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
-                    {unreadCount > 9 ? "9+" : unreadCount}
-                  </span>
-                )}
-              </button>
-
-              <AnimatePresence>
-                {showNotifications && (
-                  <NotificationDropdown
-                    notifications={notifications}
-                    onClose={() => setShowNotifications(false)}
-                    onMarkRead={fetchNotifications}
-                  />
-                )}
-              </AnimatePresence>
-            </div>
-
             {pendingMatches.length > 0 && (
               <button
                 onClick={() => setShowMatchesModal(true)}
@@ -313,6 +313,7 @@ export default function MatchUpPage() {
           >
             {showMobileMenu ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
+        </div>
         </div>
 
         <AnimatePresence>
