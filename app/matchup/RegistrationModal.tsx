@@ -185,7 +185,7 @@ export default function RegistrationModal({
                 onClick={() => setShowPassword(!showPassword)}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-mauve-wine-light hover:text-mauve-wine"
               >
-                {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                {showPassword ? <Eye className="w-5 h-5" /> : <EyeOff className="w-5 h-5" />}
               </button>
             </div>
             {!isLogin && (

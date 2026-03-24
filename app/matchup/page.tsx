@@ -144,10 +144,10 @@ export default function MatchUpPage() {
             className="max-w-2xl mx-auto text-center"
           >
             <h2 className="text-4xl sm:text-5xl font-bold text-mauve-wine mb-6">
-              Find Your Perfect Match
+              Figure It Out
             </h2>
             <p className="text-lg text-mauve-wine-light mb-8 leading-relaxed">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.
+            Figure It Out is an interactive matching experience where participants explore a series of curated profiles and responses to discover the person they align with most. By comparing answers, preferences, and overall vibe, the activity encourages thoughtful observation and intuitive decision-making. 
             </p>
             <motion.button
               whileHover={{ scale: 1.05 }}
