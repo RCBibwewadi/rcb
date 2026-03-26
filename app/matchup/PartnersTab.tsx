@@ -165,7 +165,7 @@ export default function PartnersTab({ userId, userGender, isMatched, onMatch }: 
               >
                 <Heart className="w-10 h-10 text-white" />
               </motion.div>
-              <h3 className="text-2xl font-bold text-mauve-wine mb-2">It's a Match!</h3>
+              <h3 className="text-2xl font-bold text-mauve-wine mb-2">It&apos;s a Match!</h3>
               <p className="text-mauve-wine-light">
                 You have a new pending match! Check your matches to respond.
               </p>
@@ -212,6 +212,13 @@ export default function PartnersTab({ userId, userGender, isMatched, onMatch }: 
                 </div>
               )}
 
+{currentPartner.profile?.prompt1 && (
+                <div className="p-4 border-b border-rose-tan-light/20">
+                  <p className="text-xs text-mauve-wine-light mb-1">Your &quot;this is so me&quot; moment</p>
+                  <p className="text-mauve-wine text-sm">{currentPartner.profile.prompt1}</p>
+                </div>
+              )}
+
               <div className="p-4 text-center border-b border-rose-tan-light/20">
                 <h2 className="text-xl font-bold text-mauve-wine">
                   {currentPartner.profile?.username || currentPartner.user.name}
@@ -243,17 +250,17 @@ export default function PartnersTab({ userId, userGender, isMatched, onMatch }: 
                 />
               )}
 
-              {currentPartner.profile?.prompt1 && (
+              {currentPartner.profile?.prompt2 && (
                 <div className="p-4 border-b border-rose-tan-light/20">
-                  <p className="text-xs text-mauve-wine-light mb-1">About</p>
-                  <p className="text-mauve-wine text-sm">{currentPartner.profile.prompt1}</p>
+                  <p className="text-xs text-mauve-wine-light mb-1">A Habit you&apos;ll probably never change</p>
+                  <p className="text-mauve-wine text-sm">{currentPartner.profile.prompt2}</p>
                 </div>
               )}
 
-              {currentPartner.profile?.prompt2 && (
+              {currentPartner.profile?.prompt3 && (
                 <div className="p-4 border-b border-rose-tan-light/20">
-                  <p className="text-xs text-mauve-wine-light mb-1">More about me</p>
-                  <p className="text-mauve-wine text-sm">{currentPartner.profile.prompt2}</p>
+                  <p className="text-xs text-mauve-wine-light mb-1">Something you&apos;ve been meaning to do but haven&apos;t yet</p>
+                  <p className="text-mauve-wine text-sm">{currentPartner.profile.prompt3}</p>
                 </div>
               )}
 
@@ -266,10 +273,16 @@ export default function PartnersTab({ userId, userGender, isMatched, onMatch }: 
                 />
               )}
 
-              {currentPartner.profile?.prompt3 && (
+              {currentPartner.profile?.prompt4 && (
                 <div className="p-4 border-b border-rose-tan-light/20">
-                  <p className="text-xs text-mauve-wine-light mb-1">Fun fact</p>
-                  <p className="text-mauve-wine text-sm">{currentPartner.profile.prompt3}</p>
+                  <p className="text-xs text-mauve-wine-light mb-1">One thing you thik people should do more often</p>
+                  <p className="text-mauve-wine text-sm">{currentPartner.profile.prompt4}</p>
+                </div>
+              )}
+              {currentPartner.profile?.prompt5 && (
+                <div className="p-4 border-b border-rose-tan-light/20">
+                  <p className="text-xs text-mauve-wine-light mb-1">Something you&apos;d like to get better at (just for yourself)</p>
+                  <p className="text-mauve-wine text-sm">{currentPartner.profile.prompt5}</p>
                 </div>
               )}
 

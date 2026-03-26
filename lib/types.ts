@@ -78,6 +78,8 @@ export interface MatchUpProfile {
   prompt1?: string;
   prompt2?: string;
   prompt3?: string;
+  prompt4?:string;
+  prompt5?:string;
   created_at: string;
   updated_at: string;
 }

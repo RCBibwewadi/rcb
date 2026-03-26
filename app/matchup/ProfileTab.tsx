@@ -43,6 +43,8 @@ export default function ProfileTab({ user, profile, onUpdate }: ProfileTabProps)
     prompt1: profile?.prompt1 || "",
     prompt2: profile?.prompt2 || "",
     prompt3: profile?.prompt3 || "",
+    prompt4: profile?.prompt4 || "",
+    prompt5: profile?.prompt5 || "",
   });
 
   const [questions, setQuestions] = useState<MatchUpPreferenceQuestion[]>([]);
@@ -63,6 +65,8 @@ export default function ProfileTab({ user, profile, onUpdate }: ProfileTabProps)
         prompt1: profile.prompt1 || "",
         prompt2: profile.prompt2 || "",
         prompt3: profile.prompt3 || "",
+        prompt4: profile?.prompt4 || "",
+    prompt5: profile?.prompt5 || "",
       });
     }
   }, [profile]);
@@ -326,7 +330,7 @@ export default function ProfileTab({ user, profile, onUpdate }: ProfileTabProps)
 
         <h4 className="text-lg font-semibold text-mauve-wine mt-8 mb-4">Prompts</h4>
         <div className="space-y-4">
-          {([1, 2, 3] as const).map((num) => (
+          {([1, 2, 3, 4, 5] as const).map((num) => (
             <div key={num}>
               <label className="block text-sm font-medium text-mauve-wine mb-2">
                 {DEFAULT_PROMPTS[num - 1]}

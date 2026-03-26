@@ -16,9 +16,11 @@ export const ZODIAC_SIGNS = [
 ] as const;
 
 export const DEFAULT_PROMPTS = [
-  'What is your idea of a perfect date?',
-  'What is the most spontaneous thing you have done?',
-  'What are you most passionate about?'
+  'Your "this is so me" moment',
+  'A Habit you\'ll probably never change',
+  'Something you\'ve been meaning to do but haven\'t yet',
+  'One thing you thik people should do more often',
+  'Something you\'d like to get better at (just for yourself)'
 ] as const;
 
 export const MATCH_LIMIT = 3;

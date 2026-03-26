@@ -49,7 +49,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { username, dob, photo1_url, photo2_url, photo3_url, prompt1, prompt2, prompt3 } = body;
+    const { username, dob, photo1_url, photo2_url, photo3_url, prompt1, prompt2, prompt3, prompt4, prompt5 } = body;
 
     if (!username || username.trim().length < 2) {
       return NextResponse.json({ error: 'Username is required' }, { status: 400 });
@@ -79,7 +79,9 @@ export async function POST(request: NextRequest) {
           photo3_url: photo3_url || null,
           prompt1: prompt1 || null,
           prompt2: prompt2 || null,
-          prompt3: prompt3 || null
+          prompt3: prompt3 || null,
+          prompt4: prompt4 || null,
+          prompt5: prompt5 || null
         })
         .eq('user_id', userId)
         .select()
@@ -100,7 +102,9 @@ export async function POST(request: NextRequest) {
           photo3_url: photo3_url || null,
           prompt1: prompt1 || null,
           prompt2: prompt2 || null,
-          prompt3: prompt3 || null
+          prompt3: prompt3 || null,
+          prompt4: prompt4 || null,
+          prompt5: prompt5 || null
         }])
         .select()
         .single();

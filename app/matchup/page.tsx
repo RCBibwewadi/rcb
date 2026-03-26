@@ -9,9 +9,9 @@ import ProfileTab from "./ProfileTab";
 import PartnersTab from "./PartnersTab";
 import MatchesModal from "./MatchesModal";
 import NotificationDropdown from "./NotificationDropdown";
-import { 
-  MatchUpSession, 
-  MatchUpNotification, 
+import {
+  MatchUpSession,
+  MatchUpNotification,
   MatchUpMatch,
   MatchUpUser,
   MatchUpProfile
@@ -146,16 +146,32 @@ export default function MatchUpPage() {
             <h2 className="text-4xl sm:text-5xl font-bold text-mauve-wine mb-6">
               Figure It Out
             </h2>
-            <p className="text-lg text-mauve-wine-light mb-8 leading-relaxed">
-            Figure It Out is an interactive matching experience where participants explore a series of curated profiles and responses to discover the person they align with most. By comparing answers, preferences, and overall vibe, the activity encourages thoughtful observation and intuitive decision-making. 
-            </p>
+            <div className="max-w-xl mx-auto text-center mb-8">
+              <p className="text-lg text-mauve-wine-light mb-4 leading-relaxed">
+                Not everything needs a plan.
+              </p>
+
+              <p className="text-lg text-mauve-wine-light mb-4 leading-relaxed">
+                Sometimes, you just have to figure it out.
+              </p>
+
+              <p className="text-lg text-mauve-wine-light mb-6 leading-relaxed">
+                Step in, explore a few people, and go with what feels right.
+                <br />
+                No pressure, no labels — just instincts, choices, and a little curiosity.
+              </p>
+
+              <p className="text-lg text-mauve-wine font-semibold italic">
+                You might be surprised where it leads.
+              </p>
+            </div>
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => setShowRegistration(true)}
               className="luxury-gradient text-white font-semibold px-8 py-4 rounded-xl luxury-shadow text-lg"
             >
-              Register Now
+              Step In
             </motion.button>
             <p className="mt-6 text-sm text-mauve-wine-light">
               Already registered? Wait for admin approval to access your account.
@@ -238,7 +254,7 @@ export default function MatchUpPage() {
         <div className="flex justify-between items-center h-16 px-4 sm:px-6 lg:px-8">
           <h1 className="text-xl font-bold text-mauve-wine">MatchUp</h1>
           <div className="flex items-center gap-4">
-          <div className="relative pt-2">
+            <div className="relative pt-2">
               <button
                 onClick={() => setShowNotifications(!showNotifications)}
                 className="relative text-mauve-wine hover:text-rose-tan transition-colors"
@@ -262,58 +278,56 @@ export default function MatchUpPage() {
               </AnimatePresence>
             </div>
 
-          <div className="hidden md:flex items-center gap-6">
-            <button
-              onClick={() => setActiveTab("profile")}
-              className={`flex items-center gap-2 font-medium transition-colors ${
-                activeTab === "profile"
-                  ? "text-rose-tan"
-                  : "text-mauve-wine hover:text-rose-tan"
-              }`}
-            >
-              <User className="w-5 h-5" />
-              Profile
-            </button>
-
-            {matchingEnabled && !session.user.is_matched && (
+            <div className="hidden md:flex items-center gap-6">
               <button
-                onClick={() => setActiveTab("partners")}
-                className={`flex items-center gap-2 font-medium transition-colors ${
-                  activeTab === "partners"
+                onClick={() => setActiveTab("profile")}
+                className={`flex items-center gap-2 font-medium transition-colors ${activeTab === "profile"
                     ? "text-rose-tan"
                     : "text-mauve-wine hover:text-rose-tan"
-                }`}
+                  }`}
               >
-                <Heart className="w-5 h-5" />
-                Partners
+                <User className="w-5 h-5" />
+                Profile
               </button>
-            )}
 
-            {pendingMatches.length > 0 && (
+              {matchingEnabled && !session.user.is_matched && (
+                <button
+                  onClick={() => setActiveTab("partners")}
+                  className={`flex items-center gap-2 font-medium transition-colors ${activeTab === "partners"
+                      ? "text-rose-tan"
+                      : "text-mauve-wine hover:text-rose-tan"
+                    }`}
+                >
+                  <Heart className="w-5 h-5" />
+                  Partners
+                </button>
+              )}
+
+              {pendingMatches.length > 0 && (
+                <button
+                  onClick={() => setShowMatchesModal(true)}
+                  className="relative luxury-gradient text-white px-4 py-2 rounded-lg font-medium"
+                >
+                  <Heart className="w-4 h-4 inline mr-2" />
+                  {pendingMatches.length} Match{pendingMatches.length > 1 ? "es" : ""}
+                </button>
+              )}
+
               <button
-                onClick={() => setShowMatchesModal(true)}
-                className="relative luxury-gradient text-white px-4 py-2 rounded-lg font-medium"
+                onClick={handleLogout}
+                className="text-mauve-wine-light hover:text-rose-tan text-sm"
               >
-                <Heart className="w-4 h-4 inline mr-2" />
-                {pendingMatches.length} Match{pendingMatches.length > 1 ? "es" : ""}
+                Logout
               </button>
-            )}
+            </div>
 
             <button
-              onClick={handleLogout}
-              className="text-mauve-wine-light hover:text-rose-tan text-sm"
+              onClick={() => setShowMobileMenu(!showMobileMenu)}
+              className="md:hidden text-mauve-wine"
             >
-              Logout
+              {showMobileMenu ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
           </div>
-
-          <button
-            onClick={() => setShowMobileMenu(!showMobileMenu)}
-            className="md:hidden text-mauve-wine"
-          >
-            {showMobileMenu ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
-        </div>
         </div>
 
         <AnimatePresence>
@@ -330,11 +344,10 @@ export default function MatchUpPage() {
                     setActiveTab("profile");
                     setShowMobileMenu(false);
                   }}
-                  className={`w-full text-left px-4 py-2 rounded-lg ${
-                    activeTab === "profile"
+                  className={`w-full text-left px-4 py-2 rounded-lg ${activeTab === "profile"
                       ? "bg-rose-tan/10 text-rose-tan"
                       : "text-mauve-wine"
-                  }`}
+                    }`}
                 >
                   <User className="w-5 h-5 inline mr-2" />
                   Profile
@@ -346,11 +359,10 @@ export default function MatchUpPage() {
                       setActiveTab("partners");
                       setShowMobileMenu(false);
                     }}
-                    className={`w-full text-left px-4 py-2 rounded-lg ${
-                      activeTab === "partners"
+                    className={`w-full text-left px-4 py-2 rounded-lg ${activeTab === "partners"
                         ? "bg-rose-tan/10 text-rose-tan"
                         : "text-mauve-wine"
-                    }`}
+                      }`}
                   >
                     <Heart className="w-5 h-5 inline mr-2" />
                     Partners
