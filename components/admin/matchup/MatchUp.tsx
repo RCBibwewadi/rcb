@@ -20,8 +20,8 @@ const tabs: Tab[] = [
   { id: "requests", label: "Requests", icon: Users },
   { id: "toggle", label: "Toggle", icon: ToggleLeft },
   { id: "preferences", label: "Preferences", icon: Sliders },
-  { id: "reconciliation", label: "Reconciliation", icon: RefreshCw },
-  { id: "matches", label: "Matches", icon: Heart },
+  // { id: "reconciliation", label: "Reconciliation", icon: RefreshCw },
+  // { id: "matches", label: "Matches", icon: Heart },
 ];
 
 export default function MatchUp() {
@@ -40,10 +40,10 @@ export default function MatchUp() {
         return <ToggleSection key={`toggle-${refreshKey}`} />;
       case "preferences":
         return <PreferencesSection key={`preferences-${refreshKey}`} />;
-      case "reconciliation":
-        return <ReconciliationSection key={`reconciliation-${refreshKey}`} />;
-      case "matches":
-        return <MatchesSection key={`matches-${refreshKey}`} />;
+      // case "reconciliation":
+      //   return <ReconciliationSection key={`reconciliation-${refreshKey}`} />;
+      // case "matches":
+      //   return <MatchesSection key={`matches-${refreshKey}`} />;
       default:
         return null;
     }
