@@ -214,7 +214,7 @@ export default function PartnersTab({ userId, userGender, isMatched, onMatch }: 
 
 {currentPartner.profile?.prompt1 && (
                 <div className="p-4 border-b border-rose-tan-light/20">
-                  <p className="text-xs text-mauve-wine-light mb-1">Your &quot;this is so me&quot; moment</p>
+                  <p className="text-xs text-mauve-wine-light mb-1">Your &quot;this is so me&quot; moment 😅✨</p>
                   <p className="text-mauve-wine text-sm">{currentPartner.profile.prompt1}</p>
                 </div>
               )}
@@ -252,14 +252,14 @@ export default function PartnersTab({ userId, userGender, isMatched, onMatch }: 
 
               {currentPartner.profile?.prompt2 && (
                 <div className="p-4 border-b border-rose-tan-light/20">
-                  <p className="text-xs text-mauve-wine-light mb-1">A Habit you&apos;ll probably never change</p>
+                  <p className="text-xs text-mauve-wine-light mb-1"> A habit you’ll probably never change 🔁😌</p>
                   <p className="text-mauve-wine text-sm">{currentPartner.profile.prompt2}</p>
                 </div>
               )}
 
               {currentPartner.profile?.prompt3 && (
                 <div className="p-4 border-b border-rose-tan-light/20">
-                  <p className="text-xs text-mauve-wine-light mb-1">Something you&apos;ve been meaning to do but haven&apos;t yet</p>
+                  <p className="text-xs text-mauve-wine-light mb-1">What’s something you’ve been putting off but really want to do? ⏳🤔</p>
                   <p className="text-mauve-wine text-sm">{currentPartner.profile.prompt3}</p>
                 </div>
               )}
@@ -275,13 +275,13 @@ export default function PartnersTab({ userId, userGender, isMatched, onMatch }: 
 
               {currentPartner.profile?.prompt4 && (
                 <div className="p-4 border-b border-rose-tan-light/20">
-                  <p className="text-xs text-mauve-wine-light mb-1">One thing you thik people should do more often</p>
+                  <p className="text-xs text-mauve-wine-light mb-1">What’s one thing you wish people did more often? 💭❤️</p>
                   <p className="text-mauve-wine text-sm">{currentPartner.profile.prompt4}</p>
                 </div>
               )}
               {currentPartner.profile?.prompt5 && (
                 <div className="p-4 border-b border-rose-tan-light/20">
-                  <p className="text-xs text-mauve-wine-light mb-1">Something you&apos;d like to get better at (just for yourself)</p>
+                  <p className="text-xs text-mauve-wine-light mb-1">What’s a skill or habit you want to improve—just for you? 🌱🎯</p>
                   <p className="text-mauve-wine text-sm">{currentPartner.profile.prompt5}</p>
                 </div>
               )}

@@ -16,11 +16,11 @@ export const ZODIAC_SIGNS = [
 ] as const;
 
 export const DEFAULT_PROMPTS = [
-  'Your "this is so me" moment',
-  'A Habit you\'ll probably never change',
-  'Something you\'ve been meaning to do but haven\'t yet',
-  'One thing you thik people should do more often',
-  'Something you\'d like to get better at (just for yourself)'
+  'Your “this is so me” moment 😅✨',
+  'A habit you’ll probably never change 🔁😌',
+  'What’s something you’ve been putting off but really want to do? ⏳🤔',
+  'What’s one thing you wish people did more often? 💭❤️',
+  'What’s a skill or habit you want to improve—just for you? 🌱🎯'
 ] as const;
 
 export const MATCH_LIMIT = 3;
