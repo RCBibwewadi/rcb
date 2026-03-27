@@ -126,7 +126,7 @@ export default function MatchUpPage() {
       <div className="min-h-screen bg-luxury-cream">
         <nav className="fixed top-0 left-0 right-0 z-50 glass-effect luxury-shadow">
           <div className="flex justify-between items-center h-16 px-4 sm:px-6 lg:px-8">
-            <h1 className="text-xl font-bold text-mauve-wine">MatchUp</h1>
+            <h1 className="text-xl font-bold text-mauve-wine">Figure It Out</h1>
             <Link
               href="/"
               className="flex items-center gap-2 text-mauve-wine hover:text-rose-tan transition-colors"
@@ -252,7 +252,7 @@ export default function MatchUpPage() {
     <div className="min-h-screen bg-luxury-cream">
       <nav className="fixed top-0 left-0 right-0 z-50 glass-effect luxury-shadow">
         <div className="flex justify-between items-center h-16 px-4 sm:px-6 lg:px-8">
-          <h1 className="text-xl font-bold text-mauve-wine">MatchUp</h1>
+          <h1 className="text-xl font-bold text-mauve-wine">Figure It Out</h1>
           <div className="flex items-center gap-4">
             <div className="relative pt-2">
               <button

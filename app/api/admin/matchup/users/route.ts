@@ -89,7 +89,7 @@ export async function POST(request: NextRequest) {
           user_id: user_id,
           type: 'profile_approved',
           title: 'Registration Approved!',
-          message: 'Your MatchUp registration has been approved. You can now log in and complete your profile.'
+          message: 'Your registration has been approved. You can now log in and complete your profile.'
         }]);
     } else {
       await supabaseServer
@@ -98,7 +98,7 @@ export async function POST(request: NextRequest) {
           user_id: user_id,
           type: 'profile_declined',
           title: 'Registration Declined',
-          message: 'Your MatchUp registration has been declined. Please contact admin for more information.'
+          message: 'Your registration has been declined. Please contact admin for more information.'
         }]);
     }
 

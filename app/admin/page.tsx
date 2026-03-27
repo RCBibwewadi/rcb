@@ -157,7 +157,7 @@ export default function AdminPage() {
                             : sec === "quick"
                             ? "Quick Section"
                             : sec === "matchup"
-                            ? "MatchUp"
+                            ? "Figure It Out"
                             : ""}
                         </button>
                       </li>

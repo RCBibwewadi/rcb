@@ -93,7 +93,7 @@ export default function RegistrationModal({
         </button>
 
         <h2 className="text-2xl font-bold text-mauve-wine mb-6 text-center">
-          {isLogin ? "Welcome Back" : "Join MatchUp"}
+          {isLogin ? "Welcome Back" : "Join Us"}
         </h2>
 
         {error && (
