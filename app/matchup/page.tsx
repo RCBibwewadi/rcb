@@ -3,10 +3,11 @@
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { Home, User, Heart, Bell, Menu, X } from "lucide-react";
+import { Home, User, Heart, Bell, Menu, X, Sparkles } from "lucide-react";
 import RegistrationModal from "./RegistrationModal";
 import ProfileTab from "./ProfileTab";
 import PartnersTab from "./PartnersTab";
+import ActivityTab from "./ActivityTab";
 import MatchesModal from "./MatchesModal";
 import NotificationDropdown from "./NotificationDropdown";
 import {
@@ -21,7 +22,7 @@ export default function MatchUpPage() {
   const [session, setSession] = useState<MatchUpSession | null>(null);
   const [loading, setLoading] = useState(true);
   const [showRegistration, setShowRegistration] = useState(false);
-  const [activeTab, setActiveTab] = useState<"profile" | "partners">("profile");
+  const [activeTab, setActiveTab] = useState<"profile" | "partners" | "activity">("profile");
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [notifications, setNotifications] = useState<MatchUpNotification[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
@@ -303,6 +304,19 @@ export default function MatchUpPage() {
                 </button>
               )}
 
+              {session.user.is_matched && (
+                <button
+                  onClick={() => setActiveTab("activity")}
+                  className={`flex items-center gap-2 font-medium transition-colors ${activeTab === "activity"
+                      ? "text-rose-tan"
+                      : "text-mauve-wine hover:text-rose-tan"
+                    }`}
+                >
+                  <Sparkles className="w-5 h-5" />
+                  Activity
+                </button>
+              )}
+
               {pendingMatches.length > 0 && (
                 <button
                   onClick={() => setShowMatchesModal(true)}
@@ -369,6 +383,22 @@ export default function MatchUpPage() {
                   </button>
                 )}
 
+                {session.user.is_matched && (
+                  <button
+                    onClick={() => {
+                      setActiveTab("activity");
+                      setShowMobileMenu(false);
+                    }}
+                    className={`w-full text-left px-4 py-2 rounded-lg ${activeTab === "activity"
+                        ? "bg-rose-tan/10 text-rose-tan"
+                        : "text-mauve-wine"
+                      }`}
+                  >
+                    <Sparkles className="w-5 h-5 inline mr-2" />
+                    Activity
+                  </button>
+                )}
+
                 {pendingMatches.length > 0 && (
                   <button
                     onClick={() => {
@@ -397,7 +427,7 @@ export default function MatchUpPage() {
       <main className="pt-20 pb-8 px-4">
         <div className="max-w-4xl mx-auto">
           <AnimatePresence mode="wait">
-            {activeTab === "profile" ? (
+            {activeTab === "profile" && (
               <motion.div
                 key="profile"
                 initial={{ opacity: 0, x: -20 }}
@@ -410,7 +440,8 @@ export default function MatchUpPage() {
                   onUpdate={fetchSession}
                 />
               </motion.div>
-            ) : (
+            )}
+            {activeTab === "partners" && (
               <motion.div
                 key="partners"
                 initial={{ opacity: 0, x: 20 }}
@@ -426,6 +457,16 @@ export default function MatchUpPage() {
                     fetchSession();
                   }}
                 />
+              </motion.div>
+            )}
+            {activeTab === "activity" && (
+              <motion.div
+                key="activity"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+              >
+                <ActivityTab />
               </motion.div>
             )}
           </AnimatePresence>
