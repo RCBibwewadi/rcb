@@ -33,13 +33,6 @@ export default function Navbar() {
         {/* Desktop Links */}
         <div className="hidden md:flex space-x-8 flex-shrink-0">
           <Link
-            href="/matchup"
-            className="relative font-medium text-mauve-wine hover:text-rose-tan transition-colors group"
-          >
-            Figure It Out
-            <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-rose-tan transition-all duration-300 group-hover:w-full" />
-          </Link>
-          <Link
             href="/quick"
             className="relative font-medium text-mauve-wine hover:text-rose-tan transition-colors group"
           >
@@ -139,12 +132,6 @@ export default function Navbar() {
       {isOpen && (
         <div className="md:hidden pb-4 px-4">
           <div className="flex flex-col space-y-2">
-            <Link
-              href="/matchup"
-              className="text-mauve-wine hover:text-rose-tan font-medium py-2"
-            >
-             Figure It Out
-            </Link>
             <Link
               href="/quick"
               className="text-mauve-wine hover:text-rose-tan font-medium py-2"
