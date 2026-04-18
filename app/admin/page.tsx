@@ -5,14 +5,12 @@ import { useState } from "react";
 import { Lock } from "lucide-react";
 import Link from "next/link";
 import HeroEditor from "@/components/editors/HeroEditor";
-import { ContentData } from "@/lib/types";
 import EventsEditor from "@/components/editors/EventsEditor";
 import { useToast } from "@/components/ui/ToastProvider";
 import BoardMembersEditor from "@/components/editors/BoardEditor";
 import ProjectsEditor from "@/components/editors/ProjectsEditor";
 import QuickEditor from "@/components/editors/QuickEditor";
 
-import MatchUp from "@/components/admin/matchup/MatchUp";
 
 export default function AdminPage() {
   const { showToast } = useToast();
@@ -20,7 +18,6 @@ export default function AdminPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [section, setSection] = useState<string>("welcome");
-  const [contentData, setContentData] = useState<ContentData>();
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -156,8 +153,6 @@ export default function AdminPage() {
                             ? "Events"
                             : sec === "quick"
                             ? "Quick Section"
-                            : sec === "matchup"
-                            ? "Figure It Out"
                             : ""}
                         </button>
                       </li>
@@ -193,8 +188,6 @@ export default function AdminPage() {
                 {section === "events" && <EventsEditor />}
 
                 {section === "quick" && <QuickEditor />}
-
-                 {section === "matchup" && <MatchUp />}
               </div>
             </main>
           </div>
