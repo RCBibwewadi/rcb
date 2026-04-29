@@ -10,6 +10,7 @@ import { useToast } from "@/components/ui/ToastProvider";
 import BoardMembersEditor from "@/components/editors/BoardEditor";
 import ProjectsEditor from "@/components/editors/ProjectsEditor";
 import QuickEditor from "@/components/editors/QuickEditor";
+import VotingEditor from "@/components/editors/VotingEditor";
 
 
 export default function AdminPage() {
@@ -132,7 +133,7 @@ export default function AdminPage() {
             <nav className="w-64 bg-white border-r border-rose-tan-light luxury-shadow min-h-screen">
               <div className="p-4">
                 <ul className="space-y-2">
-                  {["hero", "board", "projects", "events", "quick", "matchup"].map(
+                  {["hero", "board", "projects", "events", "quick", "voting"].map(
                     (sec) => (
                       <li key={sec}>
                         <button
@@ -153,6 +154,8 @@ export default function AdminPage() {
                             ? "Events"
                             : sec === "quick"
                             ? "Quick Section"
+                            : sec === "voting"
+                            ? "Voting System"
                             : ""}
                         </button>
                       </li>
@@ -188,6 +191,8 @@ export default function AdminPage() {
                 {section === "events" && <EventsEditor />}
 
                 {section === "quick" && <QuickEditor />}
+
+                {section === "voting" && <VotingEditor />}
               </div>
             </main>
           </div>

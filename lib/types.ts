@@ -169,3 +169,82 @@ export interface MatchUpSession {
   has_completed_profile: boolean;
   has_completed_preferences: boolean;
 }
+
+// ─── Voting + Categorization + Anonymous System ───────────────────────────────
+
+export type VotingUserStatus = 'pending' | 'approved' | 'declined';
+
+export interface VotingUser {
+  id: string;
+  name: string;
+  display_name?: string;
+  rid: string;
+  dob: string;
+  email: string;
+  photo_url?: string;
+  status: VotingUserStatus;
+  has_voted: boolean;
+  has_categorized: boolean;
+  has_messaged: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface VotingCategory {
+  id: string;
+  name: string;
+  description?: string;
+  is_active: boolean;
+  display_order: number;
+  created_at: string;
+  updated_at: string;
+  nominees?: VotingNominee[];
+}
+
+export interface VotingNominee {
+  id: string;
+  category_id: string;
+  name: string;
+  photo_url?: string;
+  display_order: number;
+  created_at: string;
+}
+
+export interface VotingVote {
+  id: string;
+  user_id: string;
+  category_id: string;
+  nominee_id: string;
+  created_at: string;
+}
+
+export interface VotingLabelCategory {
+  id: string;
+  name: string;
+  is_active: boolean;
+  display_order: number;
+  created_at: string;
+}
+
+export interface VotingUserLabel {
+  id: string;
+  labeler_id: string;
+  labeled_user_id: string;
+  label_category_id: string;
+  created_at: string;
+}
+
+export interface VotingAnonymousMessage {
+  id: string;
+  user_id: string;
+  message: string;
+  created_at: string;
+}
+
+export interface VotingSession {
+  user: VotingUser;
+  has_completed_profile: boolean;
+  has_voted: boolean;
+  has_categorized: boolean;
+  has_messaged: boolean;
+}
