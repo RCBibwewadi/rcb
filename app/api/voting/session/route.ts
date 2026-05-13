@@ -26,6 +26,13 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
+    const { data: settingRow } = await supabaseServer
+      .from('voting_settings')
+      .select('setting_value')
+      .eq('setting_key', 'voting_enabled')
+      .single();
+    const votingEnabled = settingRow?.setting_value ?? false;
+
     return NextResponse.json({
       user: {
         id: user.id, name: user.name, display_name: user.display_name,
@@ -33,6 +40,7 @@ export async function GET(request: NextRequest) {
         status: user.status, has_voted: user.has_voted,
         has_categorized: user.has_categorized, has_messaged: user.has_messaged
       },
+      voting_enabled: votingEnabled,
       has_completed_profile: !!user.photo_url,
       has_voted: user.has_voted,
       has_categorized: user.has_categorized,

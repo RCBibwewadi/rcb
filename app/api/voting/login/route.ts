@@ -36,6 +36,13 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Invalid email or password' }, { status: 401 });
     }
 
+    const { data: settingRow } = await supabaseServer
+      .from('voting_settings')
+      .select('setting_value')
+      .eq('setting_key', 'voting_enabled')
+      .single();
+    const votingEnabled = settingRow?.setting_value ?? false;
+
     const token = await new SignJWT({ userId: user.id, email: user.email, type: 'voting' })
       .setProtectedHeader({ alg: 'HS256' })
       .setIssuedAt()
@@ -44,6 +51,7 @@ export async function POST(request: NextRequest) {
 
     const response = NextResponse.json({
       message: 'Login successful',
+      voting_enabled: votingEnabled,
       user: {
         id: user.id, name: user.name, display_name: user.display_name,
         email: user.email, rid: user.rid, dob: user.dob, photo_url: user.photo_url,
