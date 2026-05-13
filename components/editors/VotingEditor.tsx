@@ -469,8 +469,8 @@ export default function VotingEditor() {
             { id: "categories", label: "Categories & Nominees", icon: Award },
             { id: "labels", label: "Labels", icon: Tag },
             { id: "results", label: "Vote Results", icon: BarChart2 },
-            { id: "label-assignments", label: "Label Assignments", icon: Tags },
-            { id: "messages", label: "Messages", icon: MessageSquare },
+            // { id: "label-assignments", label: "Label Assignments", icon: Tags },
+            // { id: "messages", label: "Messages", icon: MessageSquare },
           ] as { id: Tab; label: string; icon: any }[]).map(({ id, label, icon: Icon }) => (
             <button
               key={id}
