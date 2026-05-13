@@ -139,12 +139,12 @@ export default function Navbar() {
       {isOpen && (
         <div className="md:hidden pb-4 px-4">
           <div className="flex flex-col space-y-2">
-            {/* <Link
+            <Link
               href="/voting"
               className="text-mauve-wine hover:text-rose-tan font-medium py-2"
             >
               Member Choice
-            </Link> */}
+            </Link>
             <Link
               href="/quick"
               className="text-mauve-wine hover:text-rose-tan font-medium py-2"
