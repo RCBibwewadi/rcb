@@ -14,9 +14,15 @@ import {
   ChevronUp,
   Upload,
   User,
+  BarChart2,
+  Tags,
+  MessageSquare,
+  ToggleLeft,
+  ToggleRight,
+  RefreshCw,
 } from "lucide-react";
 
-type Tab = "users" | "categories" | "labels";
+type Tab = "users" | "categories" | "labels" | "results" | "label-assignments" | "messages";
 
 interface VotingUser {
   id: string;
@@ -78,10 +84,61 @@ export default function VotingEditor() {
   const [labels, setLabels] = useState<LabelCategory[]>([]);
   const [newLabelName, setNewLabelName] = useState("");
 
+  // Results
+  const [results, setResults] = useState<any[]>([]);
+  const [expandedResult, setExpandedResult] = useState<string | null>(null);
+
+  // Label Assignments
+  const [labelAssignments, setLabelAssignments] = useState<any[]>([]);
+  const [expandedLabelAssignment, setExpandedLabelAssignment] = useState<string | null>(null);
+
+  // Messages
+  const [messages, setMessages] = useState<any[]>([]);
+
+  // Voting toggle
+  const [votingEnabled, setVotingEnabled] = useState<boolean>(false);
+  const [toggleLoading, setToggleLoading] = useState(false);
+
+  useEffect(() => {
+    loadVotingSettings();
+  }, []);
+
+  async function loadVotingSettings() {
+    try {
+      const res = await fetch("/api/admin/voting/settings");
+      if (res.ok) {
+        const data = await res.json();
+        setVotingEnabled(data.settings?.voting_enabled ?? false);
+      }
+    } catch {}
+  }
+
+  async function handleToggleVoting() {
+    setToggleLoading(true);
+    try {
+      const res = await fetch("/api/admin/voting/settings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ setting_key: "voting_enabled", setting_value: !votingEnabled }),
+      });
+      if (res.ok) {
+        setVotingEnabled(!votingEnabled);
+        showMsg(`Voting ${!votingEnabled ? "enabled" : "disabled"}`, "success");
+      } else {
+        showMsg("Failed to update setting", "error");
+      }
+    } finally {
+      setToggleLoading(false);
+    }
+  }
+
   useEffect(() => {
     if (tab === "users") loadUsers();
     else if (tab === "categories") loadCategories();
     else if (tab === "labels") loadLabels();
+    else if (tab === "results") loadResults();
+    else if (tab === "label-assignments") loadLabelAssignments();
+    else if (tab === "messages") loadMessages();
   }, [tab, userFilter]);
 
   function showMsg(text: string, type: "success" | "error") {
@@ -279,6 +336,51 @@ export default function VotingEditor() {
     if (res.ok) loadLabels();
   }
 
+  // ── Results ────────────────────────────────────────────────────────────────
+
+  async function loadResults() {
+    setLoading(true);
+    try {
+      const res = await fetch("/api/admin/voting/results");
+      if (res.ok) {
+        const data = await res.json();
+        setResults(data.categories || []);
+      }
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  // ── Label Assignments ──────────────────────────────────────────────────────
+
+  async function loadLabelAssignments() {
+    setLoading(true);
+    try {
+      const res = await fetch("/api/admin/voting/label-assignments");
+      if (res.ok) {
+        const data = await res.json();
+        setLabelAssignments(data.labels || []);
+      }
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  // ── Messages ───────────────────────────────────────────────────────────────
+
+  async function loadMessages() {
+    setLoading(true);
+    try {
+      const res = await fetch("/api/admin/voting/messages");
+      if (res.ok) {
+        const data = await res.json();
+        setMessages(data.messages || []);
+      }
+    } finally {
+      setLoading(false);
+    }
+  }
+
   const statusColor = (s: string) =>
     s === "approved" ? "text-green-600 bg-green-50" :
     s === "declined" ? "text-red-600 bg-red-50" :
@@ -298,7 +400,46 @@ export default function VotingEditor() {
       )}
 
       <div className="glass-effect rounded-xl p-6 luxury-shadow">
-        <h2 className="text-2xl font-bold text-mauve-wine mb-6">Voting System</h2>
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-2xl font-bold text-mauve-wine">Voting System</h2>
+          <button
+            onClick={handleToggleVoting}
+            disabled={toggleLoading}
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg border-2 text-sm font-semibold transition-all disabled:opacity-50 ${
+              votingEnabled
+                ? "border-green-400 bg-green-50 text-green-700 hover:bg-green-100"
+                : "border-rose-tan-light bg-white text-mauve-wine-light hover:border-rose-tan hover:text-mauve-wine"
+            }`}
+          >
+            {votingEnabled ? (
+              <ToggleRight className="w-5 h-5 text-green-600" />
+            ) : (
+              <ToggleLeft className="w-5 h-5" />
+            )}
+            {toggleLoading ? "Updating..." : votingEnabled ? "Voting Enabled" : "Voting Disabled"}
+          </button>
+        </div>
+
+        {/* Voting status banner */}
+        <div
+          className={`mb-6 px-4 py-3 rounded-lg text-sm font-medium flex items-center gap-2 ${
+            votingEnabled
+              ? "bg-green-50 text-green-700 border border-green-200"
+              : "bg-amber-50 text-amber-700 border border-amber-200"
+          }`}
+        >
+          {votingEnabled ? (
+            <>
+              <span className="w-2 h-2 rounded-full bg-green-500 inline-block" />
+              Voting is open — approved users can log in and complete the voting process.
+            </>
+          ) : (
+            <>
+              <span className="w-2 h-2 rounded-full bg-amber-400 inline-block" />
+              Voting is closed — users can register and get approved, but cannot vote yet.
+            </>
+          )}
+        </div>
 
         {/* Tabs */}
         <div className="flex gap-1 mb-6 bg-luxury-cream rounded-lg p-1">
@@ -306,6 +447,9 @@ export default function VotingEditor() {
             { id: "users", label: "Users", icon: Users },
             { id: "categories", label: "Categories & Nominees", icon: Award },
             { id: "labels", label: "Labels", icon: Tag },
+            { id: "results", label: "Vote Results", icon: BarChart2 },
+            { id: "label-assignments", label: "Label Assignments", icon: Tags },
+            { id: "messages", label: "Messages", icon: MessageSquare },
           ] as { id: Tab; label: string; icon: any }[]).map(({ id, label, icon: Icon }) => (
             <button
               key={id}
@@ -331,7 +475,7 @@ export default function VotingEditor() {
         {/* ── USERS TAB ── */}
         {tab === "users" && !loading && (
           <div>
-            <div className="flex gap-2 mb-4">
+            <div className="flex items-center gap-2 mb-4">
               {["pending", "approved", "declined", ""].map((f) => (
                 <button
                   key={f}
@@ -345,6 +489,14 @@ export default function VotingEditor() {
                   {f === "" ? "All" : f.charAt(0).toUpperCase() + f.slice(1)}
                 </button>
               ))}
+              <button
+                onClick={loadUsers}
+                disabled={loading}
+                title="Refresh users"
+                className="ml-auto p-1.5 rounded-lg border border-rose-tan-light text-mauve-wine-light hover:text-mauve-wine hover:border-rose-tan transition-all disabled:opacity-50"
+              >
+                <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin" : ""}`} />
+              </button>
             </div>
             {users.length === 0 ? (
               <p className="text-mauve-wine-light text-sm">No users found.</p>
@@ -586,6 +738,221 @@ export default function VotingEditor() {
                 )}
               </div>
             ))}
+          </div>
+        )}
+
+        {/* ── RESULTS TAB ── */}
+        {tab === "results" && !loading && (
+          <div className="space-y-4">
+            <p className="text-sm text-mauve-wine-light">
+              Vote counts per nominee, sorted by most votes. Winner shown first.
+            </p>
+            {results.length === 0 ? (
+              <p className="text-mauve-wine-light text-sm">No categories found.</p>
+            ) : (
+              results.map((cat) => (
+                <div key={cat.id} className="border border-rose-tan-light rounded-xl bg-white overflow-hidden">
+                  <button
+                    onClick={() => setExpandedResult(expandedResult === cat.id ? null : cat.id)}
+                    className="w-full flex items-center justify-between p-4 text-left hover:bg-luxury-cream transition-colors"
+                  >
+                    <div>
+                      <div className="font-semibold text-mauve-wine text-sm">{cat.name}</div>
+                      {cat.description && (
+                        <div className="text-xs text-mauve-wine-light">{cat.description}</div>
+                      )}
+                      <div className="text-xs text-mauve-wine-light mt-0.5">
+                        {cat.nominees.length} nominee{cat.nominees.length !== 1 ? "s" : ""} &middot;{" "}
+                        {cat.nominees.reduce((sum: number, n: any) => sum + n.vote_count, 0)} votes
+                      </div>
+                    </div>
+                    {expandedResult === cat.id ? (
+                      <ChevronUp className="w-4 h-4 text-mauve-wine-light flex-shrink-0" />
+                    ) : (
+                      <ChevronDown className="w-4 h-4 text-mauve-wine-light flex-shrink-0" />
+                    )}
+                  </button>
+
+                  {expandedResult === cat.id && (
+                    <div className="border-t border-rose-tan-light p-4 bg-luxury-cream space-y-2">
+                      {cat.nominees.length === 0 ? (
+                        <p className="text-sm text-mauve-wine-light">No nominees.</p>
+                      ) : (
+                        cat.nominees.map((nominee: any, idx: number) => {
+                          const totalVotes = cat.nominees.reduce((s: number, n: any) => s + n.vote_count, 0);
+                          const pct = totalVotes > 0 ? Math.round((nominee.vote_count / totalVotes) * 100) : 0;
+                          const isWinner = idx === 0 && nominee.vote_count > 0;
+                          return (
+                            <div
+                              key={nominee.id}
+                              className={`flex items-center gap-3 bg-white rounded-lg p-3 border ${
+                                isWinner ? "border-amber-300" : "border-rose-tan-light"
+                              }`}
+                            >
+                              {nominee.photo_url ? (
+                                <img
+                                  src={nominee.photo_url}
+                                  alt={nominee.name}
+                                  className="w-9 h-9 rounded-full object-cover flex-shrink-0"
+                                />
+                              ) : (
+                                <div className="w-9 h-9 rounded-full bg-rose-tan/20 flex items-center justify-center flex-shrink-0">
+                                  <User className="w-4 h-4 text-rose-tan" />
+                                </div>
+                              )}
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-center gap-2">
+                                  <span className="text-sm font-medium text-mauve-wine truncate">{nominee.name}</span>
+                                  {isWinner && (
+                                    <span className="text-xs px-1.5 py-0.5 rounded-full bg-amber-100 text-amber-700 font-medium flex-shrink-0">
+                                      Winner
+                                    </span>
+                                  )}
+                                </div>
+                                <div className="mt-1 h-1.5 bg-rose-tan/20 rounded-full overflow-hidden">
+                                  <div
+                                    className="h-full luxury-gradient rounded-full transition-all"
+                                    style={{ width: `${pct}%` }}
+                                  />
+                                </div>
+                              </div>
+                              <span className="text-sm font-semibold text-mauve-wine flex-shrink-0">
+                                {nominee.vote_count} <span className="text-xs font-normal text-mauve-wine-light">({pct}%)</span>
+                              </span>
+                            </div>
+                          );
+                        })
+                      )}
+                    </div>
+                  )}
+                </div>
+              ))
+            )}
+          </div>
+        )}
+
+        {/* ── LABEL ASSIGNMENTS TAB ── */}
+        {tab === "label-assignments" && !loading && (
+          <div className="space-y-4">
+            <p className="text-sm text-mauve-wine-light">
+              People assigned to each label by peers.
+            </p>
+            {labelAssignments.length === 0 ? (
+              <p className="text-mauve-wine-light text-sm">No labels found.</p>
+            ) : (
+              labelAssignments.map((label) => (
+                <div key={label.id} className="border border-rose-tan-light rounded-xl bg-white overflow-hidden">
+                  <button
+                    onClick={() =>
+                      setExpandedLabelAssignment(
+                        expandedLabelAssignment === label.id ? null : label.id
+                      )
+                    }
+                    className="w-full flex items-center justify-between p-4 text-left hover:bg-luxury-cream transition-colors"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div>
+                        <div className="font-semibold text-mauve-wine text-sm">{label.name}</div>
+                        <div className="text-xs text-mauve-wine-light mt-0.5">
+                          {label.assigned_users.length} person{label.assigned_users.length !== 1 ? "s" : ""} assigned
+                        </div>
+                      </div>
+                      <span
+                        className={`text-xs px-2 py-0.5 rounded-full border ${
+                          label.is_active
+                            ? "bg-green-100 text-green-700 border-green-200"
+                            : "bg-gray-100 text-gray-500 border-gray-200"
+                        }`}
+                      >
+                        {label.is_active ? "Active" : "Inactive"}
+                      </span>
+                    </div>
+                    {expandedLabelAssignment === label.id ? (
+                      <ChevronUp className="w-4 h-4 text-mauve-wine-light flex-shrink-0" />
+                    ) : (
+                      <ChevronDown className="w-4 h-4 text-mauve-wine-light flex-shrink-0" />
+                    )}
+                  </button>
+
+                  {expandedLabelAssignment === label.id && (
+                    <div className="border-t border-rose-tan-light p-4 bg-luxury-cream space-y-2">
+                      {label.assigned_users.length === 0 ? (
+                        <p className="text-sm text-mauve-wine-light">No one assigned yet.</p>
+                      ) : (
+                        label.assigned_users.map((user: any) => (
+                          <div
+                            key={user.id}
+                            className="flex items-center gap-3 bg-white rounded-lg p-3 border border-rose-tan-light"
+                          >
+                            {user.photo_url ? (
+                              <img
+                                src={user.photo_url}
+                                alt={user.name}
+                                className="w-8 h-8 rounded-full object-cover flex-shrink-0"
+                              />
+                            ) : (
+                              <div className="w-8 h-8 rounded-full luxury-gradient flex items-center justify-center flex-shrink-0">
+                                <User className="w-3.5 h-3.5 text-white" />
+                              </div>
+                            )}
+                            <span className="text-sm text-mauve-wine font-medium">
+                              {user.name}
+                              {user.display_name && (
+                                <span className="ml-1 font-normal text-mauve-wine-light">
+                                  ({user.display_name})
+                                </span>
+                              )}
+                            </span>
+                          </div>
+                        ))
+                      )}
+                    </div>
+                  )}
+                </div>
+              ))
+            )}
+          </div>
+        )}
+
+        {/* ── MESSAGES TAB ── */}
+        {tab === "messages" && !loading && (
+          <div className="space-y-3">
+            <p className="text-sm text-mauve-wine-light">
+              Anonymous messages submitted by users, newest first.
+            </p>
+            {messages.length === 0 ? (
+              <p className="text-mauve-wine-light text-sm">No messages yet.</p>
+            ) : (
+              messages.map((msg) => (
+                <div
+                  key={msg.id}
+                  className="border border-rose-tan-light rounded-xl p-4 bg-white space-y-2"
+                >
+                  <p className="text-sm text-mauve-wine leading-relaxed">{msg.message}</p>
+                  <div className="flex items-center gap-2 pt-1 border-t border-rose-tan-light/50">
+                    {msg.author?.photo_url ? (
+                      <img
+                        src={msg.author.photo_url}
+                        alt={msg.author.name}
+                        className="w-6 h-6 rounded-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-6 h-6 rounded-full luxury-gradient flex items-center justify-center">
+                        <User className="w-3 h-3 text-white" />
+                      </div>
+                    )}
+                    <span className="text-xs text-mauve-wine-light">
+                      {msg.author
+                        ? `${msg.author.name}${msg.author.display_name ? ` (${msg.author.display_name})` : ""}`
+                        : "Unknown user"}
+                    </span>
+                    <span className="text-xs text-mauve-wine-light ml-auto">
+                      {new Date(msg.created_at).toLocaleDateString()}
+                    </span>
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         )}
 

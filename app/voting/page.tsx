@@ -24,6 +24,7 @@ type View =
   | "register"
   | "pending"
   | "login"
+  | "waiting"
   | "profile"
   | "vote"
   | "categorize"
@@ -123,6 +124,10 @@ export default function VotingPage() {
   }
 
   function routeAfterLogin(data: any) {
+    if (!data.voting_enabled) {
+      setView("waiting");
+      return;
+    }
     if (!data.has_completed_profile) {
       setView("profile");
     } else if (!data.has_voted) {
@@ -383,9 +388,9 @@ export default function VotingPage() {
             <div className="w-20 h-20 luxury-gradient rounded-full flex items-center justify-center mx-auto mb-6">
               <Award className="w-10 h-10 text-white" />
             </div>
-            <h1 className="text-4xl font-bold text-mauve-wine mb-3">Awards & Voting</h1>
-            <p className="text-mauve-wine-light mb-10 text-lg">
-              Cast your votes, label your peers, and leave an anonymous message.
+            <h1 className="text-xl font-bold italic text-mauve-wine mb-3">What began as solos has become a beautiful symphony.</h1>
+            <p className="text-mauve-wine-light mb-10 text-sm">
+              We’re not ending this symphony softly—let’s make the final note count.Nominate, with an open heart, the people who were part of your rhythm—the ones you walked, talked, and laughed with, and who deserve to be celebrated.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <button
@@ -420,7 +425,7 @@ export default function VotingPage() {
         {/* ─── REGISTER ─── */}
         {view === "register" && (
           <div className="glass-effect rounded-2xl p-8 luxury-shadow">
-            <h2 className="text-2xl font-bold text-mauve-wine mb-6">Create Account</h2>
+            <h2 className="text-2xl font-bold text-mauve-wine mb-6">Tell us a little about you — we’ll guide you the rest of the way.</h2>
             <form onSubmit={handleRegister} className="space-y-4">
               <InputField
                 icon={<User className="w-4 h-4" />}
@@ -495,7 +500,7 @@ export default function VotingPage() {
             </div>
             <h2 className="text-2xl font-bold text-mauve-wine mb-3">Registration Submitted</h2>
             <p className="text-mauve-wine-light mb-6">
-              Your account is pending admin approval. You will be notified once approved.
+             Sorry for the wait — we’re reviewing your details.
             </p>
             <button
               onClick={() => { setView("login"); setError(""); }}
@@ -506,10 +511,33 @@ export default function VotingPage() {
           </div>
         )}
 
+        {/* ─── WAITING (voting not yet enabled) ─── */}
+        {view === "waiting" && (
+          <div className="text-center glass-effect rounded-2xl p-10 luxury-shadow">
+            <div className="w-16 h-16 bg-rose-tan/10 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Award className="w-8 h-8 text-rose-tan" />
+            </div>
+            <h2 className="text-2xl font-bold text-mauve-wine mb-3">Voting Not Yet Open</h2>
+            <p className="text-mauve-wine-light mb-2">
+              You&apos;re all set — your account is approved and ready.
+            </p>
+            <p className="text-mauve-wine-light mb-8 text-sm">
+              The admin will open voting soon. Please check back later.
+            </p>
+            <button
+              onClick={handleLogout}
+              className="flex items-center gap-2 mx-auto text-mauve-wine-light hover:text-rose-tan transition-colors text-sm"
+            >
+              <LogOut className="w-4 h-4" />
+              <span>Logout</span>
+            </button>
+          </div>
+        )}
+
         {/* ─── LOGIN ─── */}
         {view === "login" && (
           <div className="glass-effect rounded-2xl p-8 luxury-shadow">
-            <h2 className="text-2xl font-bold text-mauve-wine mb-6">Login</h2>
+            <h2 className="text-2xl font-bold text-mauve-wine mb-6">Thanks for your patience — let’s continue making your voice count.</h2>
             <form onSubmit={handleLogin} className="space-y-4">
               <InputField
                 icon={<Mail className="w-4 h-4" />}
@@ -537,7 +565,7 @@ export default function VotingPage() {
               </button>
             </form>
             <p className="text-center text-sm text-mauve-wine-light mt-4">
-              No account?{" "}
+              Shh… we’ve been waiting for you.{" "}
               <button
                 onClick={() => { setView("register"); setError(""); }}
                 className="text-rose-tan hover:underline font-medium"
@@ -554,7 +582,7 @@ export default function VotingPage() {
             <StepIndicator current={0} />
             <h2 className="text-2xl font-bold text-mauve-wine mb-2">Profile Setup</h2>
             <p className="text-mauve-wine-light mb-6 text-sm">
-              Upload a profile photo so others can recognize you. You can skip this step.
+              We know you look great — we’d just love to see your smile
             </p>
             <div className="flex flex-col items-center gap-4 mb-6">
               <div
@@ -609,9 +637,9 @@ export default function VotingPage() {
         {view === "vote" && (
           <div>
             <StepIndicator current={1} />
-            <h2 className="text-2xl font-bold text-mauve-wine mb-2">Cast Your Votes</h2>
+            <h2 className="text-2xl font-bold text-mauve-wine mb-2">It’s your moment to decide.</h2>
             <p className="text-mauve-wine-light mb-6 text-sm">
-              Select one nominee per category. All categories must be voted on.
+              Help us celebrate the ones who made this year unforgettable.
             </p>
             {categories.length === 0 ? (
               <div className="glass-effect rounded-2xl p-8 text-center text-mauve-wine-light luxury-shadow">
@@ -682,9 +710,9 @@ export default function VotingPage() {
         {view === "categorize" && (
           <div>
             <StepIndicator current={2} />
-            <h2 className="text-2xl font-bold text-mauve-wine mb-2">Label Your Peers</h2>
+            <h2 className="text-2xl font-bold text-mauve-wine mb-2">Capture Each Member in One Word</h2>
             <p className="text-mauve-wine-light mb-6 text-sm">
-              Assign one label to each of the three members below.
+              Name the Vibe of Each Peer
             </p>
             {usersToLabel.length === 0 ? (
               <div className="glass-effect rounded-2xl p-8 text-center luxury-shadow">
@@ -709,31 +737,29 @@ export default function VotingPage() {
                 </button>
               </div>
             ) : (
-              <div className="space-y-4">
+              <div className="space-y-6">
                 {usersToLabel.map((u) => (
-                  <div key={u.id} className="glass-effect rounded-2xl p-5 luxury-shadow">
-                    <div className="flex items-center gap-4 mb-4">
+                  <div key={u.id} className="glass-effect rounded-2xl p-8 luxury-shadow">
+                    <div className="flex flex-col items-center text-center mb-6">
                       {u.photo_url ? (
                         <img
                           src={u.photo_url}
                           alt={u.name}
-                          className="w-14 h-14 rounded-full object-cover"
+                          className="w-36 h-36 rounded-full object-cover mb-4 ring-4 ring-rose-tan/20"
                         />
                       ) : (
-                        <div className="w-14 h-14 rounded-full luxury-gradient flex items-center justify-center">
-                          <User className="w-6 h-6 text-white" />
+                        <div className="w-24 h-24 rounded-full luxury-gradient flex items-center justify-center mb-4 ring-4 ring-rose-tan/20">
+                          <User className="w-10 h-10 text-white" />
                         </div>
                       )}
-                      <div>
-                        <div className="font-semibold text-mauve-wine">
-                          {u.display_name || u.name}
-                        </div>
-                        {u.display_name && (
-                          <div className="text-mauve-wine-light text-xs">{u.name}</div>
-                        )}
+                      <div className="font-bold text-xl text-mauve-wine">
+                        {u.display_name || u.name}
                       </div>
+                      {u.display_name && (
+                        <div className="text-mauve-wine-light text-sm mt-0.5">{u.name}</div>
+                      )}
                     </div>
-                    <div className="flex flex-wrap gap-2">
+                    <div className="flex flex-wrap justify-center gap-2">
                       {labelCategories.map((label) => {
                         const selected = selectedLabels[u.id] === label.id;
                         return (
@@ -742,7 +768,7 @@ export default function VotingPage() {
                             onClick={() =>
                               setSelectedLabels((prev) => ({ ...prev, [u.id]: label.id }))
                             }
-                            className={`px-4 py-2 rounded-full text-sm font-medium border-2 transition-all ${
+                            className={`px-5 py-2.5 rounded-full text-sm font-medium border-2 transition-all ${
                               selected
                                 ? "border-rose-tan bg-rose-tan text-white"
                                 : "border-rose-tan-light text-mauve-wine hover:border-rose-tan"
@@ -772,9 +798,9 @@ export default function VotingPage() {
         {view === "anonymous" && (
           <div className="glass-effect rounded-2xl p-8 luxury-shadow">
             <StepIndicator current={3} />
-            <h2 className="text-2xl font-bold text-mauve-wine mb-2">Anonymous Message</h2>
+            <h2 className="text-2xl font-bold text-mauve-wine mb-2">Whisper It Anonymously</h2>
             <p className="text-mauve-wine-light mb-6 text-sm">
-              Leave a message anonymously. Your identity will not be revealed.
+              Your Words Matter—Not Your Name.
             </p>
             <textarea
               value={anonMessage}

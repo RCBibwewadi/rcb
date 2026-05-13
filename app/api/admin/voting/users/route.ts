@@ -50,7 +50,7 @@ export async function POST(request: NextRequest) {
 
     const { error: updateError } = await supabaseServer
       .from('voting_users')
-      .update({ status: newStatus, plain_password: null, updated_at: new Date().toISOString() })
+      .update({ status: newStatus, updated_at: new Date().toISOString() })
       .eq('id', user_id);
 
     if (updateError) throw updateError;
