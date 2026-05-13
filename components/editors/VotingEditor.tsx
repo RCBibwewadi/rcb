@@ -89,8 +89,9 @@ export default function VotingEditor() {
   const [expandedResult, setExpandedResult] = useState<string | null>(null);
 
   // Label Assignments
-  const [labelAssignments, setLabelAssignments] = useState<any[]>([]);
-  const [expandedLabelAssignment, setExpandedLabelAssignment] = useState<string | null>(null);
+  const [labelAssignmentLabels, setLabelAssignmentLabels] = useState<any[]>([]);
+  const [userResults, setUserResults] = useState<any[]>([]);
+  const [assigningUserId, setAssigningUserId] = useState<string | null>(null);
 
   // Messages
   const [messages, setMessages] = useState<any[]>([]);
@@ -359,10 +360,30 @@ export default function VotingEditor() {
       const res = await fetch("/api/admin/voting/label-assignments");
       if (res.ok) {
         const data = await res.json();
-        setLabelAssignments(data.labels || []);
+        setLabelAssignmentLabels(data.labels || []);
+        setUserResults(data.user_results || []);
       }
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function handleAdminAssignLabel(userId: string, labelCategoryId: string) {
+    setAssigningUserId(userId);
+    try {
+      const res = await fetch("/api/admin/voting/label-assignments", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user_id: userId, label_category_id: labelCategoryId }),
+      });
+      if (res.ok) {
+        showMsg("Label assigned", "success");
+        loadLabelAssignments();
+      } else {
+        showMsg("Failed to assign label", "error");
+      }
+    } finally {
+      setAssigningUserId(null);
     }
   }
 
@@ -833,83 +854,153 @@ export default function VotingEditor() {
 
         {/* ── LABEL ASSIGNMENTS TAB ── */}
         {tab === "label-assignments" && !loading && (
-          <div className="space-y-4">
+          <div className="space-y-6">
             <p className="text-sm text-mauve-wine-light">
-              People assigned to each label by peers.
+              Each user&apos;s label is determined by the highest peer-vote count. Ties require admin assignment.
             </p>
-            {labelAssignments.length === 0 ? (
-              <p className="text-mauve-wine-light text-sm">No labels found.</p>
-            ) : (
-              labelAssignments.map((label) => (
-                <div key={label.id} className="border border-rose-tan-light rounded-xl bg-white overflow-hidden">
-                  <button
-                    onClick={() =>
-                      setExpandedLabelAssignment(
-                        expandedLabelAssignment === label.id ? null : label.id
-                      )
-                    }
-                    className="w-full flex items-center justify-between p-4 text-left hover:bg-luxury-cream transition-colors"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div>
-                        <div className="font-semibold text-mauve-wine text-sm">{label.name}</div>
-                        <div className="text-xs text-mauve-wine-light mt-0.5">
-                          {label.assigned_users.length} person{label.assigned_users.length !== 1 ? "s" : ""} assigned
-                        </div>
-                      </div>
-                      <span
-                        className={`text-xs px-2 py-0.5 rounded-full border ${
-                          label.is_active
-                            ? "bg-green-100 text-green-700 border-green-200"
-                            : "bg-gray-100 text-gray-500 border-gray-200"
-                        }`}
-                      >
-                        {label.is_active ? "Active" : "Inactive"}
-                      </span>
-                    </div>
-                    {expandedLabelAssignment === label.id ? (
-                      <ChevronUp className="w-4 h-4 text-mauve-wine-light flex-shrink-0" />
-                    ) : (
-                      <ChevronDown className="w-4 h-4 text-mauve-wine-light flex-shrink-0" />
-                    )}
-                  </button>
 
-                  {expandedLabelAssignment === label.id && (
-                    <div className="border-t border-rose-tan-light p-4 bg-luxury-cream space-y-2">
-                      {label.assigned_users.length === 0 ? (
-                        <p className="text-sm text-mauve-wine-light">No one assigned yet.</p>
-                      ) : (
-                        label.assigned_users.map((user: any) => (
-                          <div
-                            key={user.id}
-                            className="flex items-center gap-3 bg-white rounded-lg p-3 border border-rose-tan-light"
-                          >
-                            {user.photo_url ? (
-                              <img
-                                src={user.photo_url}
-                                alt={user.name}
-                                className="w-8 h-8 rounded-full object-cover flex-shrink-0"
-                              />
-                            ) : (
-                              <div className="w-8 h-8 rounded-full luxury-gradient flex items-center justify-center flex-shrink-0">
-                                <User className="w-3.5 h-3.5 text-white" />
-                              </div>
-                            )}
-                            <span className="text-sm text-mauve-wine font-medium">
-                              {user.name}
-                              {user.display_name && (
-                                <span className="ml-1 font-normal text-mauve-wine-light">
-                                  ({user.display_name})
-                                </span>
+            {userResults.length === 0 ? (
+              <p className="text-mauve-wine-light text-sm">No label data yet.</p>
+            ) : (
+              <>
+                {/* ── Group users by their effective label ── */}
+                {labelAssignmentLabels.map((label) => {
+                  const members = userResults.filter(
+                    (r) => r.effective_label_id === label.id
+                  );
+                  if (members.length === 0) return null;
+                  return (
+                    <div key={label.id} className="border border-rose-tan-light rounded-xl bg-white overflow-hidden">
+                      <div className="flex items-center gap-2 px-4 py-3 bg-luxury-cream border-b border-rose-tan-light">
+                        <Tags className="w-4 h-4 text-rose-tan flex-shrink-0" />
+                        <span className="font-semibold text-mauve-wine text-sm">{label.name}</span>
+                        <span className="ml-auto text-xs text-mauve-wine-light">
+                          {members.length} member{members.length !== 1 ? "s" : ""}
+                        </span>
+                      </div>
+                      <div className="divide-y divide-rose-tan-light/40">
+                        {members.map((r) => {
+                          const topCount = r.label_counts.find(
+                            (lc: any) => lc.label_id === label.id
+                          )?.count ?? 0;
+                          const isAdminPick = r.admin_assigned_label_id === label.id;
+                          return (
+                            <div
+                              key={r.user.id}
+                              className="flex items-center gap-3 px-4 py-3"
+                            >
+                              {r.user.photo_url ? (
+                                <img
+                                  src={r.user.photo_url}
+                                  alt={r.user.name}
+                                  className="w-8 h-8 rounded-full object-cover flex-shrink-0"
+                                />
+                              ) : (
+                                <div className="w-8 h-8 rounded-full luxury-gradient flex items-center justify-center flex-shrink-0">
+                                  <User className="w-3.5 h-3.5 text-white" />
+                                </div>
                               )}
-                            </span>
-                          </div>
-                        ))
-                      )}
+                              <div className="flex-1 min-w-0">
+                                <span className="text-sm font-medium text-mauve-wine">
+                                  {r.user.name}
+                                  {r.user.display_name && (
+                                    <span className="ml-1 font-normal text-mauve-wine-light">
+                                      ({r.user.display_name})
+                                    </span>
+                                  )}
+                                </span>
+                              </div>
+                              <div className="flex items-center gap-2 flex-shrink-0">
+                                {isAdminPick && (
+                                  <span className="text-xs px-1.5 py-0.5 rounded-full bg-purple-100 text-purple-700 border border-purple-200">
+                                    Admin pick
+                                  </span>
+                                )}
+                                <span className="text-xs font-semibold px-2 py-1 rounded-full bg-rose-tan/10 text-rose-tan">
+                                  {topCount} vote{topCount !== 1 ? "s" : ""}
+                                </span>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
                     </div>
-                  )}
-                </div>
-              ))
+                  );
+                })}
+
+                {/* ── Tie section ── */}
+                {(() => {
+                  const tiedUsers = userResults.filter(
+                    (r) => r.is_tie && !r.admin_assigned_label_id
+                  );
+                  if (tiedUsers.length === 0) return null;
+                  return (
+                    <div className="border-2 border-amber-300 rounded-xl bg-white overflow-hidden">
+                      <div className="flex items-center gap-2 px-4 py-3 bg-amber-50 border-b border-amber-200">
+                        <span className="w-2 h-2 rounded-full bg-amber-400 inline-block" />
+                        <span className="font-semibold text-amber-800 text-sm">
+                          Needs Admin Assignment ({tiedUsers.length})
+                        </span>
+                        <span className="ml-auto text-xs text-amber-600">
+                          These users have tied votes — pick their label below
+                        </span>
+                      </div>
+                      <div className="divide-y divide-amber-100">
+                        {tiedUsers.map((r) => (
+                          <div key={r.user.id} className="px-4 py-4">
+                            <div className="flex items-center gap-3 mb-3">
+                              {r.user.photo_url ? (
+                                <img
+                                  src={r.user.photo_url}
+                                  alt={r.user.name}
+                                  className="w-9 h-9 rounded-full object-cover flex-shrink-0"
+                                />
+                              ) : (
+                                <div className="w-9 h-9 rounded-full luxury-gradient flex items-center justify-center flex-shrink-0">
+                                  <User className="w-4 h-4 text-white" />
+                                </div>
+                              )}
+                              <div>
+                                <div className="text-sm font-semibold text-mauve-wine">
+                                  {r.user.name}
+                                  {r.user.display_name && (
+                                    <span className="ml-1 font-normal text-mauve-wine-light">
+                                      ({r.user.display_name})
+                                    </span>
+                                  )}
+                                </div>
+                                <div className="flex gap-2 mt-0.5 flex-wrap">
+                                  {r.label_counts.length === 0 ? (
+                                    <span className="text-xs text-gray-400 italic">No votes received</span>
+                                  ) : (
+                                    r.label_counts.map((lc: any) => (
+                                      <span key={lc.label_id} className="text-xs text-amber-700 bg-amber-50 border border-amber-200 px-1.5 py-0.5 rounded">
+                                        {lc.label_name}: {lc.count}
+                                      </span>
+                                    ))
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                            <div className="flex flex-wrap gap-2">
+                              {labelAssignmentLabels.map((label) => (
+                                <button
+                                  key={label.id}
+                                  onClick={() => handleAdminAssignLabel(r.user.id, label.id)}
+                                  disabled={assigningUserId === r.user.id}
+                                  className="px-3 py-1.5 rounded-lg text-xs font-medium border-2 border-rose-tan-light text-mauve-wine hover:border-rose-tan hover:bg-rose-tan/5 transition-all disabled:opacity-50"
+                                >
+                                  {assigningUserId === r.user.id ? "Saving..." : `Assign: ${label.name}`}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })()}
+              </>
             )}
           </div>
         )}

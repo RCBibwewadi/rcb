@@ -128,18 +128,19 @@ export default function VotingPage() {
       setView("waiting");
       return;
     }
-    if (!data.has_completed_profile) {
-      setView("profile");
-    } else if (!data.has_voted) {
-      setView("vote");
-      loadVotingData();
-    } else if (!data.has_categorized) {
+    // Check phases in order — skip earlier phases if already completed
+    if (data.has_messaged) {
+      setView("done");
+    } else if (data.has_categorized) {
+      setView("anonymous");
+    } else if (data.has_voted) {
       setView("categorize");
       loadCategorizationData();
-    } else if (!data.has_messaged) {
-      setView("anonymous");
+    } else if (data.has_completed_profile) {
+      setView("vote");
+      loadVotingData();
     } else {
-      setView("done");
+      setView("profile");
     }
   }
 
@@ -152,6 +153,7 @@ export default function VotingPage() {
   }
 
   async function loadCategorizationData() {
+    setSelectedLabels({});
     const [labelsRes, usersRes] = await Promise.all([
       fetch("/api/voting/labels"),
       fetch("/api/voting/users"),
@@ -279,17 +281,17 @@ export default function VotingPage() {
   }
 
   async function handleSubmitLabels() {
-    if (Object.keys(selectedLabels).length < usersToLabel.length) {
+    const labels = usersToLabel
+      .filter((u) => selectedLabels[u.id])
+      .map((u) => ({ labeled_user_id: u.id, label_category_id: selectedLabels[u.id] }));
+
+    if (labels.length < usersToLabel.length) {
       setError("Please assign a label to all users before submitting");
       return;
     }
     setLoading(true);
     setError("");
     try {
-      const labels = Object.entries(selectedLabels).map(([labeled_user_id, label_category_id]) => ({
-        labeled_user_id,
-        label_category_id,
-      }));
       const res = await fetch("/api/voting/categorize", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
