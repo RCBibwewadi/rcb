@@ -1,6 +1,7 @@
 // components/Hero.tsx
 "use client";
 import React, { useEffect, useState } from "react";
+import { ScrambleText } from "./CursorAnimation/ScrambleText";
 
 interface HeroData {
   background_image: string;
@@ -105,7 +106,7 @@ export default function Hero() {
               href="/quick"
               className="inline-block luxury-gradient hover:opacity-90 text-white font-semibold px-8 py-4 rounded-full transition-all duration-300 hover:scale-105 luxury-shadow"
             >
-              {hero.cta_text}
+              <ScrambleText text={hero.cta_text} />
             </a>
           )}
         </div>

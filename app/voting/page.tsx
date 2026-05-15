@@ -18,6 +18,7 @@ import {
   ArrowLeft,
 } from "lucide-react";
 import Link from "next/link";
+import { ScrambleText } from "@/components/CursorAnimation/ScrambleText";
 
 type View =
   | "landing"
@@ -96,12 +97,16 @@ export default function VotingPage() {
 
   // Voting state
   const [categories, setCategories] = useState<VotingCategory[]>([]);
-  const [selectedVotes, setSelectedVotes] = useState<Record<string, string>>({});
+  const [selectedVotes, setSelectedVotes] = useState<Record<string, string>>(
+    {},
+  );
 
   // Categorization state
   const [labelCategories, setLabelCategories] = useState<LabelCategory[]>([]);
   const [usersToLabel, setUsersToLabel] = useState<UserCard[]>([]);
-  const [selectedLabels, setSelectedLabels] = useState<Record<string, string>>({});
+  const [selectedLabels, setSelectedLabels] = useState<Record<string, string>>(
+    {},
+  );
 
   // Anonymous message state
   const [anonMessage, setAnonMessage] = useState("");
@@ -235,13 +240,16 @@ export default function VotingPage() {
     try {
       const formData = new FormData();
       formData.append("file", photoFile);
-      const res = await fetch("/api/voting/upload", { method: "POST", body: formData });
+      const res = await fetch("/api/voting/upload", {
+        method: "POST",
+        body: formData,
+      });
       const data = await res.json();
       if (!res.ok) {
         setError(data.error || "Upload failed");
         return;
       }
-      setUser((prev) => prev ? { ...prev, photo_url: data.url } : prev);
+      setUser((prev) => (prev ? { ...prev, photo_url: data.url } : prev));
       setView("vote");
       loadVotingData();
     } finally {
@@ -258,10 +266,12 @@ export default function VotingPage() {
     setLoading(true);
     setError("");
     try {
-      const votes = Object.entries(selectedVotes).map(([category_id, nominee_id]) => ({
-        category_id,
-        nominee_id,
-      }));
+      const votes = Object.entries(selectedVotes).map(
+        ([category_id, nominee_id]) => ({
+          category_id,
+          nominee_id,
+        }),
+      );
       const res = await fetch("/api/voting/vote", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -272,7 +282,7 @@ export default function VotingPage() {
         setError(data.error || "Failed to submit votes");
         return;
       }
-      setUser((prev) => prev ? { ...prev, has_voted: true } : prev);
+      setUser((prev) => (prev ? { ...prev, has_voted: true } : prev));
       setView("categorize");
       loadCategorizationData();
     } finally {
@@ -283,7 +293,10 @@ export default function VotingPage() {
   async function handleSubmitLabels() {
     const labels = usersToLabel
       .filter((u) => selectedLabels[u.id])
-      .map((u) => ({ labeled_user_id: u.id, label_category_id: selectedLabels[u.id] }));
+      .map((u) => ({
+        labeled_user_id: u.id,
+        label_category_id: selectedLabels[u.id],
+      }));
 
     if (labels.length < usersToLabel.length) {
       setError("Please assign a label to all users before submitting");
@@ -302,7 +315,7 @@ export default function VotingPage() {
         setError(data.error || "Failed to submit categorization");
         return;
       }
-      setUser((prev) => prev ? { ...prev, has_categorized: true } : prev);
+      setUser((prev) => (prev ? { ...prev, has_categorized: true } : prev));
       setView("anonymous");
     } finally {
       setLoading(false);
@@ -327,7 +340,7 @@ export default function VotingPage() {
         setError(data.error || "Failed to submit message");
         return;
       }
-      setUser((prev) => prev ? { ...prev, has_messaged: true } : prev);
+      setUser((prev) => (prev ? { ...prev, has_messaged: true } : prev));
       setView("done");
     } finally {
       setLoading(false);
@@ -372,7 +385,10 @@ export default function VotingPage() {
             )}
             {!user && view !== "landing" && (
               <button
-                onClick={() => { setView("landing"); setError(""); }}
+                onClick={() => {
+                  setView("landing");
+                  setError("");
+                }}
                 className="flex items-center space-x-1 text-mauve-wine-light hover:text-rose-tan transition-colors text-sm"
               >
                 <ArrowLeft className="w-4 h-4" />
@@ -390,19 +406,30 @@ export default function VotingPage() {
             <div className="w-20 h-20 luxury-gradient rounded-full flex items-center justify-center mx-auto mb-6">
               <Award className="w-10 h-10 text-white" />
             </div>
-            <h1 className="text-xl font-bold italic text-mauve-wine mb-3">What began as solos has become a beautiful symphony.</h1>
+            <h1 className="text-xl font-bold italic text-mauve-wine mb-3">
+              What began as solos has become a beautiful symphony.
+            </h1>
             <p className="text-mauve-wine-light mb-10 text-sm">
-              We’re not ending this symphony softly—let’s make the final note count.Nominate, with an open heart, the people who were part of your rhythm—the ones you walked, talked, and laughed with, and who deserve to be celebrated.
+              We’re not ending this symphony softly—let’s make the final note
+              count.Nominate, with an open heart, the people who were part of
+              your rhythm—the ones you walked, talked, and laughed with, and who
+              deserve to be celebrated.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <button
-                onClick={() => { setView("register"); setError(""); }}
+                onClick={() => {
+                  setView("register");
+                  setError("");
+                }}
                 className="luxury-gradient text-white font-semibold px-8 py-3 rounded-lg hover:opacity-90 transition-all"
               >
                 Register
               </button>
               <button
-                onClick={() => { setView("login"); setError(""); }}
+                onClick={() => {
+                  setView("login");
+                  setError("");
+                }}
                 className="border-2 border-rose-tan text-mauve-wine font-semibold px-8 py-3 rounded-lg hover:bg-rose-tan hover:text-white transition-all"
               >
                 Login
@@ -410,14 +437,29 @@ export default function VotingPage() {
             </div>
             <div className="mt-12 grid grid-cols-3 gap-6 text-center">
               {[
-                { icon: Award, label: "Vote", desc: "Vote in award categories" },
+                {
+                  icon: Award,
+                  label: "Vote",
+                  desc: "Vote in award categories",
+                },
                 { icon: Users, label: "Label", desc: "Categorize 3 peers" },
-                { icon: MessageSquare, label: "Message", desc: "Leave an anonymous note" },
+                {
+                  icon: MessageSquare,
+                  label: "Message",
+                  desc: "Leave an anonymous note",
+                },
               ].map(({ icon: Icon, label, desc }) => (
-                <div key={label} className="glass-effect rounded-xl p-4 luxury-shadow">
+                <div
+                  key={label}
+                  className="glass-effect rounded-xl p-4 luxury-shadow"
+                >
                   <Icon className="w-7 h-7 text-rose-tan mx-auto mb-2" />
-                  <div className="font-semibold text-mauve-wine text-sm">{label}</div>
-                  <div className="text-mauve-wine-light text-xs mt-1">{desc}</div>
+                  <div className="font-semibold text-mauve-wine text-sm">
+                    {label}
+                  </div>
+                  <div className="text-mauve-wine-light text-xs mt-1">
+                    {desc}
+                  </div>
                 </div>
               ))}
             </div>
@@ -427,7 +469,9 @@ export default function VotingPage() {
         {/* ─── REGISTER ─── */}
         {view === "register" && (
           <div className="glass-effect rounded-2xl p-8 luxury-shadow">
-            <h2 className="text-2xl font-bold text-mauve-wine mb-6">Tell us a little about you — we’ll guide you the rest of the way.</h2>
+            <h2 className="text-2xl font-bold text-mauve-wine mb-6">
+              Tell us a little about you — we’ll guide you the rest of the way.
+            </h2>
             <form onSubmit={handleRegister} className="space-y-4">
               <InputField
                 icon={<User className="w-4 h-4" />}
@@ -485,7 +529,10 @@ export default function VotingPage() {
             <p className="text-center text-sm text-mauve-wine-light mt-4">
               Already have an account?{" "}
               <button
-                onClick={() => { setView("login"); setError(""); }}
+                onClick={() => {
+                  setView("login");
+                  setError("");
+                }}
                 className="text-rose-tan hover:underline font-medium"
               >
                 Login
@@ -500,12 +547,17 @@ export default function VotingPage() {
             <div className="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-4">
               <CheckCircle className="w-8 h-8 text-amber-500" />
             </div>
-            <h2 className="text-2xl font-bold text-mauve-wine mb-3">Registration Submitted</h2>
+            <h2 className="text-2xl font-bold text-mauve-wine mb-3">
+              Registration Submitted
+            </h2>
             <p className="text-mauve-wine-light mb-6">
-             Sorry for the wait — we’re reviewing your details.
+              Sorry for the wait — we’re reviewing your details.
             </p>
             <button
-              onClick={() => { setView("login"); setError(""); }}
+              onClick={() => {
+                setView("login");
+                setError("");
+              }}
               className="luxury-gradient text-white font-semibold px-8 py-3 rounded-lg hover:opacity-90 transition-all"
             >
               Go to Login
@@ -519,7 +571,9 @@ export default function VotingPage() {
             <div className="w-16 h-16 bg-rose-tan/10 rounded-full flex items-center justify-center mx-auto mb-4">
               <Award className="w-8 h-8 text-rose-tan" />
             </div>
-            <h2 className="text-2xl font-bold text-mauve-wine mb-3">Voting Not Yet Open</h2>
+            <h2 className="text-2xl font-bold text-mauve-wine mb-3">
+              Voting Not Yet Open
+            </h2>
             <p className="text-mauve-wine-light mb-2">
               You&apos;re all set — your account is approved and ready.
             </p>
@@ -539,7 +593,9 @@ export default function VotingPage() {
         {/* ─── LOGIN ─── */}
         {view === "login" && (
           <div className="glass-effect rounded-2xl p-8 luxury-shadow">
-            <h2 className="text-2xl font-bold text-mauve-wine mb-6">Thanks for your patience — let’s continue making your voice count.</h2>
+            <h2 className="text-2xl font-bold text-mauve-wine mb-6">
+              Thanks for your patience — let’s continue making your voice count.
+            </h2>
             <form onSubmit={handleLogin} className="space-y-4">
               <InputField
                 icon={<Mail className="w-4 h-4" />}
@@ -563,13 +619,16 @@ export default function VotingPage() {
                 disabled={loading}
                 className="w-full luxury-gradient text-white font-semibold py-3 rounded-lg hover:opacity-90 transition-all disabled:opacity-50"
               >
-                {loading ? "Logging in..." : "Login"}
+                <ScrambleText text={loading ? "Logging in..." : "Login"} />
               </button>
             </form>
             <p className="text-center text-sm text-mauve-wine-light mt-4">
               Shh… we’ve been waiting for you.{" "}
               <button
-                onClick={() => { setView("register"); setError(""); }}
+                onClick={() => {
+                  setView("register");
+                  setError("");
+                }}
                 className="text-rose-tan hover:underline font-medium"
               >
                 Register
@@ -582,7 +641,9 @@ export default function VotingPage() {
         {view === "profile" && (
           <div className="glass-effect rounded-2xl p-8 luxury-shadow">
             <StepIndicator current={0} />
-            <h2 className="text-2xl font-bold text-mauve-wine mb-2">Profile Setup</h2>
+            <h2 className="text-2xl font-bold text-mauve-wine mb-2">
+              Profile Setup
+            </h2>
             <p className="text-mauve-wine-light mb-6 text-sm">
               We know you look great — we’d just love to see your smile
             </p>
@@ -592,7 +653,11 @@ export default function VotingPage() {
                 onClick={() => photoInputRef.current?.click()}
               >
                 {photoPreview ? (
-                  <img src={photoPreview} alt="Preview" className="w-full h-full object-cover" />
+                  <img
+                    src={photoPreview}
+                    alt="Preview"
+                    className="w-full h-full object-cover"
+                  />
                 ) : (
                   <Upload className="w-8 h-8 text-rose-tan-light" />
                 )}
@@ -625,10 +690,16 @@ export default function VotingPage() {
                 disabled={loading}
                 className="flex-1 luxury-gradient text-white font-semibold py-3 rounded-lg hover:opacity-90 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
               >
-                {loading ? "Uploading..." : photoFile ? (
-                  <><Upload className="w-4 h-4" /> Upload & Continue</>
+                {loading ? (
+                  "Uploading..."
+                ) : photoFile ? (
+                  <>
+                    <Upload className="w-4 h-4" /> Upload & Continue
+                  </>
                 ) : (
-                  <><ChevronRight className="w-4 h-4" /> Skip & Continue</>
+                  <>
+                    <ChevronRight className="w-4 h-4" /> Skip & Continue
+                  </>
                 )}
               </button>
             </div>
@@ -639,7 +710,9 @@ export default function VotingPage() {
         {view === "vote" && (
           <div>
             <StepIndicator current={1} />
-            <h2 className="text-2xl font-bold text-mauve-wine mb-2">It’s your moment to decide.</h2>
+            <h2 className="text-2xl font-bold text-mauve-wine mb-2">
+              It’s your moment to decide.
+            </h2>
             <p className="text-mauve-wine-light mb-6 text-sm">
               Help us celebrate the ones who made this year unforgettable.
             </p>
@@ -650,10 +723,17 @@ export default function VotingPage() {
             ) : (
               <div className="space-y-6">
                 {categories.map((cat) => (
-                  <div key={cat.id} className="glass-effect rounded-2xl p-6 luxury-shadow">
-                    <h3 className="text-lg font-semibold text-mauve-wine mb-1">{cat.name}</h3>
+                  <div
+                    key={cat.id}
+                    className="glass-effect rounded-2xl p-6 luxury-shadow"
+                  >
+                    <h3 className="text-lg font-semibold text-mauve-wine mb-1">
+                      {cat.name}
+                    </h3>
                     {cat.description && (
-                      <p className="text-mauve-wine-light text-sm mb-4">{cat.description}</p>
+                      <p className="text-mauve-wine-light text-sm mb-4">
+                        {cat.description}
+                      </p>
                     )}
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                       {cat.nominees.map((nominee) => {
@@ -662,7 +742,10 @@ export default function VotingPage() {
                           <button
                             key={nominee.id}
                             onClick={() =>
-                              setSelectedVotes((prev) => ({ ...prev, [cat.id]: nominee.id }))
+                              setSelectedVotes((prev) => ({
+                                ...prev,
+                                [cat.id]: nominee.id,
+                              }))
                             }
                             className={`rounded-xl p-3 border-2 text-left transition-all ${
                               selected
@@ -698,21 +781,34 @@ export default function VotingPage() {
                 {error && <p className="text-red-500 text-sm">{error}</p>}
                 <button
                   onClick={handleSubmitVotes}
-                  disabled={loading || Object.keys(selectedVotes).length < categories.filter(c => c.nominees.length > 0).length}
+                  disabled={
+                    loading ||
+                    Object.keys(selectedVotes).length <
+                      categories.filter((c) => c.nominees.length > 0).length
+                  }
                   className="w-full luxury-gradient text-white font-semibold py-3 rounded-lg hover:opacity-90 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
                 >
-                  {loading ? "Submitting..." : <><span>Submit Votes</span><ChevronRight className="w-4 h-4" /></>}
+                  {loading ? (
+                    "Submitting..."
+                  ) : (
+                    <>
+                      <span><ScrambleText text="Submit Votes" /></span>
+                      <ChevronRight className="w-4 h-4" />
+                    </>
+                  )}
                 </button>
               </div>
             )}
           </div>
-         )} 
+        )}
 
         {/* ─── CATEGORIZE ─── */}
         {view === "categorize" && (
           <div>
             <StepIndicator current={2} />
-            <h2 className="text-2xl font-bold text-mauve-wine mb-2">Capture Each Member in One Word</h2>
+            <h2 className="text-2xl font-bold text-mauve-wine mb-2">
+              Capture Each Member in One Word
+            </h2>
             <p className="text-mauve-wine-light mb-6 text-sm">
               Name the Vibe of Each Peer
             </p>
@@ -741,7 +837,10 @@ export default function VotingPage() {
             ) : (
               <div className="space-y-6">
                 {usersToLabel.map((u) => (
-                  <div key={u.id} className="glass-effect rounded-2xl p-8 luxury-shadow">
+                  <div
+                    key={u.id}
+                    className="glass-effect rounded-2xl p-8 luxury-shadow"
+                  >
                     <div className="flex flex-col items-center text-center mb-6">
                       {u.photo_url ? (
                         <img
@@ -758,7 +857,9 @@ export default function VotingPage() {
                         {u.display_name || u.name}
                       </div>
                       {u.display_name && (
-                        <div className="text-mauve-wine-light text-sm mt-0.5">{u.name}</div>
+                        <div className="text-mauve-wine-light text-sm mt-0.5">
+                          {u.name}
+                        </div>
                       )}
                     </div>
                     <div className="flex flex-wrap justify-center gap-2">
@@ -768,7 +869,10 @@ export default function VotingPage() {
                           <button
                             key={label.id}
                             onClick={() =>
-                              setSelectedLabels((prev) => ({ ...prev, [u.id]: label.id }))
+                              setSelectedLabels((prev) => ({
+                                ...prev,
+                                [u.id]: label.id,
+                              }))
                             }
                             className={`px-5 py-2.5 rounded-full text-sm font-medium border-2 transition-all ${
                               selected
@@ -786,10 +890,20 @@ export default function VotingPage() {
                 {error && <p className="text-red-500 text-sm">{error}</p>}
                 <button
                   onClick={handleSubmitLabels}
-                  disabled={loading || Object.keys(selectedLabels).length < usersToLabel.length}
+                  disabled={
+                    loading ||
+                    Object.keys(selectedLabels).length < usersToLabel.length
+                  }
                   className="w-full luxury-gradient text-white font-semibold py-3 rounded-lg hover:opacity-90 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
                 >
-                  {loading ? "Submitting..." : <><span>Submit Labels</span><ChevronRight className="w-4 h-4" /></>}
+                  {loading ? (
+                    "Submitting..."
+                  ) : (
+                    <>
+                      <span><ScrambleText text="Submit Labels" /></span>
+                      <ChevronRight className="w-4 h-4" />
+                    </>
+                  )}
                 </button>
               </div>
             )}
@@ -800,7 +914,9 @@ export default function VotingPage() {
         {view === "anonymous" && (
           <div className="glass-effect rounded-2xl p-8 luxury-shadow">
             <StepIndicator current={3} />
-            <h2 className="text-2xl font-bold text-mauve-wine mb-2">Whisper It Anonymously</h2>
+            <h2 className="text-2xl font-bold text-mauve-wine mb-2">
+              Whisper It Anonymously
+            </h2>
             <p className="text-mauve-wine-light mb-6 text-sm">
               Your Words Matter—Not Your Name.
             </p>
@@ -821,7 +937,14 @@ export default function VotingPage() {
               disabled={loading || !anonMessage.trim()}
               className="w-full luxury-gradient text-white font-semibold py-3 rounded-lg hover:opacity-90 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
             >
-              {loading ? "Submitting..." : <><MessageSquare className="w-4 h-4" /><span>Submit Message</span></>}
+              {loading ? (
+                "Submitting..."
+              ) : (
+                <>
+                  <MessageSquare className="w-4 h-4" />
+                  <span><ScrambleText text="Submit Message" /></span>
+                </>
+              )}
             </button>
           </div>
         )}
@@ -832,7 +955,9 @@ export default function VotingPage() {
             <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
               <CheckCircle className="w-10 h-10 text-green-500" />
             </div>
-            <h2 className="text-3xl font-bold text-mauve-wine mb-3">All Done!</h2>
+            <h2 className="text-3xl font-bold text-mauve-wine mb-3">
+              All Done!
+            </h2>
             <p className="text-mauve-wine-light mb-8 text-lg">
               Thank you for participating, {user?.display_name || user?.name}.
             </p>
@@ -844,7 +969,9 @@ export default function VotingPage() {
               ].map(({ icon: Icon, label }) => (
                 <div key={label} className="bg-green-50 rounded-xl p-4">
                   <Icon className="w-6 h-6 text-green-500 mx-auto mb-1" />
-                  <div className="text-xs text-green-700 font-medium">{label}</div>
+                  <div className="text-xs text-green-700 font-medium">
+                    {label}
+                  </div>
                 </div>
               ))}
             </div>
@@ -880,7 +1007,9 @@ function InputField({
 }) {
   return (
     <div className="relative">
-      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-rose-tan">{icon}</span>
+      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-rose-tan">
+        {icon}
+      </span>
       <input
         type={type}
         placeholder={placeholder}
@@ -913,14 +1042,16 @@ function StepIndicator({ current }: { current: number }) {
                 done
                   ? "bg-rose-tan border-rose-tan"
                   : active
-                  ? "border-rose-tan bg-rose-tan/10"
-                  : "border-rose-tan-light bg-white"
+                    ? "border-rose-tan bg-rose-tan/10"
+                    : "border-rose-tan-light bg-white"
               }`}
             >
               {done ? (
                 <CheckCircle className="w-4 h-4 text-white" />
               ) : (
-                <Icon className={`w-4 h-4 ${active ? "text-rose-tan" : "text-rose-tan-light"}`} />
+                <Icon
+                  className={`w-4 h-4 ${active ? "text-rose-tan" : "text-rose-tan-light"}`}
+                />
               )}
             </div>
             {i < steps.length - 1 && (
