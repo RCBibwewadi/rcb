@@ -674,7 +674,7 @@ export default function VotingPage() {
                               <img
                                 src={nominee.photo_url}
                                 alt={nominee.name}
-                                className="w-12 h-12 rounded-full object-cover mb-2 mx-auto"
+                                className="w-24 h-24 rounded-full object-cover mb-2 mx-auto"
                               />
                             ) : (
                               <div className="w-12 h-12 rounded-full bg-rose-tan/20 flex items-center justify-center mb-2 mx-auto">
@@ -706,7 +706,7 @@ export default function VotingPage() {
               </div>
             )}
           </div>
-        )}
+         )} 
 
         {/* ─── CATEGORIZE ─── */}
         {view === "categorize" && (

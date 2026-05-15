@@ -69,6 +69,7 @@ export default function VotingEditor() {
   // Users
   const [users, setUsers] = useState<VotingUser[]>([]);
   const [userFilter, setUserFilter] = useState<string>("pending");
+  const filteredUsers = userFilter === "" ? users : users.filter((u) => u.status === userFilter);
 
   // Categories
   const [categories, setCategories] = useState<VotingCategory[]>([]);
@@ -140,7 +141,7 @@ export default function VotingEditor() {
     else if (tab === "results") loadResults();
     else if (tab === "label-assignments") loadLabelAssignments();
     else if (tab === "messages") loadMessages();
-  }, [tab, userFilter]);
+  }, [tab]);
 
   function showMsg(text: string, type: "success" | "error") {
     setMsg({ text, type });
@@ -152,7 +153,7 @@ export default function VotingEditor() {
   async function loadUsers() {
     setLoading(true);
     try {
-      const res = await fetch(`/api/admin/voting/users?status=${userFilter}`);
+      const res = await fetch(`/api/admin/voting/users`);
       if (res.ok) {
         const data = await res.json();
         setUsers(data.users || []);
@@ -497,19 +498,27 @@ export default function VotingEditor() {
         {tab === "users" && !loading && (
           <div>
             <div className="flex items-center gap-2 mb-4">
-              {["pending", "approved", "declined", ""].map((f) => (
-                <button
-                  key={f}
-                  onClick={() => setUserFilter(f)}
-                  className={`px-3 py-1 rounded-full text-xs font-medium border transition-all ${
-                    userFilter === f
-                      ? "bg-mauve-wine text-white border-mauve-wine"
-                      : "border-rose-tan-light text-mauve-wine hover:border-rose-tan"
-                  }`}
-                >
-                  {f === "" ? "All" : f.charAt(0).toUpperCase() + f.slice(1)}
-                </button>
-              ))}
+              {["pending", "approved", "declined", ""].map((f) => {
+                const count = f === "" ? users.length : users.filter((u) => u.status === f).length;
+                return (
+                  <button
+                    key={f}
+                    onClick={() => setUserFilter(f)}
+                    className={`px-3 py-1 rounded-full text-xs font-medium border transition-all ${
+                      userFilter === f
+                        ? "bg-mauve-wine text-white border-mauve-wine"
+                        : "border-rose-tan-light text-mauve-wine hover:border-rose-tan"
+                    }`}
+                  >
+                    {f === "" ? "All" : f.charAt(0).toUpperCase() + f.slice(1)}
+                    {f === "" && (
+                      <span className={`inline-flex items-center justify-center w-6 h-6 ml-2 rounded-full text-[10px] font-semibold ${userFilter === f ? "bg-white/20 text-white" : "bg-rose-tan-light text-mauve-wine"}`}>
+                        {count}
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
               <button
                 onClick={loadUsers}
                 disabled={loading}
@@ -519,11 +528,11 @@ export default function VotingEditor() {
                 <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin" : ""}`} />
               </button>
             </div>
-            {users.length === 0 ? (
+            {filteredUsers.length === 0 ? (
               <p className="text-mauve-wine-light text-sm">No users found.</p>
             ) : (
               <div className="space-y-3">
-                {users.map((u) => (
+                {filteredUsers.map((u) => (
                   <div
                     key={u.id}
                     className="border border-rose-tan-light rounded-xl p-4 bg-white"
