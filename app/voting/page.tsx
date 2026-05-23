@@ -16,6 +16,8 @@ import {
   Users,
   MessageSquare,
   ArrowLeft,
+  Bell,
+  X,
 } from "lucide-react";
 import Link from "next/link";
 import { ScrambleText } from "@/components/CursorAnimation/ScrambleText";
@@ -111,6 +113,11 @@ export default function VotingPage() {
   // Anonymous message state
   const [anonMessage, setAnonMessage] = useState("");
 
+  // Label notification state
+  const [labelNotifEnabled, setLabelNotifEnabled] = useState(false);
+  const [myLabel, setMyLabel] = useState<{ id: string; name: string } | null>(null);
+  const [showLabelNotif, setShowLabelNotif] = useState(false);
+
   useEffect(() => {
     checkSession();
   }, []);
@@ -122,10 +129,22 @@ export default function VotingPage() {
         const data = await res.json();
         setUser(data.user);
         routeAfterLogin(data);
+        loadMyLabel();
       }
     } finally {
       setCheckingSession(false);
     }
+  }
+
+  async function loadMyLabel() {
+    try {
+      const res = await fetch("/api/voting/my-label");
+      if (res.ok) {
+        const data = await res.json();
+        setLabelNotifEnabled(data.notification_enabled ?? false);
+        setMyLabel(data.label ?? null);
+      }
+    } catch {}
   }
 
   function routeAfterLogin(data: any) {
@@ -223,6 +242,7 @@ export default function VotingPage() {
         const sessionData = await sessionRes.json();
         routeAfterLogin(sessionData);
       }
+      loadMyLabel();
     } finally {
       setLoading(false);
     }
@@ -365,7 +385,7 @@ export default function VotingPage() {
   return (
     <div className="min-h-screen bg-luxury-cream">
       {/* Header */}
-      <header className="glass-effect border-b border-rose-tan-light luxury-shadow">
+      <header className="glass-effect border-b border-rose-tan-light luxury-shadow relative z-10">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center space-x-2">
             <div className="w-8 h-8 luxury-gradient rounded-full flex items-center justify-center">
@@ -373,7 +393,61 @@ export default function VotingPage() {
             </div>
             <span className="text-mauve-wine font-semibold">Rotaract</span>
           </Link>
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-3">
+            {/* Label notification bell */}
+            {user && labelNotifEnabled && (
+              <div className="relative">
+                <button
+                  onClick={() => setShowLabelNotif((v) => !v)}
+                  className="relative p-2 rounded-full hover:bg-rose-tan/10 transition-colors"
+                  title="Your assigned label"
+                >
+                  <Bell className="w-5 h-5 text-rose-tan" />
+                  {myLabel && (
+                    <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-rose-tan" />
+                  )}
+                </button>
+
+                {showLabelNotif && (
+                  <>
+                    <div
+                      className="fixed inset-0 z-[90]"
+                      onClick={() => setShowLabelNotif(false)}
+                    />
+                    <div className="absolute right-0 top-10 w-64 glass-effect rounded-xl luxury-shadow border border-rose-tan-light z-[100] overflow-hidden">
+                    <div className="flex items-center justify-between px-4 py-3 border-b border-rose-tan-light bg-luxury-cream">
+                      <span className="text-sm font-semibold text-mauve-wine">Your Label Result</span>
+                      <button
+                        onClick={() => setShowLabelNotif(false)}
+                        className="text-mauve-wine-light hover:text-mauve-wine transition-colors"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    </div>
+                    <div className="px-4 py-4 text-center">
+                      {myLabel ? (
+                        <>
+                          <div className="w-14 h-14 luxury-gradient rounded-full flex items-center justify-center mx-auto mb-3">
+                            <Tag className="w-6 h-6 text-white" />
+                          </div>
+                          <p className="text-xs text-mauve-wine-light mb-1">The group has decided — you are</p>
+                          <p className="text-lg font-bold text-mauve-wine">{myLabel.name}</p>
+                        </>
+                      ) : (
+                        <>
+                          <div className="w-14 h-14 bg-rose-tan/10 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <Bell className="w-6 h-6 text-rose-tan-light" />
+                          </div>
+                          <p className="text-sm text-mauve-wine-light">Your label hasn&apos;t been finalized yet. Check back soon!</p>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                  </>
+                )}
+              </div>
+            )}
+
             {user && (
               <button
                 onClick={handleLogout}
