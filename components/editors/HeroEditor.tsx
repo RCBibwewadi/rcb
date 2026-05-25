@@ -98,7 +98,7 @@ export default function HeroEditor() {
 
       {/* Image Upload */}
       <div className="mb-4">
-        <label className="block mb-2 font-medium">Background Image</label>
+        <label className="block mb-2 font-medium text-mauve-wine">Background Image</label>
         <input
           type="file"
           accept="image/*"
@@ -132,7 +132,7 @@ export default function HeroEditor() {
 
       {/* Other Fields */}
       {["title", "subtitle", "description", "ctaText"].map((field) => (
-        <div key={field} className="mb-4">
+        <div key={field} className="mb-4 text-mauve-wine">
           <label className="block mb-1 font-medium">{field}</label>
           {field === "description" ? (
             <textarea

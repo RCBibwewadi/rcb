@@ -71,6 +71,8 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Headings */
+
 /* Utilities */
 .hover-scale {
   transition: transform 0.3s ease;
@@ -109,3 +111,4 @@ body {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+

@@ -242,7 +242,7 @@ export default function BoardMembersEditor() {
                 >
                   {/* Card Bottom Info */}
                   <div className="absolute bottom-0 left-0 right-0 bg-opacity-90 p-3 text-center">
-                    <div className="text-white font-bold text-sm">
+                    <div className="font-bold text-sm text-white">
                       {member.name || "Name"}
                     </div>
                     <div className="text-white text-xs">
@@ -267,7 +267,10 @@ export default function BoardMembersEditor() {
                       onChange={(e) =>
                         updateMemberField(index, "name", e.target.value)
                       }
-                      className="w-full px-3 py-2 border border-rose-tan-light rounded focus:ring-2 focus:ring-rose-tan"
+                      className="w-full px-3 py-2 border border-rose-tan-light rounded focus:outline-none
+    focus:ring-2
+    focus:ring-rose-tan
+    focus:border-rose-tan text-mauve-wine"
                       placeholder="e.g., John Doe"
                     />
                   </div>
@@ -281,7 +284,10 @@ export default function BoardMembersEditor() {
                       onChange={(e) =>
                         updateMemberField(index, "position", e.target.value)
                       }
-                      className="w-full px-3 py-2 border border-rose-tan-light rounded focus:ring-2 focus:ring-rose-tan"
+                      className="w-full px-3 py-2 border border-rose-tan-light rounded focus:outline-none
+    focus:ring-2
+    focus:ring-rose-tan
+    focus:border-rose-tan text-mauve-wine"
                       placeholder="e.g., President"
                     />
                   </div>
@@ -297,7 +303,10 @@ export default function BoardMembersEditor() {
                     onChange={(e) =>
                       updateMemberField(index, "description", e.target.value)
                     }
-                    className="w-full px-3 py-2 border border-rose-tan-light rounded focus:ring-2 focus:ring-rose-tan"
+                    className="w-full px-3 py-2 border border-rose-tan-light rounded focus:outline-none 
+    focus:ring-2
+    focus:ring-rose-tan
+    focus:border-rose-tan text-mauve-wine"
                     placeholder="e.g., Leading with Vision"
                   />
                 </div>
@@ -320,7 +329,10 @@ export default function BoardMembersEditor() {
                           .replace(/[^A-Za-z]/g, "") // only letters
                       )
                     }
-                    className="w-full px-3 py-2 border border-rose-tan-light rounded focus:ring-2 focus:ring-rose-tan"
+                    className="w-full px-3 py-2 border border-rose-tan-light rounded focus:outline-none
+    focus:ring-2
+    focus:ring-rose-tan
+    focus:border-rose-tan text-mauve-wine"
                     placeholder="e.g., PG"
                   />
                 </div>
@@ -339,7 +351,10 @@ export default function BoardMembersEditor() {
                         Number(e.target.value)
                       )
                     }
-                    className="w-full px-3 py-2 border border-rose-tan-light rounded focus:ring-2 focus:ring-rose-tan"
+                    className="w-full px-3 py-2 border border-rose-tan-light rounded focus:outline-none
+    focus:ring-2
+    focus:ring-rose-tan
+    focus:border-rose-tan text-mauve-wine"
                     placeholder="e.g., 1"
                   />
                 </div>
@@ -353,7 +368,10 @@ export default function BoardMembersEditor() {
                     onChange={(e) =>
                       updateMemberField(index, "linkedIn", e.target.value)
                     }
-                    className="w-full px-3 py-2 border border-rose-tan-light rounded focus:ring-2 focus:ring-rose-tan"
+                    className="w-full px-3 py-2 border border-rose-tan-light rounded focus:outline-none
+    focus:ring-2
+    focus:ring-rose-tan
+    focus:border-rose-tan text-mauve-wine"
                     placeholder="e.g., https://www.linkedIn.com/rotaract"
                   />
                   <label className="block text-sm font-medium text-mauve-wine-dark mb-2">
@@ -365,7 +383,10 @@ export default function BoardMembersEditor() {
                     onChange={(e) =>
                       updateMemberField(index, "instagram", e.target.value)
                     }
-                    className="w-full px-3 py-2 border border-rose-tan-light rounded focus:ring-2 focus:ring-rose-tan"
+                    className="w-full px-3 py-2 border border-rose-tan-light rounded focus:outline-none
+    focus:ring-2
+    focus:ring-rose-tan
+    focus:border-rose-tan text-mauve-wine"
                     placeholder="e.g., https://www.instagram.com/rotaract"
                   />
                   <label className="block text-sm font-medium text-mauve-wine-dark mb-2">
@@ -377,7 +398,10 @@ export default function BoardMembersEditor() {
                     onChange={(e) =>
                       updateMemberField(index, "email", e.target.value)
                     }
-                    className="w-full px-3 py-2 border border-rose-tan-light rounded focus:ring-2 focus:ring-rose-tan"
+                    className="w-full px-3 py-2 border border-rose-tan-light rounded focus:outline-none
+    focus:ring-2
+    focus:ring-rose-tan
+    focus:border-rose-tan text-mauve-wine"
                     placeholder="e.g., rotaract@gmail.com"
                   />
                 </div>

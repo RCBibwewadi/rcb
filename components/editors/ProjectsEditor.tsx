@@ -240,7 +240,10 @@ const ProjectsEditor: React.FC = () => {
                   onChange={(e) =>
                     updateProjectField(index, "project_title", e.target.value)
                   }
-                  className="w-full px-3 py-2 border border-rose-tan-light rounded focus:ring-2 focus:ring-rose-tan"
+                  className="w-full px-3 py-2 border border-rose-tan-light rounded focus:outline-none
+    focus:ring-2
+    focus:ring-rose-tan
+    focus:border-rose-tan text-mauve-wine"
                 />
               </div>
 
@@ -259,7 +262,10 @@ const ProjectsEditor: React.FC = () => {
                       e.target.value
                     )
                   }
-                  className="w-full px-3 py-2 border border-rose-tan-light rounded focus:ring-2 focus:ring-rose-tan"
+                  className="w-full px-3 py-2 border border-rose-tan-light rounded focus:outline-none
+    focus:ring-2
+    focus:ring-rose-tan
+    focus:border-rose-tan text-mauve-wine"
                 />
               </div>
 
@@ -278,7 +284,10 @@ const ProjectsEditor: React.FC = () => {
                       e.target.value
                     )
                   }
-                  className="w-full px-3 py-2 border border-rose-tan-light rounded focus:ring-2 focus:ring-rose-tan"
+                  className="w-full px-3 py-2 border border-rose-tan-light rounded focus:outline-none
+    focus:ring-2
+    focus:ring-rose-tan
+    focus:border-rose-tan text-mauve-wine"
                 />
               </div>
 

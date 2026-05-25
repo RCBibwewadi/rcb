@@ -107,14 +107,17 @@ export default function QuickEditor() {
 
   return (
     <div className="max-w-4xl mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-4">Quick Editor</h1>
+      <h1 className="text-2xl font-bold mb-4 text-mauve-wine">Quick Editor</h1>
       <label className="block text-sm font-medium text-mauve-wine-dark mb-2">
         Category
       </label>
       <form onSubmit={handleSubmit} className="space-y-3 mb-10">
         <select
           name="section"
-          className="w-full px-3 py-2 border border-rose-tan-light rounded focus:ring-2 focus:ring-rose-tan"
+          className="w-full px-3 py-2 border border-rose-tan-light rounded text-mauve-wine-dark focus:outline-none
+    focus:ring-2
+    focus:ring-rose-tan
+    focus:border-rose-tan"
         >
           <option value="dances" className="text-gray-800 bg-white">
             Dances
@@ -135,7 +138,10 @@ export default function QuickEditor() {
         <input
           type="text"
           name="title"
-          className="w-full px-3 py-2 border border-rose-tan-light rounded focus:ring-2 focus:ring-rose-tan"
+          className="w-full px-3 py-2 border border-rose-tan-light rounded focus:outline-none
+    focus:ring-2
+    focus:ring-rose-tan
+    focus:border-rose-tan text-mauve-wine-dark "
           placeholder="e.g., Cricket Masti"
         />
         <label className="block text-sm font-medium text-mauve-wine-dark mb-2">
@@ -144,7 +150,10 @@ export default function QuickEditor() {
         <input
           type="text"
           name="description"
-          className="w-full px-3 py-2 border border-rose-tan-light rounded focus:ring-2 focus:ring-rose-tan"
+          className="w-full px-3 py-2 border border-rose-tan-light rounded text-mauve-wine-dark focus:outline-none
+    focus:ring-2
+    focus:ring-rose-tan
+    focus:border-rose-tan" 
           placeholder="e.g., COC fun"
         />
         <label className="block text-sm font-medium text-mauve-wine-dark mb-2">
@@ -154,12 +163,18 @@ export default function QuickEditor() {
           type="number"
           name="sequence"
           defaultValue={0}
-          className="w-full px-3 py-2 border border-rose-tan-light rounded focus:ring-2 focus:ring-rose-tan"
+          className="w-full px-3 py-2 border border-rose-tan-light rounded text-mauve-wine-dark focus:outline-none
+    focus:ring-2
+    focus:ring-rose-tan
+    focus:border-rose-tan"
         />
 
         <select
           name="media_type"
-          className="w-full px-3 py-2 border border-rose-tan-light rounded focus:ring-2 focus:ring-rose-tan"
+          className="w-full px-3 py-2 border border-rose-tan-light rounded focus:outline-none
+    focus:ring-2
+    focus:ring-rose-tan
+    focus:border-rose-tan text-mauve-wine-dark"
         >
           <option value="image">Image</option>
           <option value="video">Video</option>
@@ -196,7 +211,7 @@ export default function QuickEditor() {
         {items.map((item) => (
           <div
             key={item.id}
-            className="border p-3 rounded flex justify-between"
+            className="border p-3 rounded flex justify-between text-mauve-wine-dark"
           >
             <div>
               <p className="font-semibold">{item.title}</p>

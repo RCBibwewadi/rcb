@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
+import { notFound } from "next/navigation";;
+
 import { useState, useEffect, useRef } from "react";
 import {
   User,
@@ -74,6 +76,8 @@ interface UserCard {
 }
 
 export default function VotingPage() {
+  notFound();
+
   const [view, setView] = useState<View>("landing");
   const [user, setUser] = useState<VotingUser | null>(null);
   const [error, setError] = useState("");
@@ -431,7 +435,7 @@ export default function VotingPage() {
                             <Tag className="w-6 h-6 text-white" />
                           </div>
                           <p className="text-xs text-mauve-wine-light mb-1">The group has decided — you are</p>
-                          <p className="text-lg font-bold text-mauve-wine">{myLabel.name}</p>
+                          {/* <p className="text-lg font-bold text-mauve-wine">{myLabel.name}</p> */}
                         </>
                       ) : (
                         <>
@@ -728,7 +732,7 @@ export default function VotingPage() {
               >
                 {photoPreview ? (
                   <img
-                    src={photoPreview}
+                    // src={photoPreview}
                     alt="Preview"
                     className="w-full h-full object-cover"
                   />

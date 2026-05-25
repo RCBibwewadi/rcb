@@ -116,7 +116,7 @@ export default function EventsEditor() {
         {events.map((event, index) => (
           <div
             key={event.id || index}
-            className="border border-rose-tan-light rounded-lg p-4"
+            className="border border-rose-tan-light rounded-lg p-4 text-mauve-wine bg-rose-tan-light/50 luxury-shadow"
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <input
@@ -124,27 +124,39 @@ export default function EventsEditor() {
                 placeholder="Title"
                 value={event.title}
                 onChange={(e) => updateEvent(index, "title", e.target.value)}
-                className="w-full px-3 py-2 border rounded"
+                className="w-full px-3 py-2 border rounded text-mauve-wine focus:outline-none
+    focus:ring-2
+    focus:ring-rose-tan
+    focus:border-rose-tan"
               />
               <input
                 type="date"
                 value={event.date}
                 onChange={(e) => updateEvent(index, "date", e.target.value)}
-                className="w-full px-3 py-2 border rounded"
+                className="w-full px-3 py-2 border rounded focus:outline-none
+    focus:ring-2
+    focus:ring-rose-tan
+    focus:border-rose-tan"
               />
               <input
                 type="text"
                 placeholder="Time"
                 value={event.time}
                 onChange={(e) => updateEvent(index, "time", e.target.value)}
-                className="w-full px-3 py-2 border rounded"
+                className="w-full px-3 py-2 border rounded focus:outline-none
+    focus:ring-2
+    focus:ring-rose-tan
+    focus:border-rose-tan"
               />
               <input
                 type="text"
                 placeholder="Location"
                 value={event.location}
                 onChange={(e) => updateEvent(index, "location", e.target.value)}
-                className="w-full px-3 py-2 border rounded"
+                className="w-full px-3 py-2 border rounded focus:outline-none
+    focus:ring-2
+    focus:ring-rose-tan
+    focus:border-rose-tan"
               />
             </div>
             <textarea
@@ -154,7 +166,10 @@ export default function EventsEditor() {
               onChange={(e) =>
                 updateEvent(index, "description", e.target.value)
               }
-              className="w-full mt-4 px-3 py-2 border rounded"
+              className="w-full mt-4 px-3 py-2 border rounded focus:outline-none
+    focus:ring-2
+    focus:ring-rose-tan
+    focus:border-rose-tan"
             />
             <div className="mt-4 flex justify-between">
               <button
