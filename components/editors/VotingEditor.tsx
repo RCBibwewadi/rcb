@@ -12,6 +12,8 @@ import {
   X,
   ChevronDown,
   ChevronUp,
+  ChevronLeft,
+  ChevronRight,
   Upload,
   User,
   BarChart2,
@@ -97,6 +99,7 @@ export default function VotingEditor() {
 
   // Messages
   const [messages, setMessages] = useState<any[]>([]);
+  const [messageIndex, setMessageIndex] = useState(0);
 
   // Voting toggle
   const [votingEnabled, setVotingEnabled] = useState<boolean>(false);
@@ -422,6 +425,7 @@ export default function VotingEditor() {
       if (res.ok) {
         const data = await res.json();
         setMessages(data.messages || []);
+        setMessageIndex(0);
       }
     } finally {
       setLoading(false);
@@ -496,7 +500,7 @@ export default function VotingEditor() {
             { id: "labels", label: "Labels", icon: Tag },
             { id: "results", label: "Vote Results", icon: BarChart2 },
             // { id: "label-assignments", label: "Label Assignments", icon: Tags },
-            // { id: "messages", label: "Messages", icon: MessageSquare },
+            { id: "messages", label: "Messages", icon: MessageSquare },
           ] as { id: Tab; label: string; icon: any }[]).map(({ id, label, icon: Icon }) => (
             <button
               key={id}
@@ -1107,35 +1111,30 @@ export default function VotingEditor() {
             {messages.length === 0 ? (
               <p className="text-mauve-wine-light text-sm">No messages yet.</p>
             ) : (
-              messages.map((msg) => (
-                <div
-                  key={msg.id}
-                  className="border border-rose-tan-light rounded-xl p-4 bg-white space-y-2"
+              <div className="flex items-center gap-4">
+                <button
+                  onClick={() => setMessageIndex((prev) => Math.max(prev - 1, 0))}
+                  disabled={messageIndex === 0}
+                  className="p-2 rounded-lg border border-rose-tan-light text-mauve-wine hover:bg-luxury-cream transition-all disabled:opacity-30 disabled:cursor-not-allowed flex-shrink-0"
                 >
-                  <p className="text-sm text-mauve-wine leading-relaxed">{msg.message}</p>
-                  {/* <div className="flex items-center gap-2 pt-1 border-t border-rose-tan-light/50">
-                    {msg.author?.photo_url ? (
-                      <img
-                        src={msg.author.photo_url}
-                        alt={msg.author.name}
-                        className="w-6 h-6 rounded-full object-cover"
-                      />
-                    ) : (
-                      <div className="w-6 h-6 rounded-full luxury-gradient flex items-center justify-center">
-                        <User className="w-3 h-3 text-white" />
-                      </div>
-                    )}
-                    <span className="text-xs text-mauve-wine-light">
-                      {msg.author
-                        ? `${msg.author.name}${msg.author.display_name ? ` (${msg.author.display_name})` : ""}`
-                        : "Unknown user"}
-                    </span>
-                    <span className="text-xs text-mauve-wine-light ml-auto">
-                      {new Date(msg.created_at).toLocaleDateString()}
-                    </span>
-                  </div> */}
+                  <ChevronLeft className="w-5 h-5" />
+                </button>
+                <div className="flex-1 border border-rose-tan-light rounded-xl p-6 bg-white min-h-[120px] flex flex-col justify-center">
+                  <p className="text-sm text-mauve-wine leading-relaxed text-center">
+                    {messages[messageIndex]?.message}
+                  </p>
+                  <p className="text-xs text-mauve-wine-light text-center mt-4">
+                    {messageIndex + 1} / {messages.length}
+                  </p>
                 </div>
-              ))
+                <button
+                  onClick={() => setMessageIndex((prev) => Math.min(prev + 1, messages.length - 1))}
+                  disabled={messageIndex === messages.length - 1}
+                  className="p-2 rounded-lg border border-rose-tan-light text-mauve-wine hover:bg-luxury-cream transition-all disabled:opacity-30 disabled:cursor-not-allowed flex-shrink-0"
+                >
+                  <ChevronRight className="w-5 h-5" />
+                </button>
+              </div>
             )}
           </div>
         )}
